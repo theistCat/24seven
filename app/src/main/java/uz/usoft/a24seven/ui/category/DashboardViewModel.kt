@@ -1,4 +1,4 @@
-package uz.usoft.a24seven.ui.dashboard
+package uz.usoft.a24seven.ui.category
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

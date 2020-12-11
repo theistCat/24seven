@@ -2,6 +2,7 @@ package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -9,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_collection_object.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -56,6 +58,14 @@ class HomeFragment : Fragment() {
         newItemsRecycler.adapter=newProductsAdapter
         newItemsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
 
+        newItems.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+        }
+        newItemsAll.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+        }
+
+
         popularProductsAdapter= ProductsListAdapter()
         popularItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         popularItemsRecycler.adapter=newProductsAdapter
@@ -71,5 +81,10 @@ class HomeFragment : Fragment() {
         newsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         newsRecycler.adapter=newsAdapter
         newsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+
     }
 }

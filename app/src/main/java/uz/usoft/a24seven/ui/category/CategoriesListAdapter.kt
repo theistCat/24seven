@@ -1,4 +1,4 @@
-package uz.usoft.a24seven.ui.home
+package uz.usoft.a24seven.ui.category
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,27 +6,25 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.network.di.MockData
-import uz.usoft.a24seven.network.di.MockData.ProductObject
 
-class ProductsListAdapter(val isGrid:Boolean=false) : RecyclerView.Adapter<ProductsListAdapter.ViewHolder>() {
-    var productsList: List<ProductObject>? = MockData.getProductList()
+class CategoriesListAdapter : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
+    var productsList: List<MockData.ProductObject>? = MockData.getProductList()
 
-    fun updateList(productsList: List<ProductObject>) {
+    fun updateList(productsList: List<MockData.ProductObject>) {
         this.productsList = productsList
         notifyDataSetChanged()
     }
 
 
-    var onItemClick: ((ProductObject) -> Unit)? = null
+    var onItemClick: ((MockData.ProductObject) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        if(isGrid)LayoutInflater.from(parent.context).inflate(R.layout.item_product_grid, parent, false)
-        else LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
+         LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
     )
 
     override fun getItemCount() = productsList?.size ?: 0
 
-    override fun onBindViewHolder(holder: ProductsListAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoriesListAdapter.ViewHolder, position: Int) {
         holder.bindData(productsList!![position])
     }
 
@@ -38,7 +36,7 @@ class ProductsListAdapter(val isGrid:Boolean=false) : RecyclerView.Adapter<Produ
             }
         }
 
-        fun bindData(product: ProductObject) {
+        fun bindData(product: MockData.ProductObject) {
         }
     }
 }

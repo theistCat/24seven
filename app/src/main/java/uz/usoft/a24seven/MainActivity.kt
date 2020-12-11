@@ -2,55 +2,91 @@ package uz.usoft.a24seven
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.abs_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
+import uz.usoft.a24seven.utils.KeyboardEventListener
+import uz.usoft.a24seven.utils.hide
+import uz.usoft.a24seven.utils.show
 
 class MainActivity : AppCompatActivity() {
 
+
+    private lateinit var bottomNavigationView: BottomNavigationView
+
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        //val bottomBar:BottomAppBar=findViewById(R.id.bottomAppBar)
-        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        supportActionBar?.setCustomView(R.layout.abs_layout)
-        supportActionBar?.elevation=0f
-        supportActionBar?.setBackgroundDrawable(resources.getDrawable(R.drawable.appbar_background))
+
+        bottomNavigationView= findViewById(R.id.nav_view)
+
+        val appBar: AppBarLayout=findViewById(R.id.main_appBarLayout)
+        val toolbar: Toolbar =findViewById(R.id.main_toolbar)
+//
+        setSupportActionBar(toolbar)
+
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_dashboard, R.id.nav_cart,R.id.nav_profile))
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+       // val appBarConfiguration = AppBarConfiguration(setOf(
+        //        R.id.nav_home, R.id.nav_dashboard, R.id.nav_cart,R.id.nav_profile))
 
+        //setupActionBarWithNavController(navController, appBarConfiguration)
+        bottomNavigationView.setupWithNavController(navController)
+        main_toolbar.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id)
             {
                 R.id.nav_home->{
-                    tvTitle.visibility=View.GONE
-                    imageView2.visibility=View.VISIBLE
-                  //  homeLogo.visibility= View.VISIBLE
+                    searchLay.show()
+                    toolbar.title=""
+                    toolbar.imageView2.visibility=View.VISIBLE
+                    //homeLogo.visibility= View.VISIBLE
+                }
+                R.id.nav_cart->{
+                    searchLay.hide()
+                    toolbar.imageView2.visibility=View.GONE
+                }
+                R.id.nav_profile->{
+                    searchLay.hide()
+                    toolbar.imageView2.visibility=View.GONE
                 }
                 else->{
-
-                    tvTitle.visibility=View.VISIBLE
-                    tvTitle.text=destination.label
-                    imageView2.visibility=View.GONE
-                  ///  homeLogo.visibility= View.GONE
+                    searchLay.show()
+                    toolbar.imageView2.visibility=View.GONE
+                    //homeLogo.visibility= View.GONE
                 }
             }
+        }
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+    }
+    override fun onResume() {
+        super.onResume()
+        KeyboardEventListener(this) { isOpen ->
+            if(isOpen) bottomNavigationView.hide()
+            else bottomNavigationView.show()
         }
     }
 }

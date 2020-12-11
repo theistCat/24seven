@@ -2,28 +2,46 @@ package uz.usoft.a24seven.utils
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.TextView
+import androidx.annotation.CallSuper
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.material.textfield.TextInputEditText
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.MaskedTextChangedListener.Companion.installOn
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import kotlinx.android.synthetic.main.fragment_collection_object.*
 import uz.usoft.a24seven.R
-import java.util.ArrayList
+import uz.usoft.kidya.data.PrefManager
+import java.text.NumberFormat
+import java.util.*
 
 class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=true,private val span:Int=2) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
@@ -79,25 +97,25 @@ fun Fragment.hideKeyboard() {
     activity?.hideSoftKeyboard()
 }
 
-fun EditText.formatPhoneMask() {
-    val affineFormats: MutableList<String> = ArrayList()
-    affineFormats.add("+998 [00] [000] [00] [00]")
-
-    val listener =
-        installOn(
-            this,
-            "+998 [00] [000] [00] [00]",
-            affineFormats, AffinityCalculationStrategy.WHOLE_STRING,
-            object : MaskedTextChangedListener.ValueListener {
-                override fun onTextChanged(
-                    maskFilled: Boolean,
-                    extractedValue: String,
-                    formattedValue: String
-                ) {
-                }
-            }
-        )
-}
+//fun EditText.formatPhoneMask() {
+//    val affineFormats: MutableList<String> = ArrayList()
+//    affineFormats.add("+998 [00] [000] [00] [00]")
+//
+//    val listener =
+//        installOn(
+//            this,
+//            "+998 [00] [000] [00] [00]",
+//            affineFormats, AffinityCalculationStrategy.WHOLE_STRING,
+//            object : MaskedTextChangedListener.ValueListener {
+//                override fun onTextChanged(
+//                    maskFilled: Boolean,
+//                    extractedValue: String,
+//                    formattedValue: String
+//                ) {
+//                }
+//            }
+//        )
+//}
 
 
 
@@ -162,7 +180,215 @@ fun Fragment.setUpViewPager(adapter:ImageCollectionAdapter,viewPager: ViewPager2
 }
 
 
+// Add these extension functions to an empty kotlin file
+fun Activity.getRootView(): View {
+    return findViewById<View>(android.R.id.content)
+}
+fun Context.convertDpToPx(dp: Float): Float {
+    return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            this.resources.displayMetrics
+    )
+}
 
+fun Activity.isKeyboardOpen(): Boolean {
+    val visibleBounds = Rect()
+    this.getRootView().getWindowVisibleDisplayFrame(visibleBounds)
+    val heightDiff = getRootView().height - visibleBounds.height()
+    val marginOfError = Math.round(this.convertDpToPx(50F))
+    return heightDiff > marginOfError
+}
+
+fun Activity.isKeyboardClosed(): Boolean {
+    return !this.isKeyboardOpen()
+}
+
+class KeyboardEventListener(
+        private val activity: AppCompatActivity,
+        private val callback: (isOpen: Boolean) -> Unit
+) : LifecycleObserver {
+
+    private val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
+        private var lastState: Boolean = activity.isKeyboardOpen()
+
+        override fun onGlobalLayout() {
+            val isOpen = activity.isKeyboardOpen()
+            if (isOpen == lastState) {
+                return
+            } else {
+                dispatchKeyboardEvent(isOpen)
+                lastState = isOpen
+            }
+        }
+    }
+
+    init {
+        // Dispatch the current state of the keyboard
+        dispatchKeyboardEvent(activity.isKeyboardOpen())
+        // Make the component lifecycle aware
+        activity.lifecycle.addObserver(this)
+        registerKeyboardListener()
+    }
+
+    private fun registerKeyboardListener() {
+        activity.getRootView().viewTreeObserver.addOnGlobalLayoutListener(listener)
+    }
+
+    private fun dispatchKeyboardEvent(isOpen: Boolean) {
+        when {
+            isOpen  -> callback(true)
+            !isOpen -> callback(false)
+        }
+    }
+
+    @OnLifecycleEvent(value = Lifecycle.Event.ON_PAUSE)
+    @CallSuper
+    fun onLifecyclePause() {
+        unregisterKeyboardListener()
+    }
+
+    private fun unregisterKeyboardListener() {
+        activity.getRootView().viewTreeObserver.removeOnGlobalLayoutListener(listener)
+    }
+}
+
+/**
+ * Animating view with slide animation
+ */
+fun View.slideDown() {
+    this.animate().translationY(500f).alpha(0.0f).setDuration(50).setInterpolator(
+            AccelerateDecelerateInterpolator()
+    )
+    this.hide()
+}
+
+fun View.slideUp() {
+    this.show()
+    this.animate().translationY(0f).alpha(1.0f).setDuration(150).setInterpolator(
+            AccelerateDecelerateInterpolator()
+    )
+}
+
+/**
+ * Hide the view. (visibility = View.INVISIBLE)
+ */
+fun View.hide(): View {
+    if (visibility != View.GONE) {
+        visibility = View.GONE
+        Log.d("DefaultTag", "actually hidden")
+    }
+    return this
+}
+
+fun View.show(): View {
+    if (visibility != View.VISIBLE) {
+        visibility = View.VISIBLE
+    }
+    return this
+}
+
+
+fun Fragment.makePhoneCall(phone: String) {
+    val call = Intent(Intent.ACTION_DIAL);
+    call.data = Uri.parse("tel:$phone")
+    requireActivity().startActivity(call)
+}
+
+
+fun EditText.hideErrorIfFilled() {
+    this.doOnTextChanged { text, start, before, count ->
+        if (this.text.toString().isNotEmpty() and !this.error.isNullOrEmpty()) {
+            this.error = null
+        }
+    }
+}
+
+fun EditText.showErrorIfNotFilled() {
+    if (this.text.toString().isEmpty()) {
+        this.error = context.getString(R.string.warning_fill_the_fields)
+    }
+}
+
+fun EditText.showError() {
+    this.error = context.getString(R.string.warning_fill_the_fields)
+}
+
+fun TextInputEditText.showError(error: String) {
+    this.error = error
+}
+
+fun AppCompatButton.showError(error: String) {
+    this.error = error
+}
+
+fun AppCompatButton.hideError() {
+    this.error = null
+}
+/**
+ * Change language
+ */
+fun Fragment.setAppLocale(localeCode: String, context: Context) {
+    activity?.setAppLocale(localeCode, context)
+}
+fun Activity.setAppLocale(localeCode: String, context: Context) {
+    val resources = context.resources
+    val dm = resources.displayMetrics
+    val config = resources.configuration
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        config.setLocale(Locale(localeCode.toLowerCase(Locale.ROOT)))
+        PrefManager.saveLocale(context, localeCode.toLowerCase(Locale.ROOT))
+    } else {
+        PrefManager.saveLocale(context, localeCode.toLowerCase(Locale.ROOT))
+        config.locale = Locale(localeCode.toLowerCase(Locale.ROOT))
+    }
+    resources.updateConfiguration(config, dm)
+}
+
+
+fun EditText.formatPhoneMask() {
+    val affineFormats: MutableList<String> = ArrayList()
+    affineFormats.add("+998 [00] [000] [00] [00]")
+
+    val listener =
+            MaskedTextChangedListener.installOn(
+                    this,
+                    "+998 [00] [000] [00] [00]",
+                    affineFormats, AffinityCalculationStrategy.WHOLE_STRING,
+                    object : MaskedTextChangedListener.ValueListener {
+                        override fun onTextChanged(
+                                maskFilled: Boolean,
+                                extractedValue: String,
+                                formattedValue: String
+                        ) {
+                        }
+                    }
+            )
+}
+fun EditText.getMaskedPhoneWithoutSpace(): String {
+    var phone = this.text.toString()
+    if (phone.startsWith("+"))
+        phone = phone.substring(1, phone.length)
+    return phone.replace(" ", "")
+}
+
+fun Fragment.changeUiStateEnabled(isLoading: Boolean, progressBar: View, viewButton: View) {
+    viewButton.isEnabled = !isLoading
+    if (isLoading) progressBar.visible() else progressBar.gone()
+}
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
+
+
+fun TextView.formatCurrencyMask(price: Float) {
+    val format= NumberFormat.getCurrencyInstance(Locale("ru", "UZ"))
+    this.text=format.format(price)
+}
 //fragment_collection_object xml
 //
 //<?xml version="1.0" encoding="utf-8"?>
