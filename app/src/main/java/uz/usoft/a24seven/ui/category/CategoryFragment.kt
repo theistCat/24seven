@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_category.*
 import uz.usoft.a24seven.R
@@ -36,5 +37,11 @@ class CategoryFragment : Fragment() {
         categoryRecycler.layoutManager=LinearLayoutManager(requireContext())
         categoryRecycler.addItemDecoration(SpacesItemDecoration((requireContext().resources.displayMetrics.density*16+0.5f).toInt(),true,1))
 
+
+        adapter.onItemClick={
+            val categoryName=it.name
+            val action=CategoryFragmentDirections.actionNavCategoriesToSubCategoriesFragment(categoryName)
+            findNavController().navigate(action)
+        }
     }
 }

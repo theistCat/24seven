@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_product.view.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.network.di.MockData
 import uz.usoft.a24seven.network.di.MockData.ProductObject
 
-class ProductsListAdapter(val isGrid:Boolean=false) : RecyclerView.Adapter<ProductsListAdapter.ViewHolder>() {
-    var productsList: List<ProductObject>? = MockData.getProductList()
+class ProductsListAdapter(val isGrid:Boolean=false,val isPopular:Boolean=false) : RecyclerView.Adapter<ProductsListAdapter.ViewHolder>() {
+
+    var productsList: List<ProductObject>? =if(isPopular) MockData.getPopularProductList() else MockData.getProductList()
 
     fun updateList(productsList: List<ProductObject>) {
         this.productsList = productsList
@@ -31,6 +33,7 @@ class ProductsListAdapter(val isGrid:Boolean=false) : RecyclerView.Adapter<Produ
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val productPrice=itemView.productPrice
 
         init {
             itemView.setOnClickListener {
@@ -39,6 +42,7 @@ class ProductsListAdapter(val isGrid:Boolean=false) : RecyclerView.Adapter<Produ
         }
 
         fun bindData(product: ProductObject) {
+            productPrice.text=product.price
         }
     }
 }

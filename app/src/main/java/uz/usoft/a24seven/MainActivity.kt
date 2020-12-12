@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
+import androidx.navigation.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -20,6 +21,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.abs_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
+import uz.usoft.a24seven.ui.category.CategoryFragmentDirections
+import uz.usoft.a24seven.ui.category.subCategory.SubCategoriesFragmentArgs
 import uz.usoft.a24seven.utils.KeyboardEventListener
 import uz.usoft.a24seven.utils.hide
 import uz.usoft.a24seven.utils.show
@@ -65,6 +68,10 @@ class MainActivity : AppCompatActivity() {
                     toolbar.imageView2.visibility=View.GONE
                 }
                 R.id.nav_profile->{
+                    searchLay.hide()
+                    toolbar.imageView2.visibility=View.GONE
+                }
+                R.id.nav_selectedProduct->{
                     searchLay.hide()
                     toolbar.imageView2.visibility=View.GONE
                 }

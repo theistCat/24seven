@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_new_products.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentDirections
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 
@@ -35,7 +37,10 @@ class NewProductsFragment : Fragment() {
         val density=requireContext().resources.displayMetrics.density
         newProductsRecycler.addItemDecoration(SpacesItemDecoration((16*density+0.5f).toInt()))
 
-
+        adapter.onItemClick={
+            val action=NewProductsFragmentDirections.actionNavNewProductsToNavSelectedProduct(resources.getString(R.string.title_newProducts))
+            findNavController().navigate(action)
+        }
 
     }
 }
