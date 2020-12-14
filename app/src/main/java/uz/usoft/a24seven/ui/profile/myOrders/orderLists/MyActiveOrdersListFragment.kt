@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_my_active_orders_list.*
 import uz.usoft.a24seven.R
@@ -35,5 +36,9 @@ class MyActiveOrdersListFragment : Fragment() {
         activeOrdersRecycler.layoutManager= LinearLayoutManager(requireContext())
         activeOrdersRecycler.adapter=myOrderListRecyclerAdapter
         activeOrdersRecycler.addItemDecoration(SpacesItemDecoration((resources.displayMetrics.density*16+0.5f).toInt(),true,1))
+
+        myOrderListRecyclerAdapter.onItemClick={
+            findNavController().navigate(R.id.action_nav_myOrders_to_nav_selectedOrder)
+        }
     }
 }
