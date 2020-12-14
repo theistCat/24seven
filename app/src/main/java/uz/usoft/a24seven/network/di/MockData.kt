@@ -1,5 +1,7 @@
 package uz.usoft.a24seven.network.di
 
+import java.io.Serializable
+
 class MockData (
 )
 {
@@ -70,7 +72,7 @@ class MockData (
     data class ProductObject(
         val name:String="",
         val price:String=""
-    )
+    ):Serializable
 
     data class FeedbackObject(
         val name:String=""

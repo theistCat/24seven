@@ -55,6 +55,9 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
         main_toolbar.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            bottomNavigationView.show()
+            searchLay.hide()
+            toolbar.imageView2.visibility=View.GONE
             when(destination.id)
             {
                 R.id.nav_home->{
@@ -63,22 +66,17 @@ class MainActivity : AppCompatActivity() {
                     toolbar.imageView2.visibility=View.VISIBLE
                     //homeLogo.visibility= View.VISIBLE
                 }
-                R.id.nav_cart->{
-                    searchLay.hide()
-                    toolbar.imageView2.visibility=View.GONE
+                R.id.nav_checkOut->{
+                    bottomNavigationView.hide()
                 }
-                R.id.nav_profile->{
-                    searchLay.hide()
-                    toolbar.imageView2.visibility=View.GONE
-                }
-                R.id.nav_selectedProduct->{
-                    searchLay.hide()
-                    toolbar.imageView2.visibility=View.GONE
-                }
-                else->{
+                R.id.nav_categories->{
                     searchLay.show()
-                    toolbar.imageView2.visibility=View.GONE
-                    //homeLogo.visibility= View.GONE
+                }
+                R.id.nav_subCategories->{
+                    searchLay.show()
+                }
+                R.id.nav_selectedSubCategory->{
+                    searchLay.show()
                 }
             }
         }

@@ -18,6 +18,7 @@ import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFrag
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.ImageCollectionAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.createBottomSheet
 import uz.usoft.a24seven.utils.setUpViewPager
 
 class SelectedProductFragment : Fragment() {
@@ -66,5 +67,11 @@ class SelectedProductFragment : Fragment() {
         imgList.add("https://i.imgur.com/0Qy7ZlB.png")
 
         pagerAdapter.updateImageList(imgList)
+
+
+        val feedbackBottomSheet=createBottomSheet(R.layout.feedback_bottomsheet)
+        leaveFeedback.setOnClickListener {
+            feedbackBottomSheet.show()
+        }
     }
 }

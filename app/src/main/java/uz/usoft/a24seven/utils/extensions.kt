@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -31,6 +32,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
@@ -38,6 +41,7 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.MaskedTextChangedListener.Companion.installOn
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import kotlinx.android.synthetic.main.fragment_collection_object.*
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
@@ -388,6 +392,20 @@ fun View.gone() {
 fun TextView.formatCurrencyMask(price: Float) {
     val format= NumberFormat.getCurrencyInstance(Locale("ru", "UZ"))
     this.text=format.format(price)
+}
+fun Context.getDisplayMetrics(): DisplayMetrics {
+    val metrics = DisplayMetrics()
+    (this as MainActivity).windowManager.defaultDisplay.getMetrics(metrics)
+    return metrics
+}
+
+fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
+    val bottomSheetDialog = BottomSheetDialog(requireContext())
+    bottomSheetDialog.setContentView(layout)
+    val bottomSheetInternal = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet)
+    BottomSheetBehavior.from<View?>(bottomSheetInternal!!).peekHeight = (requireContext().getDisplayMetrics().heightPixels*0.8).toInt()
+
+    return bottomSheetDialog
 }
 //fragment_collection_object xml
 //
