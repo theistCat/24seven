@@ -86,6 +86,10 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_profileSettings->{
                     bottomNavigationView.hide()
                 }
+                R.id.nav_myFavouriteItems->{
+                    searchLay.show()
+                    bottomNavigationView.hide()
+                }
                 R.id.nav_categories->{
                     searchLay.show()
                 }

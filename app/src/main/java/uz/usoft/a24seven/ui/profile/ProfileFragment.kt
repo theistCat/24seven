@@ -41,5 +41,9 @@ class ProfileFragment : Fragment() {
         profileSettings.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_profileSettings)
         }
+
+        myFavouriteItems.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
+        }
     }
 }
