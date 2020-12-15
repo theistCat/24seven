@@ -67,6 +67,15 @@ class MockData (
             list.add(ProductObject("Мясо и мясные продукты"))
             return list
         }
+
+        fun getPaymentMethodList(): List<PaymentMethodObject>
+        {
+            var list= ArrayList<PaymentMethodObject>()
+            list.add(PaymentMethodObject("PayMe",true))
+            list.add(PaymentMethodObject("Click"))
+            list.add(PaymentMethodObject("Наличные"))
+            return list
+        }
     }
 
     data class ProductObject(
@@ -76,5 +85,10 @@ class MockData (
 
     data class FeedbackObject(
         val name:String=""
+    )
+
+    data class PaymentMethodObject(
+        val name:String="",
+        var isDefault:Boolean=false
     )
 }

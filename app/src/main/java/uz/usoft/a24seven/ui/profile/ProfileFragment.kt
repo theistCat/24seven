@@ -34,5 +34,9 @@ class ProfileFragment : Fragment() {
         myAddress.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_addressList)
         }
+        myPaymentMethod.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
+        }
+
     }
 }

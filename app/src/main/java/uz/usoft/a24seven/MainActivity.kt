@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
         main_toolbar.setupWithNavController(navController)
+
+
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             bottomNavigationView.show()
             searchLay.hide()
@@ -73,6 +75,9 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.hide()
                 }
                 R.id.nav_selectedAddress->{
+                    bottomNavigationView.hide()
+                }
+                R.id.nav_myPaymentMethod->{
                     bottomNavigationView.hide()
                 }
                 R.id.nav_addAddress->{

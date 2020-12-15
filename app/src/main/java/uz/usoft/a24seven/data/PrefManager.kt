@@ -2,6 +2,8 @@ package uz.usoft.kidya.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import uz.usoft.a24seven.ui.profile.paymentMethod.MyPaymentMethodFragment
+
 //import com.google.gson.Gson
 //import com.google.gson.reflect.TypeToken
 
@@ -21,6 +23,7 @@ private const val ORDER_STATUS = "order_status"
 private const val ORDER_TITLE = "order_title"
 private const val IS_LOGGED_IN = "is_logged_in"
 private const val USER_ID=""
+private const val PAYMENT_METHOD="PayMe"
 
 private fun getInstance(context: Context): SharedPreferences {
     return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)
@@ -31,6 +34,13 @@ fun Context.saveUserId(id: String) {
         USER_ID, id
     ).apply()
 }
+
+fun Context.savePaymentMethod(paymentMethod: String) {
+    getInstance(this).edit().putString(
+        PAYMENT_METHOD, paymentMethod
+    ).apply()
+}
+
 
 fun Context.saveToken(token: String) {
     getInstance(this).edit().putString(
@@ -159,6 +169,12 @@ class PrefManager {
             return getInstance(
                 context
             ).getString(USER_ID, "")!!
+        }
+
+        fun getPaymentMethod(context: Context): String {
+            return getInstance(
+                context
+            ).getString(PAYMENT_METHOD, "")!!
         }
 
         fun isUserLoggedIn(context: Context): Boolean {
