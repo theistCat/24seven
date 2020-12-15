@@ -69,6 +69,15 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_checkOut->{
                     bottomNavigationView.hide()
                 }
+                R.id.nav_addressList->{
+                    bottomNavigationView.hide()
+                }
+                R.id.nav_selectedAddress->{
+                    bottomNavigationView.hide()
+                }
+                R.id.nav_addAddress->{
+                    bottomNavigationView.hide()
+                }
                 R.id.nav_categories->{
                     searchLay.show()
                 }
