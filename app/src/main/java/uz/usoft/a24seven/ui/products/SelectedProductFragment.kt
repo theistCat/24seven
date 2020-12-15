@@ -62,9 +62,9 @@ class SelectedProductFragment : Fragment() {
 
         var imgList=ArrayList<String>()
 
-        imgList.add("https://i.imgur.com/0Qy7ZlB.png")
-        imgList.add("https://i.imgur.com/0Qy7ZlB.png")
-        imgList.add("https://i.imgur.com/0Qy7ZlB.png")
+        imgList.add("https://i.imgur.com/0Qy.png")
+        imgList.add("https://i.imgur.com/0Qy.png")
+        imgList.add("https://i.imgur.com/0Qy.png")
 
         pagerAdapter.updateImageList(imgList)
 

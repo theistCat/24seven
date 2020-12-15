@@ -1,4 +1,4 @@
-package uz.usoft.a24seven.ui.profile.myAddresses
+package uz.usoft.a24seven.ui.barcodeScanner
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import uz.usoft.a24seven.R
 
-class AddAddressFragment : Fragment() {
-    private var param2: String? = null
+class BarcodeScannerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,10 +20,12 @@ class AddAddressFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_address, container, false)
+        return inflater.inflate(R.layout.fragment_barcode_scanner, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
     }
 }

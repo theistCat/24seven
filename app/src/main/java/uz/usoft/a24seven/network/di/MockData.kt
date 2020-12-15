@@ -9,9 +9,9 @@ class MockData (
         fun getProductList() : List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("","200"))
-            list.add(ProductObject("","300"))
-            list.add(ProductObject("","500"))
+            list.add(ProductObject("","200 sum"))
+            list.add(ProductObject("","300 sum"))
+            list.add(ProductObject("","500 sum"))
             list.add(ProductObject(""))
             list.add(ProductObject(""))
             return list
@@ -20,9 +20,9 @@ class MockData (
         fun getPopularProductList() : List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("","500"))
-            list.add(ProductObject("","600"))
-            list.add(ProductObject("","500"))
+            list.add(ProductObject("","500 sum"))
+            list.add(ProductObject("","600 sum"))
+            list.add(ProductObject("","500 sum"))
             list.add(ProductObject(""))
             list.add(ProductObject(""))
             return list
@@ -31,9 +31,9 @@ class MockData (
         fun getCategoriesList(): List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("Еда","200"))
-            list.add(ProductObject("Одежда","300"))
-            list.add(ProductObject("Телефоны и гаджеты","500"))
+            list.add(ProductObject("Еда","200 sum"))
+            list.add(ProductObject("Одежда","300 sum"))
+            list.add(ProductObject("Телефоны и гаджеты","500 sum"))
             list.add(ProductObject("Спорт товары"))
             list.add(ProductObject("Техника для кухни"))
             return list
@@ -42,9 +42,9 @@ class MockData (
         fun getSubCategoriesList(): List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("Овощи","200"))
-            list.add(ProductObject("Фрукты","300"))
-            list.add(ProductObject("Сухофрукты / орехи","500"))
+            list.add(ProductObject("Овощи","200 sum"))
+            list.add(ProductObject("Фрукты","300 sum"))
+            list.add(ProductObject("Сухофрукты / орехи","500 sum"))
             list.add(ProductObject("Вода и напитки"))
             list.add(ProductObject("Торты и сладости"))
             list.add(ProductObject("Хлеб и хлебо-булочные изделия"))
@@ -80,7 +80,7 @@ class MockData (
 
     data class ProductObject(
         val name:String="",
-        val price:String=""
+        val price:String="0 sum"
     ):Serializable
 
     data class FeedbackObject(

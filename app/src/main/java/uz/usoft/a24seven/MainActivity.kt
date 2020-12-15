@@ -56,6 +56,9 @@ class MainActivity : AppCompatActivity() {
         main_toolbar.setupWithNavController(navController)
 
 
+        scanBarCode.setOnClickListener {
+            navController.navigate(R.id.nav_barcodeScanner)
+        }
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             bottomNavigationView.show()
             searchLay.hide()
@@ -87,7 +90,6 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigationView.hide()
                 }
                 R.id.nav_myFavouriteItems->{
-                    searchLay.show()
                     bottomNavigationView.hide()
                 }
                 R.id.nav_categories->{

@@ -47,9 +47,9 @@ class HomeFragment : Fragment() {
 
         var imgList=ArrayList<String>()
 
-        imgList.add("https://i.imgur.com/0Qy7ZlB.png")
-        imgList.add("https://i.imgur.com/0Qy7ZlB.png")
-        imgList.add("https://i.imgur.com/0Qy7ZlB.png")
+        imgList.add("https://i.imgur.com/0Q.png")
+        imgList.add("https://i.imgur.com/0Q.png")
+        imgList.add("https://i.imgur.com/0Q.png")
 
         pagerAdapter.updateImageList(imgList)
 
