@@ -38,5 +38,8 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
         }
 
+        profileSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_profile_to_nav_profileSettings)
+        }
     }
 }
