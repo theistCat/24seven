@@ -9,7 +9,7 @@ class MockData (
         fun getProductList() : List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("","200 sum"))
+            list.add(ProductObject("Fanta","200 sum","4780069000178"))
             list.add(ProductObject("","300 sum"))
             list.add(ProductObject("","500 sum"))
             list.add(ProductObject(""))
@@ -80,7 +80,8 @@ class MockData (
 
     data class ProductObject(
         val name:String="",
-        val price:String="0 sum"
+        val price:String="0 sum",
+        val code:String=""
     ):Serializable
 
     data class FeedbackObject(

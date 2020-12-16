@@ -19,6 +19,10 @@
         <package android:name="com.facebook.katana" />
     </queries>
 
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"

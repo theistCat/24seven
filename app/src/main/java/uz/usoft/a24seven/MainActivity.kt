@@ -92,6 +92,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_myFavouriteItems->{
                     bottomNavigationView.hide()
                 }
+                R.id.nav_barcodeScanner->{
+                    bottomNavigationView.hide()
+                }
                 R.id.nav_categories->{
                     searchLay.show()
                 }
