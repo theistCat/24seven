@@ -75,6 +75,7 @@ class BarcodeScannerFragment : Fragment() ,SurfaceHolder.Callback{
         super.onViewCreated(view, savedInstanceState)
         val options = BarcodeScannerOptions.Builder()
             .setBarcodeFormats(
+                Barcode.FORMAT_QR_CODE,
                 Barcode.FORMAT_UPC_A,
                 Barcode.FORMAT_EAN_13,
                 Barcode.FORMAT_EAN_8,
