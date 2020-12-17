@@ -31,7 +31,7 @@ class MyActiveOrdersListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter()
+        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter("active")
 
         activeOrdersRecycler.layoutManager= LinearLayoutManager(requireContext())
         activeOrdersRecycler.adapter=myOrderListRecyclerAdapter

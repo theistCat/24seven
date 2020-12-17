@@ -1,12 +1,19 @@
 package uz.usoft.a24seven.ui.barcodeScanner
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PixelFormat
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -33,10 +40,11 @@ typealias CornersListener=(luma: Double)->Unit
 private var barcodeResult:TextView?=null
 
 private var scanner:BarcodeScanner?=null
-class BarcodeScannerFragment : Fragment() {
+class BarcodeScannerFragment : Fragment() ,SurfaceHolder.Callback{
     private var preview:Preview?=null
     private var imageCapture:ImageCapture?=null
     private var imageAnalysis:ImageAnalysis?=null
+    private var holder:SurfaceHolder?=null
     private var camera: Camera?=null
 
     private lateinit var safeContext: Context
@@ -79,11 +87,11 @@ class BarcodeScannerFragment : Fragment() {
             startCamera()
         }
         else{
-            ActivityCompat.requestPermissions(requireActivity(),REQIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+            requestPermissions(REQIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
     //    outputDirectory=getOutputDirectory()
-        cameraExecutor=Executors.newSingleThreadExecutor()
+
 
     }
 
@@ -119,6 +127,13 @@ class BarcodeScannerFragment : Fragment() {
                 Log.e(TAG, "Use case binding failed", exc)
             }
         }, ContextCompat.getMainExecutor(safeContext))
+
+        cameraExecutor=Executors.newSingleThreadExecutor()
+        val surfaceView=overlay
+        surfaceView.setZOrderOnTop(true)
+        holder=surfaceView.holder
+        holder?.setFormat(PixelFormat.TRANSPARENT)
+        holder?.addCallback(this)
     }
 
     override fun onRequestPermissionsResult(
@@ -126,7 +141,7 @@ class BarcodeScannerFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode== REQUEST_CODE_PERMISSIONS)
+        if (requestCode == REQUEST_CODE_PERMISSIONS)
         {
             if(allPermissionsGranted()){
                 startCamera()
@@ -237,5 +252,58 @@ class BarcodeScannerFragment : Fragment() {
                 }
             }
         }
+    }
+
+    @SuppressLint("RestrictedApi")
+    fun drawFocusRect(color:Int){
+        val displaymetrics=resources.displayMetrics
+        val height = preview?.viewPortCropRect?.height()
+        val width = preview?.viewPortCropRect?.width()
+
+        var diametr=width
+        if (height != null) {
+            if (height< width!!) {
+                diametr=height
+            }
+        }
+
+        val offset= (diametr?.times(0.05))?.toInt()
+        if (diametr != null) {
+            diametr -= offset!!
+        }
+
+        val canvas=holder?.lockCanvas()
+        canvas?.drawColor(0,PorterDuff.Mode.CLEAR)
+
+        val paint=Paint()
+        paint.style=Paint.Style.STROKE
+        paint.color=color
+        paint.strokeWidth=5f
+
+        val left= (width?.div(2) ?: 0) - (diametr?.div(3) ?: 0)
+        val top= (width?.div(2) ?: 0) - (diametr?.div(3) ?: 0)
+        val right= (width?.div(2) ?: 0) + (diametr?.div(3) ?: 0)
+        val bottom= (width?.div(2) ?: 0) + (diametr?.div(3) ?: 0)
+
+
+        val xOffset=left
+        val yOffset=right
+        val boxHeight=bottom-top
+        val boxWidth=right-left
+
+        canvas?.drawRect(left.toFloat(),top.toFloat(),right.toFloat(),bottom.toFloat(),paint)
+        holder?.unlockCanvasAndPost(canvas)
+    }
+
+    override fun surfaceCreated(p0: SurfaceHolder) {
+
+    }
+
+    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
+        drawFocusRect(Color.parseColor("#b3dabb"))
+    }
+
+    override fun surfaceDestroyed(p0: SurfaceHolder) {
+
     }
 }

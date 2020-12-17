@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity() {
         scanBarCode.setOnClickListener {
             navController.navigate(R.id.nav_barcodeScanner)
         }
+
+        favItems.setOnClickListener {
+            navController.navigate(R.id.nav_myFavouriteItems)
+        }
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             bottomNavigationView.show()
             searchLay.hide()
@@ -67,7 +71,6 @@ class MainActivity : AppCompatActivity() {
             {
                 R.id.nav_home->{
                     searchLay.show()
-                    toolbar.title=""
                     toolbar.imageView2.visibility=View.VISIBLE
                     //homeLogo.visibility= View.VISIBLE
                 }
@@ -118,6 +121,46 @@ class MainActivity : AppCompatActivity() {
         KeyboardEventListener(this) { isOpen ->
             if(isOpen) bottomNavigationView.hide()
             else bottomNavigationView.show()
+        }
+
+        when(findNavController(R.id.nav_host_fragment).currentDestination?.id)
+        {
+            R.id.nav_home->{
+                searchLay.show()
+            }
+            R.id.nav_checkOut->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_addressList->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_selectedAddress->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_myPaymentMethod->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_addAddress->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_profileSettings->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_myFavouriteItems->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_barcodeScanner->{
+                bottomNavigationView.hide()
+            }
+            R.id.nav_categories->{
+                searchLay.show()
+            }
+            R.id.nav_subCategories->{
+                searchLay.show()
+            }
+            R.id.nav_selectedSubCategory->{
+                searchLay.show()
+            }
         }
     }
 }

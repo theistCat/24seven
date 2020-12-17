@@ -1,13 +1,15 @@
 package uz.usoft.a24seven.ui.profile.myOrders
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_order.view.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.network.di.MockData
 
-class MyOrderListRecyclerAdapter : RecyclerView.Adapter<MyOrderListRecyclerAdapter.ViewHolder>() {
+class MyOrderListRecyclerAdapter(val orderListType:String="") : RecyclerView.Adapter<MyOrderListRecyclerAdapter.ViewHolder>() {
 
     var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
 
@@ -31,6 +33,7 @@ class MyOrderListRecyclerAdapter : RecyclerView.Adapter<MyOrderListRecyclerAdapt
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        val orderStatus=itemView.orderStatus
         init {
             itemView.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
@@ -38,6 +41,20 @@ class MyOrderListRecyclerAdapter : RecyclerView.Adapter<MyOrderListRecyclerAdapt
         }
 
         fun bindData(product: MockData.ProductObject) {
+            when(orderListType){
+                "active"->{
+                    orderStatus.setTextColor(Color.parseColor("#1BC06D"))
+                    orderStatus.text="Активные"
+                }
+                "inactive"->{
+                    orderStatus.setTextColor(Color.parseColor("#F8B068"))
+                    orderStatus.text="Ожидание"
+                }
+                "delivered"->{
+                    orderStatus.setTextColor(Color.parseColor("#DB3022"))
+                    orderStatus.text="Доставлен"
+                }
+            }
         }
     }
 }

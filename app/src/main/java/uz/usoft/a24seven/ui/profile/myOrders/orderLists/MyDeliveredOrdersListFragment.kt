@@ -33,7 +33,7 @@ class MyDeliveredOrdersListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter()
+        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter("delivered")
 
         deliveredOrdersRecycler.layoutManager= LinearLayoutManager(requireContext())
         deliveredOrdersRecycler.adapter=myOrderListRecyclerAdapter

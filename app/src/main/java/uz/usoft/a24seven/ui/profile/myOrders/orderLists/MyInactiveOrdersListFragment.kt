@@ -32,7 +32,7 @@ class MyInactiveOrdersListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter()
+        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter("inactive")
 
         inactiveOrdersRecycler.layoutManager=LinearLayoutManager(requireContext())
         inactiveOrdersRecycler.adapter=myOrderListRecyclerAdapter

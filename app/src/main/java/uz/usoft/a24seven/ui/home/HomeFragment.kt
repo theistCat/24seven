@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_collection_object.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.ui.products.NewProductsFragmentDirections
+import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.ImageCollectionAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.setUpViewPager
@@ -27,7 +24,7 @@ class HomeFragment : Fragment() {
     private lateinit var newProductsAdapter:ProductsListAdapter
     private lateinit var popularProductsAdapter:ProductsListAdapter
     private lateinit var onSaleProductsAdapter:ProductsListAdapter
-    private lateinit var newsAdapter:NewsListAdapter
+    private lateinit var newsAdapter: NewsListAdapter
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -54,6 +51,13 @@ class HomeFragment : Fragment() {
         pagerAdapter.updateImageList(imgList)
 
 
+//        scanBarCode.setOnClickListener {
+//            findNavController().navigate(R.id.action_nav_home_to_nav_barcodeScanner)
+//        }
+//
+//        favItems.setOnClickListener {
+//            findNavController().navigate(R.id.action_nav_home_to_nav_myFavouriteItems)
+//        }
         newProductsAdapter= ProductsListAdapter()
         newItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         newItemsRecycler.adapter=newProductsAdapter
@@ -97,6 +101,18 @@ class HomeFragment : Fragment() {
         newsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         newsRecycler.adapter=newsAdapter
         newsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
+
+        news.setOnClickListener{
+            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
+        }
+
+        allNews.setOnClickListener{
+            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
+        }
+
+        newsAdapter.onItemClick={
+                findNavController().navigate(R.id.action_nav_home_to_selectedNewsFragment)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

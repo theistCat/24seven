@@ -52,6 +52,55 @@ class MyOrdersFragment : Fragment() {
         tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
         tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)
         tabLayout.setSelectedTabIndicatorGravity(TabLayout.INDICATOR_GRAVITY_CENTER)
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when(tab?.position)
+                {
+                    0 -> {
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+                    }
+                    1 -> {
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabActiveOrder))
+                    }
+                    2->{
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabDeliveredOrder))
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                when(tab?.position)
+                {
+                    0 -> {
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+                    }
+                    1 -> {
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabActiveOrder))
+                    }
+                    2->{
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabDeliveredOrder))
+                    }
+                }
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                when(tab?.position)
+                {
+                    0 -> {
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+                    }
+                    1 -> {
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabActiveOrder))
+                    }
+                    2->{
+                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabDeliveredOrder))
+                    }
+                }
+            }
+
+        })
     }
 
 }
