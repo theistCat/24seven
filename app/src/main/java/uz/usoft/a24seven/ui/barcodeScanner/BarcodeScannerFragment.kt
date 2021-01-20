@@ -1,14 +1,14 @@
 package uz.usoft.a24seven.ui.barcodeScanner
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.annotation.SuppressLint
+import android.app.ActionBar
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.PixelFormat
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,17 +16,19 @@ import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.camera.core.*
+import androidx.camera.core.Camera
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.createBitmap
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_barcode_scanner.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.network.di.MockData
@@ -94,6 +96,19 @@ class BarcodeScannerFragment : Fragment() ,SurfaceHolder.Callback{
     //    outputDirectory=getOutputDirectory()
 
 
+
+
+        val scaleDown: ObjectAnimator = ObjectAnimator.ofPropertyValuesHolder(
+                image_view_scale,
+                PropertyValuesHolder.ofFloat("scaleX", 1.1f),
+                PropertyValuesHolder.ofFloat("scaleY", 1.1f)
+        )
+        scaleDown.duration = 510
+
+        scaleDown.repeatCount = ObjectAnimator.INFINITE
+        scaleDown.repeatMode = ObjectAnimator.REVERSE
+
+        scaleDown.start()
     }
 
     fun startCamera(){
@@ -135,6 +150,8 @@ class BarcodeScannerFragment : Fragment() ,SurfaceHolder.Callback{
         holder=surfaceView.holder
         holder?.setFormat(PixelFormat.TRANSPARENT)
         holder?.addCallback(this)
+
+
     }
 
     override fun onRequestPermissionsResult(

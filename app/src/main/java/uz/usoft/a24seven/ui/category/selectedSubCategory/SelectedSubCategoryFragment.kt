@@ -9,13 +9,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_new_products.*
 import kotlinx.android.synthetic.main.fragment_selected_sub_category.*
-import kotlinx.android.synthetic.main.item_sub_category.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.createBottomSheet
 
 
 class SelectedSubCategoryFragment : Fragment() {
@@ -40,7 +39,8 @@ class SelectedSubCategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val safeArgs:SelectedSubCategoryFragmentArgs by navArgs()
-        (requireActivity() as MainActivity).main_toolbar.title=safeArgs.subCategoryName
+        val mainActivity = (requireActivity() as MainActivity)
+        mainActivity.main_toolbar.title=safeArgs.subCategoryName
 
 
         adapter= ProductsListAdapter(true)
@@ -53,6 +53,16 @@ class SelectedSubCategoryFragment : Fragment() {
         adapter.onItemClick={
             val action=SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSelectedProduct(safeArgs.subCategoryName)
             findNavController().navigate(action)
+        }
+
+        filter.setOnClickListener {
+            mainActivity.openDrawer()
+        }
+
+        val sortBottomSheet=
+            createBottomSheet(R.layout.sort_bottomsheet)
+        sortBy.setOnClickListener {
+            sortBottomSheet.show()
         }
     }
 }

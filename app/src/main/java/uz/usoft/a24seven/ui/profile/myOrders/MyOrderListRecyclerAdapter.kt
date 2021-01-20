@@ -35,7 +35,7 @@ class MyOrderListRecyclerAdapter(val orderListType:String="") : RecyclerView.Ada
 
         val orderStatus=itemView.orderStatus
         init {
-            itemView.setOnClickListener {
+            itemView.orderDetails.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
             }
         }

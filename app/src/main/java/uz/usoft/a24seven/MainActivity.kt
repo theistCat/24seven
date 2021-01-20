@@ -2,11 +2,13 @@ package uz.usoft.a24seven
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
@@ -14,15 +16,16 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
+import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.KeyboardEventListener
 import uz.usoft.a24seven.utils.hide
 import uz.usoft.a24seven.utils.hideSoftKeyboard
 import uz.usoft.a24seven.utils.show
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
 
-
-    private lateinit var bottomNavigationView: BottomNavigationView
+    lateinit var bottomNavigationView: BottomNavigationView
+    lateinit var drawerLayout: DrawerLayout
 
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +34,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         bottomNavigationView= findViewById(R.id.nav_view)
+        drawerLayout = findViewById(R.id.drawerFragment)
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        drawerLayout.addDrawerListener(this)
 
         val appBar: AppBarLayout=findViewById(R.id.main_appBarLayout)
         val toolbar: Toolbar =findViewById(R.id.main_toolbar)
@@ -54,7 +60,10 @@ class MainActivity : AppCompatActivity() {
         favItems.setOnClickListener {
             navController.navigate(R.id.nav_myFavouriteItems)
         }
+
+
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            hideSoftKeyboard()
             bottomNavigationView.show()
             searchLay.hide()
             toolbar.imageView2.visibility=View.GONE
@@ -103,6 +112,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    fun openDrawer() {
+        drawerLayout?.openDrawer(GravityCompat.END)
+    }
+
+    fun closeDrawer() {
+        drawerLayout?.closeDrawer(GravityCompat.END)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         hideSoftKeyboard()
         val navController = findNavController(R.id.nav_host_fragment)
@@ -113,7 +131,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         KeyboardEventListener(this) { isOpen ->
             if(isOpen) bottomNavigationView.hide()
-            else bottomNavigationView.show()
         }
 
         when(findNavController(R.id.nav_host_fragment).currentDestination?.id)
@@ -157,8 +174,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getDrawer():DrawerLayout
+    {
+        return drawerFragment
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         hideSoftKeyboard()
     }
+
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+    }
+
+    override fun onDrawerOpened(drawerView: View) {
+        Log.i("drawer", "opened")
+    }
+
+    override fun onDrawerClosed(drawerView: View) {
+        Log.i("drawer", "closed")
+        //filterFragmentSideSheet.changePage(0)
+        (filterFragmentSideSheet as FilterFragment).changePage(0)
+    }
+
+    override fun onDrawerStateChanged(newState: Int) {
+    }
+
 }
