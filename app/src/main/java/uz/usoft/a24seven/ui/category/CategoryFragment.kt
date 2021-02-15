@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_category.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.toDpi
 
 class CategoryFragment : Fragment() {
 
@@ -35,7 +36,7 @@ class CategoryFragment : Fragment() {
         adapter= CategoriesListAdapter()
         categoryRecycler.adapter=adapter
         categoryRecycler.layoutManager=LinearLayoutManager(requireContext())
-        categoryRecycler.addItemDecoration(SpacesItemDecoration((requireContext().resources.displayMetrics.density*16+0.5f).toInt(),true,1))
+        categoryRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),true,1))
 
 
         adapter.onItemClick={

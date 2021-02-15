@@ -17,8 +17,6 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
@@ -38,7 +36,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.redmadrobot.inputmask.MaskedTextChangedListener
-import com.redmadrobot.inputmask.MaskedTextChangedListener.Companion.installOn
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import kotlinx.android.synthetic.main.fragment_collection_object.*
 import uz.usoft.a24seven.MainActivity
@@ -58,26 +55,40 @@ class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=
 
         if(vertical)
         {
-            var itemposition=parent.getChildLayoutPosition(view)
-            var column= itemposition%span
 
-            outRect.left = space-column* space/span
-            outRect.right = (column+1)* space/span
-            outRect.bottom = space
+            val itemposition = parent.getChildLayoutPosition(view)
+            if(span>1) {
+                val column = itemposition % span
 
-            if (itemposition < span ) {
-                outRect.top = space
-            } else {
-                outRect.top = 0
+                outRect.left = space - column * space / span
+                outRect.right = (column + 1) * space / span
+                outRect.bottom = space
+
+                if (itemposition < span) {
+                    outRect.top = space
+                } else {
+                    outRect.top = 0
+                }
+            }
+            else{
+                outRect.left = space
+                outRect.right=space
+                outRect.bottom = space-space/4
+
+                if (itemposition == 0)
+                    outRect.top = space
+                else {
+                    outRect.top = 0
+                }
             }
         }
         else
         {
-            var itemposition=parent.getChildLayoutPosition(view)
+            val itemposition=parent.getChildLayoutPosition(view)
 
-            outRect.top = space
-            outRect.bottom = space
-            outRect.right=space
+            outRect.top = 0
+            outRect.bottom = 2
+            outRect.right=space/2
 
             if (itemposition == 0) {
                 outRect.left = space
@@ -394,9 +405,7 @@ fun TextView.formatCurrencyMask(price: Float) {
     this.text=format.format(price)
 }
 fun Context.getDisplayMetrics(): DisplayMetrics {
-    val metrics = DisplayMetrics()
-    (this as MainActivity).windowManager.defaultDisplay.getMetrics(metrics)
-    return metrics
+    return (this as MainActivity).resources.displayMetrics
 }
 
 fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
@@ -407,6 +416,11 @@ fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
 
     return bottomSheetDialog
 }
+
+fun Fragment.toDpi(px:Int) :Int{
+    return ((requireContext().getDisplayMetrics().density * px)+0.5f).toInt()
+}
+
 //fragment_collection_object xml
 //
 //<?xml version="1.0" encoding="utf-8"?>

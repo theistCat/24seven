@@ -16,10 +16,7 @@ import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentArgs
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
-import uz.usoft.a24seven.utils.ImageCollectionAdapter
-import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.createBottomSheet
-import uz.usoft.a24seven.utils.setUpViewPager
+import uz.usoft.a24seven.utils.*
 
 class SelectedProductFragment : Fragment() {
 
@@ -50,7 +47,7 @@ class SelectedProductFragment : Fragment() {
         similarItemAdapter= ProductsListAdapter()
         similarItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         similarItemsRecycler.adapter=similarItemAdapter
-        similarItemsRecycler.addItemDecoration(SpacesItemDecoration((requireContext().resources.displayMetrics.density*16+0.5f).toInt(),false))
+        similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
 
 
         feedbackListAdapter= FeedbackListAdapter()

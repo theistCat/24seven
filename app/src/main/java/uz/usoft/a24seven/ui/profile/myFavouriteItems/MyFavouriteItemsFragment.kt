@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_my_favourite_items.*
-import kotlinx.android.synthetic.main.fragment_new_products.*
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
-import uz.usoft.a24seven.ui.products.NewProductsFragmentDirections
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.createBottomSheet
+import uz.usoft.a24seven.utils.toDpi
 
 class MyFavouriteItemsFragment : Fragment() {
 
@@ -37,13 +38,21 @@ class MyFavouriteItemsFragment : Fragment() {
         adapter= ProductsListAdapter(true)
         favouriteProductsRecycler.adapter=adapter
         favouriteProductsRecycler.layoutManager= GridLayoutManager(requireContext(),2)
-        val density=resources.displayMetrics.density
-        favouriteProductsRecycler.addItemDecoration(SpacesItemDecoration((16*density+0.5f).toInt()))
+        favouriteProductsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16)))
 
         adapter.onItemClick={
             val action= MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(resources.getString(R.string.title_myFavourites))
             findNavController().navigate(action)
         }
 
+        filter.setOnClickListener {
+            (requireActivity() as MainActivity).openDrawer()
+        }
+
+        val sortBottomSheet=
+                createBottomSheet(R.layout.sort_bottomsheet)
+        sortBy.setOnClickListener {
+            sortBottomSheet.show()
+        }
     }
 }

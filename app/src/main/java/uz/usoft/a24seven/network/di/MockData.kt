@@ -9,9 +9,9 @@ class MockData (
         fun getProductList() : List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("Fanta","200 sum","4780069000178"))
-            list.add(ProductObject("","300 sum"))
-            list.add(ProductObject("","500 sum"))
+            list.add(ProductObject("Fanta","7 490 сум за кг ","4780069000178"))
+            list.add(ProductObject("","20 490 сум за кг "))
+            list.add(ProductObject("","7 490 сум за кг "))
             list.add(ProductObject(""))
             list.add(ProductObject(""))
             return list
@@ -20,9 +20,9 @@ class MockData (
         fun getPopularProductList() : List<ProductObject>
         {
             var list= ArrayList<ProductObject>()
-            list.add(ProductObject("","500 sum"))
-            list.add(ProductObject("","600 sum"))
-            list.add(ProductObject("","500 sum"))
+            list.add(ProductObject("","7 490 сум за кг "))
+            list.add(ProductObject("","7 490 сум за кг "))
+            list.add(ProductObject("","7 490 сум за кг "))
             list.add(ProductObject(""))
             list.add(ProductObject(""))
             return list

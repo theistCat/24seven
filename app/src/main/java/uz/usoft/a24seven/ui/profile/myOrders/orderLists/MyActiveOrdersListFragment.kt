@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.fragment_my_active_orders_list.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.toDpi
 
 
 class MyActiveOrdersListFragment : Fragment() {
@@ -35,7 +36,7 @@ class MyActiveOrdersListFragment : Fragment() {
 
         activeOrdersRecycler.layoutManager= LinearLayoutManager(requireContext())
         activeOrdersRecycler.adapter=myOrderListRecyclerAdapter
-        activeOrdersRecycler.addItemDecoration(SpacesItemDecoration((resources.displayMetrics.density*16+0.5f).toInt(),true,1))
+        activeOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),true,1))
 
         myOrderListRecyclerAdapter.onItemClick={
             findNavController().navigate(R.id.action_nav_myOrders_to_nav_selectedOrder)

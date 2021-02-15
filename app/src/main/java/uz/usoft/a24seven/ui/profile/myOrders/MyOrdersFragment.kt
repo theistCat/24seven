@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -38,18 +39,18 @@ class MyOrdersFragment : Fragment() {
         TabLayoutMediator(tabLayout, pager) { tab, position ->
             when (position) {
                 0 -> {
-                    tab.text = "Ожидание"
+                    tab.text = getString(R.string.in_wait)
                 }
                 1 -> {
-                    tab.text = "Активные"
+                    tab.text = getString(R.string.active)
                 }
                 2->{
-                    tab.text="Доставлен"
+                    tab.text=getString(R.string.delivered)
                 }
             }
         }.attach()
 
-        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
         tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)
         tabLayout.setSelectedTabIndicatorGravity(TabLayout.INDICATOR_GRAVITY_CENTER)
 
@@ -58,13 +59,13 @@ class MyOrdersFragment : Fragment() {
                 when(tab?.position)
                 {
                     0 -> {
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
                     }
                     1 -> {
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabActiveOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabActiveOrder))
                     }
                     2->{
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabDeliveredOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabDeliveredOrder))
                     }
                 }
             }
@@ -73,13 +74,13 @@ class MyOrdersFragment : Fragment() {
                 when(tab?.position)
                 {
                     0 -> {
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
                     }
                     1 -> {
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabActiveOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabActiveOrder))
                     }
                     2->{
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabDeliveredOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabDeliveredOrder))
                     }
                 }
 
@@ -89,13 +90,13 @@ class MyOrdersFragment : Fragment() {
                 when(tab?.position)
                 {
                     0 -> {
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabInactiveOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
                     }
                     1 -> {
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabActiveOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabActiveOrder))
                     }
                     2->{
-                        tabLayout.setSelectedTabIndicatorColor(resources.getColor(R.color.tabDeliveredOrder))
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabDeliveredOrder))
                     }
                 }
             }

@@ -15,6 +15,7 @@ import uz.usoft.a24seven.R
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.createBottomSheet
+import uz.usoft.a24seven.utils.toDpi
 
 
 class SelectedSubCategoryFragment : Fragment() {
@@ -46,8 +47,7 @@ class SelectedSubCategoryFragment : Fragment() {
         adapter= ProductsListAdapter(true)
         selectedSubCategoryRecycler.adapter=adapter
         selectedSubCategoryRecycler.layoutManager= GridLayoutManager(requireContext(),2)
-        val density=requireContext().resources.displayMetrics.density
-        selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration((16*density+0.5f).toInt()))
+        selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16)))
 
 
         adapter.onItemClick={

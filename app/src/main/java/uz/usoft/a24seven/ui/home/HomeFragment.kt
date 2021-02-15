@@ -15,6 +15,7 @@ import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.ImageCollectionAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.setUpViewPager
+import uz.usoft.a24seven.utils.toDpi
 
 class HomeFragment : Fragment() {
 
@@ -61,7 +62,7 @@ class HomeFragment : Fragment() {
         newProductsAdapter= ProductsListAdapter()
         newItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         newItemsRecycler.adapter=newProductsAdapter
-        newItemsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
+        newItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
 
         newProductsAdapter.onItemClick={
             val action= HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts))
@@ -79,7 +80,7 @@ class HomeFragment : Fragment() {
         popularProductsAdapter= ProductsListAdapter(isPopular = true)
         popularItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         popularItemsRecycler.adapter=popularProductsAdapter
-        popularItemsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
+        popularItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
 
         popularProductsAdapter.onItemClick={
             val action= HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items))
@@ -90,7 +91,7 @@ class HomeFragment : Fragment() {
         onSaleProductsAdapter= ProductsListAdapter()
         onSaleItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         onSaleItemsRecycler.adapter=onSaleProductsAdapter
-        onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
+        onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
 
         onSaleProductsAdapter.onItemClick={
             val action= HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items))
@@ -100,7 +101,7 @@ class HomeFragment : Fragment() {
         newsAdapter= NewsListAdapter()
         newsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         newsRecycler.adapter=newsAdapter
-        newsRecycler.addItemDecoration(SpacesItemDecoration(16,false))
+        newsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
 
         news.setOnClickListener{
             findNavController().navigate(R.id.action_nav_home_to_newsFragment)

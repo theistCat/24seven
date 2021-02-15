@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_address_list.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.toDpi
 
 class AddressListFragment : Fragment() {
 
@@ -32,7 +33,7 @@ class AddressListFragment : Fragment() {
         adapter= AddressListAdapter()
         addressRecycler.adapter=adapter
         addressRecycler.layoutManager=LinearLayoutManager(requireContext())
-        addressRecycler.addItemDecoration(SpacesItemDecoration((resources.displayMetrics.density*16+0.5f).toInt(),true,1))
+        addressRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),true,1))
 
         adapter.onItemClick={
             findNavController().navigate(R.id.action_nav_addressList_to_selectedAddressFragment)

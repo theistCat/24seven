@@ -1,6 +1,5 @@
 package uz.usoft.a24seven
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -10,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
 
-    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
@@ -38,7 +37,6 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         drawerLayout.addDrawerListener(this)
 
-        val appBar: AppBarLayout=findViewById(R.id.main_appBarLayout)
         val toolbar: Toolbar =findViewById(R.id.main_toolbar)
 //
         setSupportActionBar(toolbar)
@@ -46,12 +44,12 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-       // val appBarConfiguration = AppBarConfiguration(setOf(
-        //        R.id.nav_home, R.id.nav_dashboard, R.id.nav_cart,R.id.nav_profile))
+        val appBarConfiguration = AppBarConfiguration(setOf(
+                R.id.nav_home, R.id.nav_categories, R.id.nav_cart,R.id.nav_profile))
 
         //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
-        main_toolbar.setupWithNavController(navController)
+        main_toolbar.setupWithNavController(navController,appBarConfiguration)
 
         scanBarCode.setOnClickListener {
             navController.navigate(R.id.nav_barcodeScanner)
@@ -62,7 +60,7 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
         }
 
 
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             hideSoftKeyboard()
             bottomNavigationView.show()
             searchLay.hide()
@@ -73,6 +71,17 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
                     searchLay.show()
                     toolbar.imageView2.visibility = View.VISIBLE
                     //homeLogo.visibility= View.VISIBLE
+                }
+                R.id.nav_categories -> {
+                    searchLay.show()
+                    toolbar.imageView2.visibility = View.VISIBLE
+                }
+                R.id.nav_cart -> {
+                    toolbar.imageView2.visibility = View.VISIBLE
+                }
+
+                R.id.nav_profile -> {
+                    toolbar.imageView2.visibility = View.VISIBLE
                 }
                 R.id.nav_checkOut -> {
                     bottomNavigationView.hide()
@@ -98,9 +107,6 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
                 R.id.nav_barcodeScanner -> {
                     bottomNavigationView.hide()
                 }
-                R.id.nav_categories -> {
-                    searchLay.show()
-                }
                 R.id.nav_subCategories -> {
                     searchLay.show()
                 }
@@ -114,11 +120,11 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
 
 
     fun openDrawer() {
-        drawerLayout?.openDrawer(GravityCompat.END)
+        drawerLayout.openDrawer(GravityCompat.END)
     }
 
     fun closeDrawer() {
-        drawerLayout?.closeDrawer(GravityCompat.END)
+        drawerLayout.closeDrawer(GravityCompat.END)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
