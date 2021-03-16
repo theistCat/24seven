@@ -8,8 +8,12 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_profile.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentMyOrdersBinding
+import uz.usoft.a24seven.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -20,29 +24,27 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        setUpOnClick()
+        return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        myOrders.setOnClickListener {
+    private fun setUpOnClick() {
+        binding.myOrders.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myOrders)
         }
-        myAddress.setOnClickListener {
+        binding.myAddress.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_addressList)
         }
-        myPaymentMethod.setOnClickListener {
+        binding.myPaymentMethod.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
         }
 
-        profileSettings.setOnClickListener {
+        binding.profileSettings.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_profileSettings)
         }
 
-        myFavouriteItems.setOnClickListener {
+        binding.myFavouriteItems.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
         }
     }

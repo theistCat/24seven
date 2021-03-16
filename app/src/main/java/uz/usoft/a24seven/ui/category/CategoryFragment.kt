@@ -12,37 +12,47 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_category.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentCategoryBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.toDpi
 
 class CategoryFragment : Fragment() {
 
-    private lateinit var adapter:CategoriesListAdapter
+    private var _binding: FragmentCategoryBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var adapter: CategoriesListAdapter
     private lateinit var dashboardViewModel: DashboardViewModel
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        dashboardViewModel =
-                ViewModelProvider(this).get(DashboardViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_category, container, false)
-        return root
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setUpAdapter()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        adapter= CategoriesListAdapter()
-        categoryRecycler.adapter=adapter
-        categoryRecycler.layoutManager=LinearLayoutManager(requireContext())
-        categoryRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),true,1))
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
+        _binding = FragmentCategoryBinding.inflate(inflater, container, false)
+        setUpRecyclerView()
+        return binding.root
+    }
 
-
-        adapter.onItemClick={
-            val categoryName=it.name
-            val action=CategoryFragmentDirections.actionNavCategoriesToSubCategoriesFragment(categoryName)
+    private fun setUpAdapter() {
+        adapter = CategoriesListAdapter()
+        adapter.onItemClick = {
+            val categoryName = it.name
+            val action =
+                CategoryFragmentDirections.actionNavCategoriesToSubCategoriesFragment(categoryName)
             findNavController().navigate(action)
         }
+    }
+
+    private fun setUpRecyclerView() {
+        binding.categoryRecycler.adapter = adapter
+        binding.categoryRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.categoryRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), true, 1))
     }
 }

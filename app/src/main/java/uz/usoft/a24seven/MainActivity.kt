@@ -15,47 +15,51 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.view.*
+import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.KeyboardEventListener
 import uz.usoft.a24seven.utils.hide
 import uz.usoft.a24seven.utils.hideSoftKeyboard
 import uz.usoft.a24seven.utils.show
 
-class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
+class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
-        setContentView(R.layout.activity_main)
 
-        bottomNavigationView= findViewById(R.id.nav_view)
+        setContentView(binding.root)
+
+        bottomNavigationView = findViewById(R.id.nav_view)
         drawerLayout = findViewById(R.id.drawerFragment)
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         drawerLayout.addDrawerListener(this)
 
-        val toolbar: Toolbar =findViewById(R.id.main_toolbar)
 //
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.mainToolbar)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_categories, R.id.nav_cart,R.id.nav_profile))
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_home, R.id.nav_categories, R.id.nav_cart, R.id.nav_profile
+            )
+        )
 
         //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
-        main_toolbar.setupWithNavController(navController,appBarConfiguration)
+        binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
 
-        scanBarCode.setOnClickListener {
+        binding.scanBarCode.setOnClickListener {
             navController.navigate(R.id.nav_barcodeScanner)
         }
 
-        favItems.setOnClickListener {
+        binding.favItems.setOnClickListener {
             navController.navigate(R.id.nav_myFavouriteItems)
         }
 
@@ -63,25 +67,24 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
         navController.addOnDestinationChangedListener { _, destination, _ ->
             hideSoftKeyboard()
             bottomNavigationView.show()
-            searchLay.hide()
-            toolbar.imageView2.visibility=View.GONE
-            when(destination.id)
-            {
+            binding.searchLay.hide()
+            binding.imageView2.visibility = View.GONE
+            when (destination.id) {
                 R.id.nav_home -> {
-                    searchLay.show()
-                    toolbar.imageView2.visibility = View.VISIBLE
+                    binding.searchLay.show()
+                    binding.imageView2.visibility = View.VISIBLE
                     //homeLogo.visibility= View.VISIBLE
                 }
                 R.id.nav_categories -> {
-                    searchLay.show()
-                    toolbar.imageView2.visibility = View.VISIBLE
+                    binding.searchLay.show()
+                    binding.imageView2.visibility = View.VISIBLE
                 }
                 R.id.nav_cart -> {
-                    toolbar.imageView2.visibility = View.VISIBLE
+                    binding.imageView2.visibility = View.VISIBLE
                 }
 
                 R.id.nav_profile -> {
-                    toolbar.imageView2.visibility = View.VISIBLE
+                    binding.imageView2.visibility = View.VISIBLE
                 }
                 R.id.nav_checkOut -> {
                     bottomNavigationView.hide()
@@ -108,10 +111,10 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
                     bottomNavigationView.hide()
                 }
                 R.id.nav_subCategories -> {
-                    searchLay.show()
+                    binding.searchLay.show()
                 }
                 R.id.nav_selectedSubCategory -> {
-                    searchLay.show()
+                    binding.searchLay.show()
                 }
             }
         }
@@ -136,13 +139,12 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
     override fun onResume() {
         super.onResume()
         KeyboardEventListener(this) { isOpen ->
-            if(isOpen) bottomNavigationView.hide()
+            if (isOpen) bottomNavigationView.hide()
         }
 
-        when(findNavController(R.id.nav_host_fragment).currentDestination?.id)
-        {
+        when (findNavController(R.id.nav_host_fragment).currentDestination?.id) {
             R.id.nav_home -> {
-                searchLay.show()
+                binding.searchLay.show()
             }
             R.id.nav_checkOut -> {
                 bottomNavigationView.hide()
@@ -169,20 +171,19 @@ class MainActivity : AppCompatActivity() ,DrawerLayout.DrawerListener{
                 bottomNavigationView.hide()
             }
             R.id.nav_categories -> {
-                searchLay.show()
+                binding.searchLay.show()
             }
             R.id.nav_subCategories -> {
-                searchLay.show()
+                binding.searchLay.show()
             }
             R.id.nav_selectedSubCategory -> {
-                searchLay.show()
+                binding.searchLay.show()
             }
         }
     }
 
-    fun getDrawer():DrawerLayout
-    {
-        return drawerFragment
+    fun getDrawer(): DrawerLayout {
+        return binding.drawerFragment
     }
 
     override fun onBackPressed() {

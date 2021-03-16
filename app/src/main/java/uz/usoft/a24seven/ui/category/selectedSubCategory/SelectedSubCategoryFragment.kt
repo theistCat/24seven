@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_selected_sub_category.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.createBottomSheet
@@ -20,48 +21,61 @@ import uz.usoft.a24seven.utils.toDpi
 
 class SelectedSubCategoryFragment : Fragment() {
 
+    private var _binding: FragmentSelectedSubCategoryBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: ProductsListAdapter
+    private val safeArgs: SelectedSubCategoryFragmentArgs by navArgs()
+    private val mainActivity = (requireActivity() as MainActivity)
+    private val sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        setUpAdapter()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_selected_sub_category, container, false)
+        _binding = FragmentSelectedSubCategoryBinding.inflate(inflater, container, false)
+        setUpRecycler()
+        setUpData()
+        setUpClickListener()
+        return binding.root
+
     }
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val safeArgs:SelectedSubCategoryFragmentArgs by navArgs()
-        val mainActivity = (requireActivity() as MainActivity)
-        mainActivity.main_toolbar.title=safeArgs.subCategoryName
-
-
-        adapter= ProductsListAdapter(true)
-        selectedSubCategoryRecycler.adapter=adapter
-        selectedSubCategoryRecycler.layoutManager= GridLayoutManager(requireContext(),2)
-        selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16)))
-
-
-        adapter.onItemClick={
-            val action=SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSelectedProduct(safeArgs.subCategoryName)
+    private fun setUpAdapter() {
+        adapter = ProductsListAdapter(true)
+        adapter.onItemClick = {
+            val action =
+                SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSelectedProduct(
+                    safeArgs.subCategoryName
+                )
             findNavController().navigate(action)
         }
 
-        filter.setOnClickListener {
+    }
+
+    private fun setUpRecycler() {
+        binding.selectedSubCategoryRecycler.adapter = adapter
+        binding.selectedSubCategoryRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16)))
+
+    }
+
+    private fun setUpData() {
+        mainActivity.main_toolbar.title = safeArgs.subCategoryName
+    }
+
+    private fun setUpClickListener() {
+        binding.filter.setOnClickListener {
             mainActivity.openDrawer()
         }
-
-        val sortBottomSheet=
-            createBottomSheet(R.layout.sort_bottomsheet)
-        sortBy.setOnClickListener {
+        binding.sortBy.setOnClickListener {
             sortBottomSheet.show()
         }
     }

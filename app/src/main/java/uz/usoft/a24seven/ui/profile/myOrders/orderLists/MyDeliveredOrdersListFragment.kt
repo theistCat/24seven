@@ -9,6 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_my_delivered_orders.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentMyActiveOrdersListBinding
+import uz.usoft.a24seven.databinding.FragmentMyDeliveredOrdersBinding
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.toDpi
@@ -17,10 +19,13 @@ import uz.usoft.a24seven.utils.toDpi
 class MyDeliveredOrdersListFragment : Fragment() {
 
     private lateinit var myOrderListRecyclerAdapter: MyOrderListRecyclerAdapter
+    private var _binding: FragmentMyDeliveredOrdersBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        setUpAdapters()
     }
 
     override fun onCreateView(
@@ -28,20 +33,24 @@ class MyDeliveredOrdersListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_delivered_orders, container, false)
+        _binding = FragmentMyDeliveredOrdersBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        myOrderListRecyclerAdapter= MyOrderListRecyclerAdapter("delivered")
-
-        deliveredOrdersRecycler.layoutManager= LinearLayoutManager(requireContext())
-        deliveredOrdersRecycler.adapter=myOrderListRecyclerAdapter
-        deliveredOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),true,1))
-
-        myOrderListRecyclerAdapter.onItemClick={
+    private fun setUpAdapters() {
+        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter("delivered")
+        myOrderListRecyclerAdapter.onItemClick = {
             findNavController().navigate(R.id.action_nav_myOrders_to_nav_selectedOrder)
         }
     }
+
+    private fun setUpClickListener() {
+        binding.deliveredOrdersRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.deliveredOrdersRecycler.adapter = myOrderListRecyclerAdapter
+        binding.deliveredOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), true, 1))
+
+    }
+
+
 }

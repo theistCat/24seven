@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import kotlinx.android.synthetic.main.item_order.view.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.ItemOrderBinding
 import uz.usoft.a24seven.network.di.MockData
 
-class MyOrderListRecyclerAdapter(val orderListType:String="") : RecyclerView.Adapter<MyOrderListRecyclerAdapter.ViewHolder>() {
+class MyOrderListRecyclerAdapter(val orderListType: String = "") :
+    RecyclerView.Adapter<MyOrderListRecyclerAdapter.ViewHolder>() {
 
     var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
 
@@ -21,9 +24,12 @@ class MyOrderListRecyclerAdapter(val orderListType:String="") : RecyclerView.Ada
 
     var onItemClick: ((MockData.ProductObject) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_order, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemOrderBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return ViewHolder(binding)
+    }
 
     override fun getItemCount() = productsList?.size ?: 0
 
@@ -31,9 +37,9 @@ class MyOrderListRecyclerAdapter(val orderListType:String="") : RecyclerView.Ada
         holder.bindData(productsList!![position])
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val orderStatus=itemView.orderStatus
+
         init {
             itemView.orderDetails.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
@@ -41,18 +47,19 @@ class MyOrderListRecyclerAdapter(val orderListType:String="") : RecyclerView.Ada
         }
 
         fun bindData(product: MockData.ProductObject) {
-            when(orderListType){
-                "active"->{
-                    orderStatus.setTextColor(Color.parseColor("#1BC06D"))
-                    orderStatus.text="Активные"
+            val binding = binding as ItemOrderBinding
+            when (orderListType) {
+                "active" -> {
+                    binding.orderStatus.setTextColor(Color.parseColor("#1BC06D"))
+                    binding.orderStatus.text = "Активные"
                 }
-                "inactive"->{
-                    orderStatus.setTextColor(Color.parseColor("#F8B068"))
-                    orderStatus.text="Ожидание"
+                "inactive" -> {
+                    binding.orderStatus.setTextColor(Color.parseColor("#F8B068"))
+                    binding.orderStatus.text = "Ожидание"
                 }
-                "delivered"->{
-                    orderStatus.setTextColor(Color.parseColor("#DB3022"))
-                    orderStatus.text="Доставлен"
+                "delivered" -> {
+                    binding.orderStatus.setTextColor(Color.parseColor("#DB3022"))
+                    binding.orderStatus.text = "Доставлен"
                 }
             }
         }

@@ -1,13 +1,13 @@
 package uz.usoft.a24seven.ui.filter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import uz.usoft.a24seven.R
+import androidx.viewbinding.ViewBinding
+import uz.usoft.a24seven.databinding.ItemFilterOptionBinding
 import uz.usoft.a24seven.network.di.MockData
 
-class FilterOptionsAdapter(): RecyclerView.Adapter<FilterOptionsAdapter.ViewHolder>() {
+class   FilterOptionsAdapter() : RecyclerView.Adapter<FilterOptionsAdapter.ViewHolder>() {
 
     var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
 
@@ -19,9 +19,11 @@ class FilterOptionsAdapter(): RecyclerView.Adapter<FilterOptionsAdapter.ViewHold
 
     var onItemClick: ((MockData.ProductObject) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_filter_option, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding =
+            ItemFilterOptionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
 
     override fun getItemCount() = productsList?.size ?: 0
 
@@ -29,7 +31,7 @@ class FilterOptionsAdapter(): RecyclerView.Adapter<FilterOptionsAdapter.ViewHold
         holder.bindData(productsList!![position])
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {

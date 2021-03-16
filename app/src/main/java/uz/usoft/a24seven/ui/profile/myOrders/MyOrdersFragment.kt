@@ -12,15 +12,19 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fragment_my_orders.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentMyActiveOrdersListBinding
+import uz.usoft.a24seven.databinding.FragmentMyOrdersBinding
 
 class MyOrdersFragment : Fragment() {
 
-
+    private var _binding: FragmentMyOrdersBinding? = null
+    private val binding get() = _binding!!
     private lateinit var pagerAdapter: MyOrdersPagerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        setUpAdapters()
     }
 
     override fun onCreateView(
@@ -28,14 +32,18 @@ class MyOrdersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_orders, container, false)
+        _binding = FragmentMyOrdersBinding.inflate(inflater, container, false)
+        setUpTabLayouts()
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setUpAdapters() {
+        pagerAdapter = MyOrdersPagerAdapter(this)
+        binding.pager.adapter = pagerAdapter
 
-        pagerAdapter=MyOrdersPagerAdapter(this)
-        pager.adapter=pagerAdapter
+    }
+
+    private fun setUpTabLayouts() {
         TabLayoutMediator(tabLayout, pager) { tab, position ->
             when (position) {
                 0 -> {
@@ -44,64 +52,112 @@ class MyOrdersFragment : Fragment() {
                 1 -> {
                     tab.text = getString(R.string.active)
                 }
-                2->{
-                    tab.text=getString(R.string.delivered)
+                2 -> {
+                    tab.text = getString(R.string.delivered)
                 }
             }
         }.attach()
 
-        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
-        tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)
-        tabLayout.setSelectedTabIndicatorGravity(TabLayout.INDICATOR_GRAVITY_CENTER)
+        binding.tabLayout.setSelectedTabIndicatorColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.tabInactiveOrder
+            )
+        )
+        binding.tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)
+        binding.tabLayout.setSelectedTabIndicatorGravity(TabLayout.INDICATOR_GRAVITY_CENTER)
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                when(tab?.position)
-                {
+                when (tab?.position) {
                     0 -> {
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabInactiveOrder
+                            )
+                        )
                     }
                     1 -> {
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabActiveOrder))
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabActiveOrder
+                            )
+                        )
                     }
-                    2->{
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabDeliveredOrder))
+                    2 -> {
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabDeliveredOrder
+                            )
+                        )
                     }
                 }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                when(tab?.position)
-                {
+                when (tab?.position) {
                     0 -> {
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabInactiveOrder
+                            )
+                        )
                     }
                     1 -> {
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabActiveOrder))
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabActiveOrder
+                            )
+                        )
                     }
-                    2->{
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabDeliveredOrder))
+                    2 -> {
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabDeliveredOrder
+                            )
+                        )
                     }
                 }
 
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                when(tab?.position)
-                {
+                when (tab?.position) {
                     0 -> {
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabInactiveOrder))
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabInactiveOrder
+                            )
+                        )
                     }
                     1 -> {
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabActiveOrder))
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabActiveOrder
+                            )
+                        )
                     }
-                    2->{
-                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(),R.color.tabDeliveredOrder))
+                    2 -> {
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabDeliveredOrder
+                            )
+                        )
                     }
                 }
             }
 
         })
     }
+
 
 }

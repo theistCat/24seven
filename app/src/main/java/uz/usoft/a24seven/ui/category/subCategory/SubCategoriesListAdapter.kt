@@ -4,12 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import kotlinx.android.synthetic.main.item_sub_category.view.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentSubCategoriesBinding
+import uz.usoft.a24seven.databinding.ItemSubCategoryBinding
 import uz.usoft.a24seven.network.di.MockData
 
-class SubCategoriesListAdapter  : RecyclerView.Adapter<SubCategoriesListAdapter.ViewHolder>() {
+class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.ViewHolder>() {
     var productsList: List<MockData.ProductObject>? = MockData.getSubCategoriesList()
+
 
     fun updateList(productsList: List<MockData.ProductObject>) {
         this.productsList = productsList
@@ -19,9 +23,11 @@ class SubCategoriesListAdapter  : RecyclerView.Adapter<SubCategoriesListAdapter.
 
     var onItemClick: ((MockData.ProductObject) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_sub_category, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding =
+            ItemSubCategoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(binding)
+    }
 
     override fun getItemCount() = productsList?.size ?: 0
 
@@ -29,9 +35,9 @@ class SubCategoriesListAdapter  : RecyclerView.Adapter<SubCategoriesListAdapter.
         holder.bindData(productsList!![position])
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        var name=itemView.subCategoryName
+
         init {
             itemView.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
@@ -39,7 +45,8 @@ class SubCategoriesListAdapter  : RecyclerView.Adapter<SubCategoriesListAdapter.
         }
 
         fun bindData(product: MockData.ProductObject) {
-            name.text=product.name
+            val binding = binding as ItemSubCategoryBinding
+            binding.subCategoryName.text = product.name
         }
     }
 }

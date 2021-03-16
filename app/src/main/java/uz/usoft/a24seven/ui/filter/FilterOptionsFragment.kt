@@ -6,37 +6,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.fragment_cart.*
 import kotlinx.android.synthetic.main.fragment_filter_options.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentFilterOptionsBinding
 
 class FilterOptionsFragment : Fragment() {
 
-    private lateinit var adapter:FilterOptionsAdapter
+    private var _binding: FragmentFilterOptionsBinding? = null
+    private val binding get() = _binding!!
+    private val parent = parentFragment as FilterFragment
+
+
+    private lateinit var adapter: FilterOptionsAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        setUpAdapter()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filter_options, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentFilterOptionsBinding.inflate(inflater, cartRecycler, false)
+        setUpRecycler()
+        return binding.root
     }
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        adapter= FilterOptionsAdapter()
-        filterOptionsRecycler.adapter=adapter
-        filterOptionsRecycler.layoutManager=LinearLayoutManager(requireContext())
-
-        val parent= parentFragment as FilterFragment
-
-        adapter.onItemClick={
+    private fun setUpAdapter() {
+        adapter = FilterOptionsAdapter()
+        adapter.onItemClick = {
             parent.changePage(1)
         }
-
     }
+
+    private fun setUpRecycler() {
+        binding.filterOptionsRecycler.adapter = adapter
+        binding.filterOptionsRecycler.layoutManager = LinearLayoutManager(requireContext())
+    }
+
 }

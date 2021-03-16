@@ -10,41 +10,47 @@ import android.widget.Spinner
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_check_out.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentCheckOutBinding
 
 
 class CheckOutFragment : Fragment() {
+
+    private var _binding: FragmentCheckOutBinding? = null
+    private val binding get() = _binding!!
+    private val spinner: Spinner = savedAddresses
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
+        setUpSpinnerAdapter()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_check_out, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentCheckOutBinding.inflate(inflater, container, false)
+        setUpClickLister()
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val spinner: Spinner = savedAddresses
-
-
+    private fun setUpSpinnerAdapter() {
         ArrayAdapter.createFromResource(
-        requireContext(),
-        R.array.savedAddr,
-        R.layout.spinner_lay
+            requireContext(),
+            R.array.savedAddr,
+            R.layout.spinner_lay
         ).also { adapter ->
             // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(R.layout.spinner_dropdown_lay)
             // Apply the adapter to the spinner
             spinner.adapter = adapter
         }
+    }
 
-        checkout.setOnClickListener{
+    private fun setUpClickLister() {
+        binding.checkout.setOnClickListener {
             findNavController().navigate(R.id.action_nav_checkOut_to_nav_myOrders)
         }
     }

@@ -4,27 +4,32 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import kotlinx.android.synthetic.main.item_payment_method.view.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.ItemPaymentMethodBinding
 import uz.usoft.a24seven.network.di.MockData
 
-class PaymentMethodListAdapter (): RecyclerView.Adapter<PaymentMethodListAdapter.ViewHolder>() {
+class PaymentMethodListAdapter() : RecyclerView.Adapter<PaymentMethodListAdapter.ViewHolder>() {
     var productsList: List<MockData.PaymentMethodObject>? = MockData.getPaymentMethodList()
-    var selected=""
+    var selected = ""
     fun updateList(productsList: List<MockData.PaymentMethodObject>) {
         this.productsList = productsList
         notifyDataSetChanged()
     }
 
-    fun getDefaultPaymentMethod():String{
+    fun getDefaultPaymentMethod(): String {
         return selected
     }
 
     var onItemClick: ((MockData.PaymentMethodObject) -> Unit)? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_payment_method, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemPaymentMethodBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return ViewHolder(binding)
+    }
 
     override fun getItemCount() = productsList?.size ?: 0
 
@@ -32,49 +37,45 @@ class PaymentMethodListAdapter (): RecyclerView.Adapter<PaymentMethodListAdapter
         holder.bindData(productsList!![position])
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        val paymentMethod=itemView.paymentMethod
-        val checkbx=itemView.checkBox
 
         init {
             itemView.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
 
-                if(!productsList!![adapterPosition].isDefault)
-                {
+                if (!productsList!![adapterPosition].isDefault) {
                     for (method in productsList!!)
-                        method.isDefault=false
+                        method.isDefault = false
 
-                    productsList!![adapterPosition].isDefault=true
-                    selected=productsList!![adapterPosition].name
-                }
-                else{
-                    productsList!![adapterPosition].isDefault=false
+                    productsList!![adapterPosition].isDefault = true
+                    selected = productsList!![adapterPosition].name
+                } else {
+                    productsList!![adapterPosition].isDefault = false
                 }
                 notifyDataSetChanged()
             }
 
-                checkbx.setOnClickListener {
-                    onItemClick?.invoke(productsList!![adapterPosition])
+            itemView.checkBox.setOnClickListener {
+                onItemClick?.invoke(productsList!![adapterPosition])
 
-                    if(!productsList!![adapterPosition].isDefault)
-                    {
-                        for (method in productsList!!)
-                            method.isDefault=false
+                if (!productsList!![adapterPosition].isDefault) {
+                    for (method in productsList!!)
+                        method.isDefault = false
 
-                        productsList!![adapterPosition].isDefault=true
-                    }
-                    else{
-                        productsList!![adapterPosition].isDefault=false
-                    }
-                    notifyDataSetChanged()
+                    productsList!![adapterPosition].isDefault = true
+                } else {
+                    productsList!![adapterPosition].isDefault = false
                 }
+                notifyDataSetChanged()
+            }
         }
 
         fun bindData(product: MockData.PaymentMethodObject) {
-            paymentMethod.text=product.name
-            checkbx.isChecked=product.isDefault
+            val binding = binding as ItemPaymentMethodBinding
+
+            binding.paymentMethod.text = product.name
+            binding.checkBox.isChecked = product.isDefault
         }
     }
 }

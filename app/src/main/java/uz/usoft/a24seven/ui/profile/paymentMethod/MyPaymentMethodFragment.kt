@@ -8,36 +8,59 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_my_payment_method.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentMyPaymentMethodBinding
+import uz.usoft.a24seven.databinding.FragmentSelectedOrderBinding
+import uz.usoft.a24seven.ui.profile.myOrders.OrderItemListAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 
 class MyPaymentMethodFragment : Fragment() {
 
-
+    private var _binding: FragmentMyPaymentMethodBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: PaymentMethodListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        setUpAdapter()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_payment_method, container, false)
+        _binding = FragmentMyPaymentMethodBinding.inflate(inflater, container, false)
+        setUpRecycler()
+        setUpClickListener()
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setUpAdapter() {
+        adapter = PaymentMethodListAdapter()
 
-        adapter= PaymentMethodListAdapter()
-        paymentMethodRecycler.layoutManager=LinearLayoutManager(requireContext())
-        paymentMethodRecycler.adapter=adapter
-        paymentMethodRecycler.addItemDecoration(SpacesItemDecoration((resources.displayMetrics.density*16+0.5f).toInt(),true,1))
 
-        savePaymentMethod.setOnClickListener {
+    }
+
+    private fun setUpRecycler() {
+        binding.paymentMethodRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.paymentMethodRecycler.adapter = adapter
+        binding.paymentMethodRecycler.addItemDecoration(
+            SpacesItemDecoration(
+                (resources.displayMetrics.density * 16 + 0.5f).toInt(),
+                true,
+                1
+            )
+        )
+
+    }
+
+    private fun setUpClickListener() {
+        binding.savePaymentMethod.setOnClickListener {
 
         }
     }
+
 }
+

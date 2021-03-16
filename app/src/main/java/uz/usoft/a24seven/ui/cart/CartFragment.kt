@@ -9,37 +9,55 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_cart.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentCartBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 
 
 class CartFragment : Fragment() {
 
-    private lateinit var adapter:CartItemListAdapter
+    private var _binding: FragmentCartBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var adapter: CartItemListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        setUpAdapter()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false)
+        _binding = FragmentCartBinding.inflate(inflater, container, false)
+        setUpRecycler()
+        setUpOnClickListener()
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun setUpAdapter() {
+        adapter = CartItemListAdapter()
 
-        adapter= CartItemListAdapter()
-        cartRecycler.adapter=adapter
-        cartRecycler.layoutManager=LinearLayoutManager(requireContext())
-        cartRecycler.addItemDecoration(SpacesItemDecoration((requireContext().resources.displayMetrics.density*16+0.5f).toInt(),true,1))
+    }
 
+    private fun setUpRecycler() {
+        binding.cartRecycler.adapter = adapter
+        binding.cartRecycler.layoutManager = LinearLayoutManager(requireContext())
+        binding.cartRecycler.addItemDecoration(
+            SpacesItemDecoration(
+                (requireContext().resources.displayMetrics.density * 16 + 0.5f).toInt(),
+                true,
+                1
+            )
+        )
+    }
 
-        checkout.setOnClickListener{
+    private fun setUpOnClickListener() {
+        binding.checkout.setOnClickListener {
             findNavController().navigate(R.id.action_nav_cart_to_nav_checkOut)
         }
     }
+
+
 }

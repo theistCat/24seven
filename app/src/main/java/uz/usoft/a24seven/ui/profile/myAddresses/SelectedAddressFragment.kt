@@ -6,9 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentAddressListBinding
+import uz.usoft.a24seven.databinding.FragmentSelectedAddressBinding
 
 class SelectedAddressFragment : Fragment() {
 
+    private var _binding: FragmentSelectedAddressBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -19,8 +23,8 @@ class SelectedAddressFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_selected_address, container, false)
+        _binding = FragmentSelectedAddressBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 

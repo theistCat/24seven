@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.ImageCollectionAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
@@ -19,101 +20,121 @@ import uz.usoft.a24seven.utils.toDpi
 
 class HomeFragment : Fragment() {
 
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+    private var imgList = ArrayList<String>()
     private lateinit var pagerAdapter: ImageCollectionAdapter
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var newProductsAdapter:ProductsListAdapter
-    private lateinit var popularProductsAdapter:ProductsListAdapter
-    private lateinit var onSaleProductsAdapter:ProductsListAdapter
+    private lateinit var newProductsAdapter: ProductsListAdapter
+    private lateinit var popularProductsAdapter: ProductsListAdapter
+    private lateinit var onSaleProductsAdapter: ProductsListAdapter
     private lateinit var newsAdapter: NewsListAdapter
 
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        return root
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setUpAdapter()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        pagerAdapter= ImageCollectionAdapter(this)
-        setUpViewPager(pagerAdapter,homePager,homeTabLayout)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        homeViewModel =
+            ViewModelProvider(this).get(HomeViewModel::class.java)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        setUpRecycler()
+        setOnClickListener()
+        return binding.root
+    }
 
-        var imgList=ArrayList<String>()
-
+    private fun setUpAdapter() {
         imgList.add("https://i.imgur.com/0Q.png")
         imgList.add("https://i.imgur.com/0Q.png")
         imgList.add("https://i.imgur.com/0Q.png")
-
         pagerAdapter.updateImageList(imgList)
+        pagerAdapter = ImageCollectionAdapter(this)
+        setUpViewPager(pagerAdapter, homePager, homeTabLayout)
+        newProductsAdapter = ProductsListAdapter()
+        popularProductsAdapter = ProductsListAdapter(isPopular = true)
+
+        popularProductsAdapter.onItemClick = {
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items))
+            findNavController().navigate(action)
+        }
+
+        onSaleProductsAdapter = ProductsListAdapter()
+
+        onSaleProductsAdapter.onItemClick = {
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items))
+            findNavController().navigate(action)
+        }
+
+        newProductsAdapter.onItemClick = {
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts))
+            findNavController().navigate(action)
+        }
+
+        newsAdapter = NewsListAdapter()
+
+        newsAdapter.onItemClick = {
+            findNavController().navigate(R.id.action_nav_home_to_selectedNewsFragment)
+        }
+
+    }
+
+    private fun setUpRecycler() {
+        binding.newItemsRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.newItemsRecycler.adapter = newProductsAdapter
+        binding.newItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
 
 
+        binding.popularItemsRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.popularItemsRecycler.adapter = popularProductsAdapter
+        binding.popularItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
 
-//        scanBarCode.setOnClickListener {
+        binding.onSaleItemsRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.onSaleItemsRecycler.adapter = onSaleProductsAdapter
+        binding.onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+
+        binding.newsRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.newsRecycler.adapter = newsAdapter
+        binding.newsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+
+    }
+
+
+    private fun setOnClickListener() {
+        binding.newItems.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+        }
+        binding.newItemsAll.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+        }
+
+        binding.news.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
+        }
+
+        binding.allNews.setOnClickListener {
+            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
+        }
+
+        //        scanBarCode.setOnClickListener {
 //            findNavController().navigate(R.id.action_nav_home_to_nav_barcodeScanner)
 //        }
 //
 //        favItems.setOnClickListener {
 //            findNavController().navigate(R.id.action_nav_home_to_nav_myFavouriteItems)
 //        }
-        newProductsAdapter= ProductsListAdapter()
-        newItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        newItemsRecycler.adapter=newProductsAdapter
-        newItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
-
-        newProductsAdapter.onItemClick={
-            val action= HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts))
-            findNavController().navigate(action)
-        }
-
-        newItems.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
-        }
-        newItemsAll.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
-        }
-
-
-        popularProductsAdapter= ProductsListAdapter(isPopular = true)
-        popularItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        popularItemsRecycler.adapter=popularProductsAdapter
-        popularItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
-
-        popularProductsAdapter.onItemClick={
-            val action= HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items))
-            findNavController().navigate(action)
-        }
-
-
-        onSaleProductsAdapter= ProductsListAdapter()
-        onSaleItemsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        onSaleItemsRecycler.adapter=onSaleProductsAdapter
-        onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
-
-        onSaleProductsAdapter.onItemClick={
-            val action= HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items))
-            findNavController().navigate(action)
-        }
-
-        newsAdapter= NewsListAdapter()
-        newsRecycler.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-        newsRecycler.adapter=newsAdapter
-        newsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16),false))
-
-        news.setOnClickListener{
-            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
-        }
-
-        allNews.setOnClickListener{
-            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
-        }
-
-        newsAdapter.onItemClick={
-                findNavController().navigate(R.id.action_nav_home_to_selectedNewsFragment)
-        }
 
 
     }
