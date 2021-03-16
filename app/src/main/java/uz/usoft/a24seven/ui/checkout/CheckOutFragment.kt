@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_check_out.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCheckOutBinding
 
@@ -17,7 +16,7 @@ class CheckOutFragment : Fragment() {
 
     private var _binding: FragmentCheckOutBinding? = null
     private val binding get() = _binding!!
-    private val spinner: Spinner = savedAddresses
+    private val spinner: Spinner = binding.savedAddresses
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_cart.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCartBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration

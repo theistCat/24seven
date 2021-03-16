@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_home.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.ui.news.NewsListAdapter
@@ -55,7 +54,7 @@ class HomeFragment : Fragment() {
         imgList.add("https://i.imgur.com/0Q.png")
         pagerAdapter.updateImageList(imgList)
         pagerAdapter = ImageCollectionAdapter(this)
-        setUpViewPager(pagerAdapter, homePager, homeTabLayout)
+        setUpViewPager(pagerAdapter, binding.homePager, binding.homeTabLayout)
         newProductsAdapter = ProductsListAdapter()
         popularProductsAdapter = ProductsListAdapter(isPopular = true)
 
