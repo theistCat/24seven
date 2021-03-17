@@ -44,6 +44,11 @@ import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
 import java.util.*
 
+fun Fragment.toDpi(px:Int) :Int{
+    return ((requireContext().resources.displayMetrics.density * px)+0.5f).toInt()
+}
+
+
 class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=true,private val span:Int=2) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
@@ -417,9 +422,6 @@ fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
     return bottomSheetDialog
 }
 
-fun Fragment.toDpi(px:Int) :Int{
-    return ((requireContext().getDisplayMetrics().density * px)+0.5f).toInt()
-}
 
 //fragment_collection_object xml
 //

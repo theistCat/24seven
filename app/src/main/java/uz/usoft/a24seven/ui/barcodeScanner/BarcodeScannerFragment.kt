@@ -165,7 +165,7 @@ class BarcodeScannerFragment : Fragment() ,SurfaceHolder.Callback{
                 startCamera()
             }
             else{
-                Toast.makeText(safeContext,"permission not granted",Toast.LENGTH_SHORT)
+                Toast.makeText(safeContext,"permission not granted",Toast.LENGTH_SHORT).show()
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -269,6 +269,8 @@ class BarcodeScannerFragment : Fragment() ,SurfaceHolder.Callback{
                         }
                 }
             }
+            else
+            imageProxy.close()
         }
     }
 
