@@ -16,20 +16,20 @@ import java.util.concurrent.TimeUnit
 
 private const val BASE_URL: String = "http://api-seven.usoftdev.uz/"
 
-val networkModule= module {
+val networkModule = module {
 
     single<SevenApi> {
         val retrofit = get<Retrofit>()
         retrofit.create(SevenApi::class.java)
     }
 
-    single<Moshi>{
+    single<Moshi> {
         Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
     }
 
-    single<Retrofit>{
+    single<Retrofit> {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(get())
@@ -45,7 +45,7 @@ val networkModule= module {
             .readTimeout(5, TimeUnit.SECONDS)
             .writeTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
-       //     .addInterceptor(LogoutInterceptor(get()))
+            //     .addInterceptor(LogoutInterceptor(get()))
             .addInterceptor { chain ->
                 val token = " "
                 val locale: String = PrefManager.getLocale(get())

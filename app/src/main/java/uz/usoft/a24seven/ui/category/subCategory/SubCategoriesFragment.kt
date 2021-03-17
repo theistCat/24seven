@@ -58,8 +58,8 @@ class SubCategoriesFragment : Fragment() {
     }
 
     private fun setUpData() {
-        val safeArgs: SubCategoriesFragmentArgs by navArgs()
-        (requireActivity() as MainActivity).main_toolbar.title = safeArgs.categoryName
+//        val safeArgs: SubCategoriesFragmentArgs by navArgs()
+//        (requireActivity() as MainActivity).main_toolbar.title = safeArgs.categoryName
 
     }
 

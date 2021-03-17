@@ -44,12 +44,16 @@ import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
 import java.util.*
 
-fun Fragment.toDpi(px:Int) :Int{
-    return ((requireContext().resources.displayMetrics.density * px)+0.5f).toInt()
+fun Fragment.toDpi(px: Int): Int {
+    return ((requireContext().resources.displayMetrics.density * px) + 0.5f).toInt()
 }
 
 
-class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=true,private val span:Int=2) : RecyclerView.ItemDecoration() {
+class SpacesItemDecoration(
+    private val space: Int,
+    private val vertical: Boolean = true,
+    private val span: Int = 2
+) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -58,11 +62,10 @@ class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=
     ) {
         super.getItemOffsets(outRect, view, parent, state)
 
-        if(vertical)
-        {
+        if (vertical) {
 
             val itemposition = parent.getChildLayoutPosition(view)
-            if(span>1) {
+            if (span > 1) {
                 val column = itemposition % span
 
                 outRect.left = space - column * space / span
@@ -74,11 +77,10 @@ class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=
                 } else {
                     outRect.top = 0
                 }
-            }
-            else{
+            } else {
                 outRect.left = space
-                outRect.right=space
-                outRect.bottom = space-space/4
+                outRect.right = space
+                outRect.bottom = space - space / 4
 
                 if (itemposition == 0)
                     outRect.top = space
@@ -86,14 +88,12 @@ class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=
                     outRect.top = 0
                 }
             }
-        }
-        else
-        {
-            val itemposition=parent.getChildLayoutPosition(view)
+        } else {
+            val itemposition = parent.getChildLayoutPosition(view)
 
             outRect.top = 0
             outRect.bottom = 2
-            outRect.right=space/2
+            outRect.right = space / 2
 
             if (itemposition == 0) {
                 outRect.left = space
@@ -104,6 +104,7 @@ class SpacesItemDecoration(private val space: Int,private val vertical: Boolean=
 
     }
 }
+
 fun Activity.hideSoftKeyboard() {
     if (currentFocus != null) {
         val inputMethodManager = getSystemService(
@@ -113,6 +114,7 @@ fun Activity.hideSoftKeyboard() {
         inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
     }
 }
+
 fun Fragment.hideKeyboard() {
     activity?.hideSoftKeyboard()
 }
@@ -136,7 +138,6 @@ fun Fragment.hideKeyboard() {
 //            }
 //        )
 //}
-
 
 
 class ImageCollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
@@ -175,7 +176,8 @@ class ImageObjectFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
             var imageLink = it.getString(ARG_IMG_LINK)
-            Glide.with(requireContext()).load(imageLink).placeholder(R.drawable.banner).into(imageView)
+            Glide.with(requireContext()).load(imageLink).placeholder(R.drawable.banner)
+                .into(imageView)
         }
     }
 
@@ -191,9 +193,12 @@ class ImageObjectFragment() : Fragment() {
     }
 }
 
-fun Fragment.setUpViewPager(adapter:ImageCollectionAdapter,viewPager: ViewPager2,tabLayout: TabLayout)
-{
-    viewPager.adapter=adapter
+fun Fragment.setUpViewPager(
+    adapter: ImageCollectionAdapter,
+    viewPager: ViewPager2,
+    tabLayout: TabLayout
+) {
+    viewPager.adapter = adapter
 
     TabLayoutMediator(tabLayout, viewPager) { tab, position ->
     }.attach()
@@ -205,11 +210,12 @@ fun Fragment.setUpViewPager(adapter:ImageCollectionAdapter,viewPager: ViewPager2
 fun Activity.getRootView(): View {
     return findViewById<View>(android.R.id.content)
 }
+
 fun Context.convertDpToPx(dp: Float): Float {
     return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            this.resources.displayMetrics
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp,
+        this.resources.displayMetrics
     )
 }
 
@@ -226,8 +232,8 @@ fun Activity.isKeyboardClosed(): Boolean {
 }
 
 class KeyboardEventListener(
-        private val activity: AppCompatActivity,
-        private val callback: (isOpen: Boolean) -> Unit
+    private val activity: AppCompatActivity,
+    private val callback: (isOpen: Boolean) -> Unit
 ) : LifecycleObserver {
 
     private val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -258,7 +264,7 @@ class KeyboardEventListener(
 
     private fun dispatchKeyboardEvent(isOpen: Boolean) {
         when {
-            isOpen  -> callback(true)
+            isOpen -> callback(true)
             !isOpen -> callback(false)
         }
     }
@@ -279,7 +285,7 @@ class KeyboardEventListener(
  */
 fun View.slideDown() {
     this.animate().translationY(500f).alpha(0.0f).setDuration(50).setInterpolator(
-            AccelerateDecelerateInterpolator()
+        AccelerateDecelerateInterpolator()
     )
     this.hide()
 }
@@ -287,7 +293,7 @@ fun View.slideDown() {
 fun View.slideUp() {
     this.show()
     this.animate().translationY(0f).alpha(1.0f).setDuration(150).setInterpolator(
-            AccelerateDecelerateInterpolator()
+        AccelerateDecelerateInterpolator()
     )
 }
 
@@ -346,12 +352,14 @@ fun AppCompatButton.showError(error: String) {
 fun AppCompatButton.hideError() {
     this.error = null
 }
+
 /**
  * Change language
  */
 fun Fragment.setAppLocale(localeCode: String, context: Context) {
     activity?.setAppLocale(localeCode, context)
 }
+
 fun Activity.setAppLocale(localeCode: String, context: Context) {
     val resources = context.resources
     val dm = resources.displayMetrics
@@ -372,20 +380,21 @@ fun EditText.formatPhoneMask() {
     affineFormats.add("+998 [00] [000] [00] [00]")
 
     val listener =
-            MaskedTextChangedListener.installOn(
-                    this,
-                    "+998 [00] [000] [00] [00]",
-                    affineFormats, AffinityCalculationStrategy.WHOLE_STRING,
-                    object : MaskedTextChangedListener.ValueListener {
-                        override fun onTextChanged(
-                                maskFilled: Boolean,
-                                extractedValue: String,
-                                formattedValue: String
-                        ) {
-                        }
-                    }
-            )
+        MaskedTextChangedListener.installOn(
+            this,
+            "+998 [00] [000] [00] [00]",
+            affineFormats, AffinityCalculationStrategy.WHOLE_STRING,
+            object : MaskedTextChangedListener.ValueListener {
+                override fun onTextChanged(
+                    maskFilled: Boolean,
+                    extractedValue: String,
+                    formattedValue: String
+                ) {
+                }
+            }
+        )
 }
+
 fun EditText.getMaskedPhoneWithoutSpace(): String {
     var phone = this.text.toString()
     if (phone.startsWith("+"))
@@ -397,6 +406,7 @@ fun Fragment.changeUiStateEnabled(isLoading: Boolean, progressBar: View, viewBut
     viewButton.isEnabled = !isLoading
     if (isLoading) progressBar.visible() else progressBar.gone()
 }
+
 fun View.visible() {
     this.visibility = View.VISIBLE
 }
@@ -407,9 +417,10 @@ fun View.gone() {
 
 
 fun TextView.formatCurrencyMask(price: Float) {
-    val format= NumberFormat.getCurrencyInstance(Locale("ru", "UZ"))
-    this.text=format.format(price)
+    val format = NumberFormat.getCurrencyInstance(Locale("ru", "UZ"))
+    this.text = format.format(price)
 }
+
 fun Context.getDisplayMetrics(): DisplayMetrics {
     return (this as MainActivity).resources.displayMetrics
 }
@@ -418,7 +429,8 @@ fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
     val bottomSheetDialog = BottomSheetDialog(requireContext())
     bottomSheetDialog.setContentView(layout)
     val bottomSheetInternal = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet)
-    BottomSheetBehavior.from<View?>(bottomSheetInternal!!).peekHeight = (requireContext().getDisplayMetrics().heightPixels*0.8).toInt()
+    BottomSheetBehavior.from<View?>(bottomSheetInternal!!).peekHeight =
+        (requireContext().getDisplayMetrics().heightPixels * 0.8).toInt()
 
     return bottomSheetDialog
 }
@@ -458,7 +470,6 @@ fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
 //</androidx.cardview.widget.CardView>
 //
 //</androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
 //setting up a spinner

@@ -24,8 +24,8 @@ class SelectedSubCategoryFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: ProductsListAdapter
     private val safeArgs: SelectedSubCategoryFragmentArgs by navArgs()
-    private lateinit var mainActivity :MainActivity
-    private lateinit var sortBottomSheet :BottomSheetDialog
+    private lateinit var mainActivity: MainActivity
+    private lateinit var sortBottomSheet: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class SelectedSubCategoryFragment : Fragment() {
         _binding = FragmentSelectedSubCategoryBinding.inflate(inflater, container, false)
 
         mainActivity = requireActivity() as MainActivity
-        sortBottomSheet= createBottomSheet(R.layout.sort_bottomsheet)
+        sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
 
         setUpAdapter()
         setUpRecycler()

@@ -1,4 +1,4 @@
-package uz.usoft.a24seven.ui.home
+package uz.usoft.a24seven.ui.category
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,23 +10,28 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import uz.usoft.a24seven.network.models.CategoriesResponse
+import uz.usoft.a24seven.network.models.CategoryObject
 import uz.usoft.a24seven.network.models.CategoryProductsItems
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
 
-class HomeViewModel constructor(private val repository: SevenRepository) : ViewModel() {
+class CategoryViewModel(private val repository: SevenRepository) : ViewModel() {
+    val getCategoriesResponse = MutableLiveData<Event<Resource<CategoriesResponse>>>()
 
-    val getHomeResponse = MutableLiveData<Event<Resource<Any>>>()
-    val getCategoriesResponse = MutableLiveData<Event<Resource<List<CategoriesResponse>>>>()
-
-    fun getHome() {
+    fun getCategories() {
         viewModelScope.launch {
-            repository.getHome().onEach {
-                getHomeResponse.value = Event(it)
+            repository.getCategories().onEach {
+                getCategoriesResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
 
-
+    fun getCategoryProducts(
+        categoryId: Int,
+        orderBy: String
+    ): Flow<PagingData<CategoryProductsItems>> {
+        return repository.getCategoryProducts(categoryId, orderBy)
+            .cachedIn(viewModelScope)
+    }
 }

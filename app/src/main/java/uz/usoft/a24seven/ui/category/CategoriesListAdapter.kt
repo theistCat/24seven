@@ -5,18 +5,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.databinding.ItemCategoryBinding
+import uz.usoft.a24seven.network.models.CategoryObject
 import uz.usoft.a24seven.network.models.MockData
 
 class CategoriesListAdapter : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
-    var productsList: List<MockData.ProductObject>? = MockData.getCategoriesList()
+    var productsList: List<CategoryObject>? = emptyList()
 
-    fun updateList(productsList: List<MockData.ProductObject>) {
+    fun updateList(productsList: List<CategoryObject>) {
         this.productsList = productsList
         notifyDataSetChanged()
     }
 
 
-    var onItemClick: ((MockData.ProductObject) -> Unit)? = null
+    var onItemClick: ((CategoryObject) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -39,7 +40,8 @@ class CategoriesListAdapter : RecyclerView.Adapter<CategoriesListAdapter.ViewHol
                 onItemClick?.invoke(productsList!![adapterPosition])
             }
         }
-        fun bindData(product: MockData.ProductObject) {
+
+        fun bindData(product: CategoryObject) {
             val binding = binding as ItemCategoryBinding
             binding.categoryName.text = product.name
         }
