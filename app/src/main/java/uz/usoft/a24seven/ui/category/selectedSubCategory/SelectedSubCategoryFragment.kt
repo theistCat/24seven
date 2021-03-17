@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_selected_sub_category.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
@@ -25,14 +24,13 @@ class SelectedSubCategoryFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: ProductsListAdapter
     private val safeArgs: SelectedSubCategoryFragmentArgs by navArgs()
-    private val mainActivity = (requireActivity() as MainActivity)
-    private val sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
+    private lateinit var mainActivity :MainActivity
+    private lateinit var sortBottomSheet :BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-        setUpAdapter()
     }
 
     override fun onCreateView(
@@ -40,6 +38,11 @@ class SelectedSubCategoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSelectedSubCategoryBinding.inflate(inflater, container, false)
+
+        mainActivity = requireActivity() as MainActivity
+        sortBottomSheet= createBottomSheet(R.layout.sort_bottomsheet)
+
+        setUpAdapter()
         setUpRecycler()
         setUpData()
         setUpClickListener()
@@ -68,7 +71,7 @@ class SelectedSubCategoryFragment : Fragment() {
     }
 
     private fun setUpData() {
-        mainActivity.main_toolbar.title = safeArgs.subCategoryName
+        mainActivity.setTitle(safeArgs.subCategoryName)
     }
 
     private fun setUpClickListener() {

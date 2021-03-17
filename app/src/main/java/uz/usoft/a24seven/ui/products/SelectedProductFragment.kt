@@ -5,17 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.fragment_selected_product.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
-import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentArgs
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.*
 
@@ -28,10 +23,9 @@ class SelectedProductFragment : Fragment() {
     private lateinit var feedbackListAdapter: FeedbackListAdapter
     private val safeArgs: SelectedProductFragmentArgs by navArgs()
     private val imgList = ArrayList<String>()
-    private val feedbackBottomSheet = createBottomSheet(R.layout.feedback_bottomsheet)
+    private lateinit var feedbackBottomSheet : BottomSheetDialog
 
 
-    //private lateinit var feedbacks:
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -47,21 +41,27 @@ class SelectedProductFragment : Fragment() {
         setUpRecyclerAdapters()
         setUpData()
         setUpOnClick()
+        setUpPager()
+        feedbackBottomSheet= createBottomSheet(R.layout.feedback_bottomsheet)
         return binding.root
+    }
+
+    private fun setUpPager() {
+        imgList.add("https://i.imgur.com/0Qy.png")
+        imgList.add("https://i.imgur.com/0Qy.png")
+        imgList.add("https://i.imgur.com/0Qy.png")
+        pagerAdapter = ImageCollectionAdapter(this)
+        pagerAdapter.updateImageList(imgList)
+        setUpViewPager(pagerAdapter, binding.productPager, binding.productTabLayout)
     }
 
     private fun setUpAdapters() {
         similarItemAdapter = ProductsListAdapter()
         feedbackListAdapter = FeedbackListAdapter()
-        pagerAdapter = ImageCollectionAdapter(this)
-        pagerAdapter.updateImageList(imgList)
-        setUpViewPager(pagerAdapter, productPager, productTabLayout)
-
     }
 
     private fun setUpRecyclerAdapters() {
-        binding.similarItemsRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.similarItemsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.similarItemsRecycler.adapter = similarItemAdapter
         binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
 
@@ -70,15 +70,11 @@ class SelectedProductFragment : Fragment() {
     }
 
     private fun setUpData() {
-        (requireActivity() as MainActivity).main_toolbar.title = safeArgs.selectedCategoryName
-
-        imgList.add("https://i.imgur.com/0Qy.png")
-        imgList.add("https://i.imgur.com/0Qy.png")
-        imgList.add("https://i.imgur.com/0Qy.png")
+        (requireActivity() as MainActivity).setTitle(safeArgs.selectedCategoryName)
     }
 
     private fun setUpOnClick() {
-        leaveFeedback.setOnClickListener {
+        binding.leaveFeedback.setOnClickListener {
             feedbackBottomSheet.show()
         }
     }

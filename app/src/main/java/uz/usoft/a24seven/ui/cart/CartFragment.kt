@@ -37,7 +37,6 @@ class CartFragment : Fragment() {
 
     private fun setUpAdapter() {
         adapter = CartItemListAdapter()
-
     }
 
     private fun setUpRecycler() {

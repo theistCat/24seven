@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import uz.usoft.a24seven.R
@@ -21,7 +22,7 @@ class ProfileSettingsFragment : Fragment() {
     val day = c.get(Calendar.DAY_OF_MONTH)
     private var _binding: FragmentProfileSettingsBinding? = null
     private val binding get() = _binding!!
-    private val bottomsheet = createBottomSheet(R.layout.changepasword_bottomsheet)
+    private lateinit var bottomsheet : BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class ProfileSettingsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProfileSettingsBinding.inflate(inflater, container, false)
+        bottomsheet=createBottomSheet(R.layout.changepasword_bottomsheet)
         setUpOnClickListener()
         return binding.root
     }

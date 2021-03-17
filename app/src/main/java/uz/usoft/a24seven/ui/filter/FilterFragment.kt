@@ -24,7 +24,6 @@ class FilterFragment() : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-        setUpPagerAdapter()
     }
 
     override fun onCreateView(
@@ -32,7 +31,15 @@ class FilterFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
+
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setUpPagerAdapter()
+
     }
 
     private fun setUpPagerAdapter() {
@@ -40,9 +47,6 @@ class FilterFragment() : Fragment() {
         binding.filterPager.adapter = pagerAdapter
         binding.filterPager.isUserInputEnabled = false
         binding.filterPager.setCurrentItem(0, true)
-        //val drawer=(requireActivity() as MainActivity).drawerLayoutl
-        //drawer.addDrawerListener(this)
-        // val drawer1=(requireActivity() as MainActivity).drawerLayout
     }
 
 

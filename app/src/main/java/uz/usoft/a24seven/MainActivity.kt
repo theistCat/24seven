@@ -5,16 +5,13 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.activity_main.*
 import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.KeyboardEventListener
@@ -32,14 +29,14 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
 
+        binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        bottomNavigationView = findViewById(R.id.nav_view)
-        drawerLayout = findViewById(R.id.drawerFragment)
+        bottomNavigationView = binding.navView
+        drawerLayout = binding.drawerFragment
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         drawerLayout.addDrawerListener(this)
 
-//
         setSupportActionBar(binding.mainToolbar)
 
         val navController = findNavController(R.id.nav_host_fragment)
@@ -70,55 +67,33 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             binding.searchLay.hide()
             binding.imageView2.visibility = View.GONE
             when (destination.id) {
-                R.id.nav_home -> {
+                R.id.nav_home,
+                R.id.nav_categories  -> {
                     binding.searchLay.show()
-                    binding.imageView2.visibility = View.VISIBLE
-                    //homeLogo.visibility= View.VISIBLE
-                }
-                R.id.nav_categories -> {
-                    binding.searchLay.show()
-                    binding.imageView2.visibility = View.VISIBLE
-                }
-                R.id.nav_cart -> {
                     binding.imageView2.visibility = View.VISIBLE
                 }
 
-                R.id.nav_profile -> {
+                R.id.nav_cart, R.id.nav_profile -> {
                     binding.imageView2.visibility = View.VISIBLE
                 }
-                R.id.nav_checkOut -> {
-                    bottomNavigationView.hide()
+
+                R.id.nav_checkOut,R.id.nav_addressList ,R.id.nav_selectedAddress,
+                R.id.nav_myPaymentMethod ,R.id.nav_addAddress, R.id.nav_profileSettings,
+                R.id.nav_myFavouriteItems, R.id.nav_barcodeScanner-> {
+                    //bottomNavigationView.hide()
                 }
-                R.id.nav_addressList -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_selectedAddress -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_myPaymentMethod -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_addAddress -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_profileSettings -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_myFavouriteItems -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_barcodeScanner -> {
-                    bottomNavigationView.hide()
-                }
-                R.id.nav_subCategories -> {
-                    binding.searchLay.show()
-                }
-                R.id.nav_selectedSubCategory -> {
+
+                R.id.nav_subCategories,R.id.nav_selectedSubCategory -> {
                     binding.searchLay.show()
                 }
             }
         }
 
+    }
+
+    fun hideBottomNavigation()
+    {
+        bottomNavigationView.hide()
     }
 
 
@@ -145,9 +120,6 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         when (findNavController(R.id.nav_host_fragment).currentDestination?.id) {
             R.id.nav_home -> {
                 binding.searchLay.show()
-            }
-            R.id.nav_checkOut -> {
-                bottomNavigationView.hide()
             }
             R.id.nav_addressList -> {
                 bottomNavigationView.hide()
@@ -186,6 +158,11 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         return binding.drawerFragment
     }
 
+    fun setTitle(title: String)
+    {
+        binding.mainToolbar.title=title
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         hideSoftKeyboard()
@@ -201,7 +178,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     override fun onDrawerClosed(drawerView: View) {
         Log.i("drawer", "closed")
         //filterFragmentSideSheet.changePage(0)
-        (filterFragmentSideSheet as FilterFragment).changePage(0)
+        (supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).changePage(0)
     }
 
     override fun onDrawerStateChanged(newState: Int) {

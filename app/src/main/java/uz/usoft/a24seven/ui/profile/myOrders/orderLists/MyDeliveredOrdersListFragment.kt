@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_my_delivered_orders.*
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.FragmentMyActiveOrdersListBinding
 import uz.usoft.a24seven.databinding.FragmentMyDeliveredOrdersBinding
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
@@ -21,6 +19,7 @@ class MyDeliveredOrdersListFragment : Fragment() {
     private lateinit var myOrderListRecyclerAdapter: MyOrderListRecyclerAdapter
     private var _binding: FragmentMyDeliveredOrdersBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,7 +33,7 @@ class MyDeliveredOrdersListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMyDeliveredOrdersBinding.inflate(inflater, container, false)
-
+        setUpRecycler()
         return binding.root
     }
 
@@ -45,7 +44,7 @@ class MyDeliveredOrdersListFragment : Fragment() {
         }
     }
 
-    private fun setUpClickListener() {
+    private fun setUpRecycler() {
         binding.deliveredOrdersRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.deliveredOrdersRecycler.adapter = myOrderListRecyclerAdapter
         binding.deliveredOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), true, 1))

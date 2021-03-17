@@ -1,30 +1,27 @@
 package uz.usoft.a24seven.ui.profile.myOrders
 
 import android.os.Bundle
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.GravityCompat
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_my_orders.*
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.FragmentMyActiveOrdersListBinding
 import uz.usoft.a24seven.databinding.FragmentMyOrdersBinding
 
 class MyOrdersFragment : Fragment() {
 
     private var _binding: FragmentMyOrdersBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var pagerAdapter: MyOrdersPagerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-        setUpAdapters()
     }
 
     override fun onCreateView(
@@ -33,18 +30,23 @@ class MyOrdersFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMyOrdersBinding.inflate(inflater, container, false)
+        setUpPager()
         setUpTabLayouts()
         return binding.root
     }
 
-    private fun setUpAdapters() {
+    private fun setUpPager() {
+
         pagerAdapter = MyOrdersPagerAdapter(this)
         binding.pager.adapter = pagerAdapter
 
     }
 
+
     private fun setUpTabLayouts() {
-        TabLayoutMediator(tabLayout, pager) { tab, position ->
+
+
+        TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
                 0 -> {
                     tab.text = getString(R.string.in_wait)

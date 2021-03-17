@@ -15,7 +15,7 @@ class FilterOptionsFragment : Fragment() {
 
     private var _binding: FragmentFilterOptionsBinding? = null
     private val binding get() = _binding!!
-    private val parent = parentFragment as FilterFragment
+   // private val parent = parentFragment as FilterFragment
 
 
     private lateinit var adapter: FilterOptionsAdapter
@@ -38,7 +38,7 @@ class FilterOptionsFragment : Fragment() {
     private fun setUpAdapter() {
         adapter = FilterOptionsAdapter()
         adapter.onItemClick = {
-            parent.changePage(1)
+            (parentFragment as FilterFragment).changePage(1)
         }
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.navigation.fragment.findNavController
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCheckOutBinding
 
@@ -16,14 +17,12 @@ class CheckOutFragment : Fragment() {
 
     private var _binding: FragmentCheckOutBinding? = null
     private val binding get() = _binding!!
-    private val spinner: Spinner = binding.savedAddresses
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
 
         }
-        setUpSpinnerAdapter()
     }
 
     override fun onCreateView(
@@ -32,10 +31,13 @@ class CheckOutFragment : Fragment() {
     ): View? {
         _binding = FragmentCheckOutBinding.inflate(inflater, container, false)
         setUpClickLister()
+        setUpSpinnerAdapter()
+        (requireActivity() as MainActivity).hideBottomNavigation()
         return binding.root
     }
 
     private fun setUpSpinnerAdapter() {
+        val spinner = binding.savedAddresses
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.savedAddr,

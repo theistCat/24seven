@@ -45,16 +45,22 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         setUpRecycler()
         setOnClickListener()
+        setUpPager()
         return binding.root
     }
 
-    private fun setUpAdapter() {
+    private fun setUpPager(){
+
+        imgList.clear()
         imgList.add("https://i.imgur.com/0Q.png")
         imgList.add("https://i.imgur.com/0Q.png")
         imgList.add("https://i.imgur.com/0Q.png")
-        pagerAdapter.updateImageList(imgList)
         pagerAdapter = ImageCollectionAdapter(this)
+        pagerAdapter.updateImageList(imgList)
         setUpViewPager(pagerAdapter, binding.homePager, binding.homeTabLayout)
+    }
+
+    private fun setUpAdapter() {
         newProductsAdapter = ProductsListAdapter()
         popularProductsAdapter = ProductsListAdapter(isPopular = true)
 

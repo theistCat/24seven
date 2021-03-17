@@ -144,6 +144,7 @@ class ImageCollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment
     var fragmentImageList = ArrayList<Fragment>()
 
     fun updateImageList(imageList: ArrayList<String>) {
+        fragmentImageList.clear()
         imageList.forEach {
             fragmentImageList.add(ImageObjectFragment.newInstance(it))
         }

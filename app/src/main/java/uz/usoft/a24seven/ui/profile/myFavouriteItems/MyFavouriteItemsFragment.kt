@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.fragment_my_favourite_items.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
@@ -22,7 +23,7 @@ class MyFavouriteItemsFragment : Fragment() {
     private var _binding: FragmentMyFavouriteItemsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: ProductsListAdapter
-    private val sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
+    private lateinit var  sortBottomSheet: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +37,7 @@ class MyFavouriteItemsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMyFavouriteItemsBinding.inflate(inflater, container, false)
+        sortBottomSheet= createBottomSheet(R.layout.sort_bottomsheet)
         setUpOnRecycler()
         setUpOnClickerListener()
         return binding.root
