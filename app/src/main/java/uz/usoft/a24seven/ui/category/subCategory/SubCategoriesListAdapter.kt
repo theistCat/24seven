@@ -5,19 +5,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.databinding.ItemSubCategoryBinding
+import uz.usoft.a24seven.network.models.CategoryObject
 import uz.usoft.a24seven.network.models.MockData
 
 class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.ViewHolder>() {
-    var productsList: List<MockData.ProductObject>? = MockData.getSubCategoriesList()
+    var productsList: List<CategoryObject>? =null
 
 
-    fun updateList(productsList: List<MockData.ProductObject>) {
+    fun updateList(productsList: List<CategoryObject>) {
         this.productsList = productsList
         notifyDataSetChanged()
     }
 
 
-    var onItemClick: ((MockData.ProductObject) -> Unit)? = null
+    var onItemClick: ((CategoryObject) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -40,7 +41,7 @@ class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.V
             }
         }
 
-        fun bindData(product: MockData.ProductObject) {
+        fun bindData(product:CategoryObject) {
             val binding = binding as ItemSubCategoryBinding
             binding.subCategoryName.text = product.name
         }
