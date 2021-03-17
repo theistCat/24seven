@@ -6,9 +6,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.ui.news.NewsListAdapter
@@ -23,7 +23,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private var imgList = ArrayList<String>()
     private lateinit var pagerAdapter: ImageCollectionAdapter
-    private lateinit var homeViewModel: HomeViewModel
+    val homeViewModel: HomeViewModel by viewModel()
     private lateinit var newProductsAdapter: ProductsListAdapter
     private lateinit var popularProductsAdapter: ProductsListAdapter
     private lateinit var onSaleProductsAdapter: ProductsListAdapter
@@ -33,6 +33,8 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpAdapter()
+
+        homeViewModel.getHome()
     }
 
     override fun onCreateView(
@@ -40,8 +42,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         setUpRecycler()
         setOnClickListener()

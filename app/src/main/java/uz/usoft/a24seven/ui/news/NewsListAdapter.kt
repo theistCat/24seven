@@ -1,16 +1,14 @@
 package uz.usoft.a24seven.ui.news
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import kotlinx.android.synthetic.main.item_news.view.*
-import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ItemNewsBinding
 import uz.usoft.a24seven.databinding.ItemNewsGridBinding
-import uz.usoft.a24seven.network.di.MockData
-import uz.usoft.a24seven.network.di.MockData.ProductObject
+import uz.usoft.a24seven.network.models.MockData
+import uz.usoft.a24seven.network.models.MockData.ProductObject
 
 class NewsListAdapter(val isGrid: Boolean = false) :
     RecyclerView.Adapter<NewsListAdapter.ViewHolder>() {

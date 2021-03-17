@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.databinding.ItemFilterOptionBinding
-import uz.usoft.a24seven.network.di.MockData
+import uz.usoft.a24seven.network.models.MockData
 
 class   FilterOptionsAdapter() : RecyclerView.Adapter<FilterOptionsAdapter.ViewHolder>() {
 

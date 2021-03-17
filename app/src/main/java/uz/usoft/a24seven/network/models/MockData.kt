@@ -1,4 +1,4 @@
-package uz.usoft.a24seven.network.di
+package uz.usoft.a24seven.network.models
 
 import java.io.Serializable
 

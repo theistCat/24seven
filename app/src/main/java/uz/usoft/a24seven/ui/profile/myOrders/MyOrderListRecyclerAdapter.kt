@@ -2,14 +2,12 @@ package uz.usoft.a24seven.ui.profile.myOrders
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import kotlinx.android.synthetic.main.item_order.view.*
-import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ItemOrderBinding
-import uz.usoft.a24seven.network.di.MockData
+import uz.usoft.a24seven.network.models.MockData
 
 class MyOrderListRecyclerAdapter(val orderListType: String = "") :
     RecyclerView.Adapter<MyOrderListRecyclerAdapter.ViewHolder>() {

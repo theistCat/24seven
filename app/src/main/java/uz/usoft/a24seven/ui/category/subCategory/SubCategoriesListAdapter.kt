@@ -1,15 +1,11 @@
 package uz.usoft.a24seven.ui.category.subCategory
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import kotlinx.android.synthetic.main.item_sub_category.view.*
-import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.FragmentSubCategoriesBinding
 import uz.usoft.a24seven.databinding.ItemSubCategoryBinding
-import uz.usoft.a24seven.network.di.MockData
+import uz.usoft.a24seven.network.models.MockData
 
 class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.ViewHolder>() {
     var productsList: List<MockData.ProductObject>? = MockData.getSubCategoriesList()

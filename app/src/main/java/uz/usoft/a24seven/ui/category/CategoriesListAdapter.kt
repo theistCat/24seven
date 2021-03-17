@@ -1,15 +1,11 @@
 package uz.usoft.a24seven.ui.category
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import kotlinx.android.synthetic.main.item_category.view.*
-import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ItemCategoryBinding
-import uz.usoft.a24seven.databinding.ItemProductBinding
-import uz.usoft.a24seven.network.di.MockData
+import uz.usoft.a24seven.network.models.MockData
 
 class CategoriesListAdapter : RecyclerView.Adapter<CategoriesListAdapter.ViewHolder>() {
     var productsList: List<MockData.ProductObject>? = MockData.getCategoriesList()
