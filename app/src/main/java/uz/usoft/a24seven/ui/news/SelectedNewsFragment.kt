@@ -36,7 +36,7 @@ class SelectedNewsFragment : Fragment() {
     }
 
     private fun setUpAdapter() {
-        newsAdapter = NewsListAdapter()
+        newsAdapter = NewsListAdapter(requireContext())
         newsAdapter.onItemClick = {
             findNavController().navigate(R.id.action_nav_selectedNews_self)
         }

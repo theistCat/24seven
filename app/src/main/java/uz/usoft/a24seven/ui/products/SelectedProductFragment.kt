@@ -56,7 +56,7 @@ class SelectedProductFragment : Fragment() {
     }
 
     private fun setUpAdapters() {
-        similarItemAdapter = ProductsListAdapter()
+        similarItemAdapter = ProductsListAdapter(requireContext())
         feedbackListAdapter = FeedbackListAdapter()
     }
 

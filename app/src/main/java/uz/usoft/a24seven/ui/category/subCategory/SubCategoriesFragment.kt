@@ -13,6 +13,9 @@ import kotlinx.android.synthetic.main.fragment_sub_categories.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSubCategoriesBinding
+import uz.usoft.a24seven.network.models.CategoryObject
+import uz.usoft.a24seven.network.models.SubCategoriesObject
+import uz.usoft.a24seven.utils.navigate
 
 
 class SubCategoriesFragment : Fragment() {
@@ -44,10 +47,17 @@ class SubCategoriesFragment : Fragment() {
         adapter.onItemClick = {
             val subCategoryName = it.name
             val action =
+                if(it.parents.isEmpty())
                 SubCategoriesFragmentDirections.actionNavSubCategoriesToNavSelectedSubCategory(
                     subCategoryName
                 )
-            findNavController().navigate(action)
+                else{
+                    SubCategoriesFragmentDirections.actionNavSubCategoriesSelf(
+                        subCategoryName,
+                        SubCategoriesObject(it.parents as ArrayList<CategoryObject>)
+                    )
+                }
+            navigate(action)
         }
     }
 

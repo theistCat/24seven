@@ -1,26 +1,26 @@
 package uz.usoft.a24seven.ui.news
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import kotlinx.android.synthetic.main.item_news.view.*
 import uz.usoft.a24seven.databinding.ItemNewsBinding
 import uz.usoft.a24seven.databinding.ItemNewsGridBinding
-import uz.usoft.a24seven.network.models.MockData
-import uz.usoft.a24seven.network.models.MockData.ProductObject
+import uz.usoft.a24seven.network.models.Post
+import uz.usoft.a24seven.utils.image
 
-class NewsListAdapter(val isGrid: Boolean = false) :
+class NewsListAdapter(val context: Context, val isGrid: Boolean = false) :
     RecyclerView.Adapter<NewsListAdapter.ViewHolder>() {
-    var productsList: List<ProductObject>? = MockData.getProductList()
+    var list: List<Post>? = null
 
-    fun updateList(productsList: List<ProductObject>) {
-        this.productsList = productsList
+    fun updateList(productsList: List<Post>) {
+        this.list = productsList
         notifyDataSetChanged()
     }
 
 
-    var onItemClick: ((ProductObject) -> Unit)? = null
+    var onItemClick: ((Post) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -34,22 +34,36 @@ class NewsListAdapter(val isGrid: Boolean = false) :
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = productsList?.size ?: 0
+    override fun getItemCount() = list?.size ?: 0
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(productsList!![position])
+        holder.bindData(list!![position])
     }
 
     inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        val parent = itemView.parentLay
+
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(list!![adapterPosition])
             }
         }
 
-        fun bindData(product: ProductObject) {
+        fun bindData(news: Post) {
+            if(isGrid) {
+                val binding = binding as ItemNewsGridBinding
+                binding.newsImage.image(context,news.image)
+                binding.newsTitle.text=news.name
+                binding.newsDate.text=news.created_at
+            }
+            else {
+                val binding = binding as ItemNewsBinding
+                binding.newsImage.image(context,news.image)
+                binding.newsTitle.text=news.name
+                binding.newsDate.text=news.created_at
+            }
+
+
         }
     }
 }

@@ -1,16 +1,19 @@
 package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.ImageCollectionAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
@@ -46,7 +49,38 @@ class HomeFragment : Fragment() {
         setUpRecycler()
         setOnClickListener()
         setUpPager()
+        setUpObservers()
         return binding.root
+    }
+
+    private fun setUpObservers() {
+        homeViewModel.getHomeResponse.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Success -> {
+                        resource.data.compilations.forEach { it->
+                            when(it.title)
+                            {
+                                "Новые товары"->
+                                    newProductsAdapter.updateList(it.products)
+                                "Популярные товары"->
+                                    popularProductsAdapter.updateList(it.products)
+                                "Скидки"->
+                                    onSaleProductsAdapter.updateList(it.products)
+                            }
+                        }
+                        newsAdapter.updateList(resource.data.posts)
+
+                    }
+                    is Resource.GenericError -> {
+                    }
+                    is Resource.Error -> {
+                    }
+                }
+            }
+        })
     }
 
     private fun setUpPager(){
@@ -61,8 +95,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpAdapter() {
-        newProductsAdapter = ProductsListAdapter()
-        popularProductsAdapter = ProductsListAdapter(isPopular = true)
+        newProductsAdapter = ProductsListAdapter(requireContext())
+        popularProductsAdapter = ProductsListAdapter( requireContext())
 
         popularProductsAdapter.onItemClick = {
             val action =
@@ -70,7 +104,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        onSaleProductsAdapter = ProductsListAdapter()
+        onSaleProductsAdapter = ProductsListAdapter(requireContext())
 
         onSaleProductsAdapter.onItemClick = {
             val action =
@@ -84,7 +118,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        newsAdapter = NewsListAdapter()
+        newsAdapter = NewsListAdapter(requireContext())
 
         newsAdapter.onItemClick = {
             findNavController().navigate(R.id.action_nav_home_to_selectedNewsFragment)

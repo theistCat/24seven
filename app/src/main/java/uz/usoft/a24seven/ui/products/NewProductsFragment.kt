@@ -47,7 +47,7 @@ class NewProductsFragment : Fragment() {
     }
 
     private fun setUpAdapter() {
-        adapter = ProductsListAdapter(true)
+        adapter = ProductsListAdapter(requireContext(),isGrid = true)
         adapter.onItemClick = {
             val action = NewProductsFragmentDirections.actionNavNewProductsToNavSelectedProduct(
                 resources.getString(R.string.title_newProducts)

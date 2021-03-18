@@ -44,7 +44,7 @@ class MyFavouriteItemsFragment : Fragment() {
     }
 
     private fun setUpAdapters() {
-        adapter = ProductsListAdapter(true)
+        adapter = ProductsListAdapter(requireContext(),isGrid = true)
         adapter.onItemClick = {
             val action =
                 MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(

@@ -9,13 +9,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.HomeResponse
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
 
 class HomeViewModel constructor(private val repository: SevenRepository) : ViewModel() {
 
-    val getHomeResponse = MutableLiveData<Event<Resource<Any>>>()
+    val getHomeResponse = MutableLiveData<Event<Resource<HomeResponse>>>()
 
     fun getHome() {
         viewModelScope.launch {

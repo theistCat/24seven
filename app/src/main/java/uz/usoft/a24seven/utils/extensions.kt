@@ -17,8 +17,10 @@ import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.CallSuper
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.widget.doOnTextChanged
@@ -26,6 +28,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
@@ -119,6 +124,40 @@ fun Fragment.hideKeyboard() {
     activity?.hideSoftKeyboard()
 }
 
+
+fun ImageView.image(context: Context,imageLink: String)
+{
+    Glide.with(context).load(imageLink).placeholder(R.drawable.img).into(this)
+}
+
+
+/**
+ * navigate with animations.
+ * has one animation at the moment,
+ * later planed to add more with param to choose one
+ *
+ * @return nothing
+ */
+fun Fragment.navigate(resId:Int, args:Bundle?=null){
+
+    val builder = NavOptions.Builder()
+        .setEnterAnim(R.anim.slide_in)
+        .setExitAnim(R.anim.slide_out)
+        .setPopEnterAnim(R.anim.fade_in)
+        .setPopExitAnim(R.anim.fade_out)
+
+    this.findNavController().navigate(resId,args,builder.build())
+}
+
+fun Fragment.navigate(action:NavDirections){
+
+    val builder = NavOptions.Builder()
+        .setEnterAnim(R.anim.slide_in)
+        .setExitAnim(R.anim.fade_out)
+        .setPopEnterAnim(R.anim.fade_in)
+        .setPopExitAnim(R.anim.slide_out)
+    this.findNavController().navigate(action,builder.build())
+}
 //fun EditText.formatPhoneMask() {
 //    val affineFormats: MutableList<String> = ArrayList()
 //    affineFormats.add("+998 [00] [000] [00] [00]")
