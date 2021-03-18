@@ -1,20 +1,21 @@
-package uz.usoft.a24seven.ui.home
+package uz.usoft.a24seven.ui.category.selectedSubCategory
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.ItemProductBinding
 import uz.usoft.a24seven.databinding.ItemProductGridBinding
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.utils.image
 
-class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
-    RecyclerView.Adapter<ProductsListAdapter.ViewHolder>() {
+class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Product,ProductPagingListAdapter.ViewHolder>(PRODUCT)
+{
 
     var productsList: List<Product>? = null
 
@@ -27,30 +28,26 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
     var onItemClick: ((Product) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            if (isGrid) ItemProductGridBinding.inflate(
+        val binding = ItemProductGridBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
-            else
-                ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(binding)
 
     }
 
-    override fun getItemCount() = productsList?.size ?: 0
 
-    override fun onBindViewHolder(holder: ProductsListAdapter.ViewHolder, position: Int) {
-        holder.bindData(productsList!![position])
+    override fun onBindViewHolder(holder: ProductPagingListAdapter.ViewHolder, position: Int) {
+        holder.bindData(getItem(position) as Product)
     }
 
     inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(getItem(bindingAdapterPosition) as Product)
             }
         }
 
@@ -75,28 +72,19 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                     binding.productName.text=product.name
                     binding.productImage.image(context,product.image!!.path_thumb)
                 }
-                is ItemProductBinding -> {
-                    val binding = binding as ItemProductBinding
-                    if(product.discount_percent>0)
-                    {
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price_discount,product.unit.name)
-                        binding.productOldPrice.text = context.getString(R.string.money_format_sum, product.price_discount)
-                        binding.productTag.text=context.getString(R.string.discount,product.discount_percent)
-                    }
-                    else{
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price,product.unit.name)
-                        binding.productOldPrice.visibility= View.INVISIBLE
-                        binding.productTag.isVisible=false
-                    }
-                    binding.productCategory.text=product.category.name
-                    binding.productComments.text=context.getString(R.string.comments_count,product.comments_count)
-                    binding.productIsFav.isChecked=product.is_favorite
-                    binding.productName.text=product.name
-                    binding.productImage.image(context,product.image!!.path_thumb)
-                }
-
             }
         }
     }
+    companion object {
+        private val PRODUCT = object :
+            DiffUtil.ItemCallback<Product>() {
+            // Concert details may have changed if reloaded from the database,
+            // but ID is fixed.
+            override fun areItemsTheSame(oldConcert: Product,
+                                         newConcert: Product) = oldConcert.id == newConcert.id
 
+            override fun areContentsTheSame(oldConcert: Product,
+                                            newConcert: Product) = oldConcert == newConcert
+        }
+    }
 }

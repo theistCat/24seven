@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +24,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.constraintlayout.widget.Placeholder
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -49,7 +51,7 @@ import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
 import java.util.*
 
-fun Fragment.toDpi(px: Int): Int {
+fun Fragment.toDp(px: Int): Int {
     return ((requireContext().resources.displayMetrics.density * px) + 0.5f).toInt()
 }
 
@@ -125,9 +127,9 @@ fun Fragment.hideKeyboard() {
 }
 
 
-fun ImageView.image(context: Context,imageLink: String)
+fun ImageView.image(context: Context,imageLink: String,placeholder: Int=R.drawable.img)
 {
-    Glide.with(context).load(imageLink).placeholder(R.drawable.img).into(this)
+    Glide.with(context).load(imageLink).placeholder(placeholder).into(this)
 }
 
 
@@ -142,9 +144,9 @@ fun Fragment.navigate(resId:Int, args:Bundle?=null){
 
     val builder = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in)
-        .setExitAnim(R.anim.slide_out)
+        .setExitAnim(R.anim.fade_out)
         .setPopEnterAnim(R.anim.fade_in)
-        .setPopExitAnim(R.anim.fade_out)
+        .setPopExitAnim(R.anim.slide_out)
 
     this.findNavController().navigate(resId,args,builder.build())
 }
@@ -239,7 +241,7 @@ fun Fragment.setUpViewPager(
 ) {
     viewPager.adapter = adapter
 
-    TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+    TabLayoutMediator(tabLayout, viewPager) { _, _ ->
     }.attach()
 
 }

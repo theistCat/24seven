@@ -49,12 +49,12 @@ class SubCategoriesFragment : Fragment() {
             val action =
                 if(it.parents.isEmpty())
                 SubCategoriesFragmentDirections.actionNavSubCategoriesToNavSelectedSubCategory(
-                    subCategoryName
+                    subCategoryName,it.id
                 )
                 else{
                     SubCategoriesFragmentDirections.actionNavSubCategoriesSelf(
-                        subCategoryName,
-                        SubCategoriesObject(it.parents as ArrayList<CategoryObject>)
+                        subcategories,
+                        subCategoryName
                     )
                 }
             navigate(action)

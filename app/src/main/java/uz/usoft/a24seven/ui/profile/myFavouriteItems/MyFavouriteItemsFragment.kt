@@ -8,15 +8,13 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.fragment_my_favourite_items.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyFavouriteItemsBinding
-import uz.usoft.a24seven.databinding.FragmentSelectedAddressBinding
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.createBottomSheet
-import uz.usoft.a24seven.utils.toDpi
+import uz.usoft.a24seven.utils.toDp
 
 class MyFavouriteItemsFragment : Fragment() {
 
@@ -46,18 +44,18 @@ class MyFavouriteItemsFragment : Fragment() {
     private fun setUpAdapters() {
         adapter = ProductsListAdapter(requireContext(),isGrid = true)
         adapter.onItemClick = {
-            val action =
-                MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(
-                    resources.getString(R.string.title_myFavourites)
-                )
-            findNavController().navigate(action)
+//            val action =
+//                MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(
+//                    resources.getString(R.string.title_myFavourites)
+//                )
+//            findNavController().navigate(action)
         }
     }
 
     private fun setUpOnRecycler() {
         binding.favouriteProductsRecycler.adapter = adapter
         binding.favouriteProductsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.favouriteProductsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16)))
+        binding.favouriteProductsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
     }
 
     private fun setUpOnClickerListener() {

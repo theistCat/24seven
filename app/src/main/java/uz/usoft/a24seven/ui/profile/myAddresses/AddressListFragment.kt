@@ -7,11 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_address_list.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentAddressListBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.toDpi
+import uz.usoft.a24seven.utils.toDp
 
 class AddressListFragment : Fragment() {
 
@@ -45,7 +44,7 @@ class AddressListFragment : Fragment() {
     private fun setUpRecyclerView() {
         binding.addressRecycler.adapter = adapter
         binding.addressRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.addressRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), true, 1))
+        binding.addressRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true, 1))
     }
 
     private fun setUpClickListener() {

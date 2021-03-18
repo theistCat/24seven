@@ -5,12 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.*
 
@@ -18,9 +21,11 @@ class SelectedProductFragment : Fragment() {
 
     private var _binding: FragmentSelectedProductBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var pagerAdapter: ImageCollectionAdapter
     private lateinit var similarItemAdapter: ProductsListAdapter
     private lateinit var feedbackListAdapter: FeedbackListAdapter
+    private val productViewModel:ProductViewModel by viewModel()
     private val safeArgs: SelectedProductFragmentArgs by navArgs()
     private val imgList = ArrayList<String>()
     private lateinit var feedbackBottomSheet : BottomSheetDialog
@@ -31,6 +36,41 @@ class SelectedProductFragment : Fragment() {
         arguments?.let {
         }
         setUpAdapters()
+        productViewModel.getProduct(safeArgs.productId)
+    }
+
+    private fun setUpObservers() {
+
+        productViewModel.getProductResponse.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Success -> {
+                        val product = resource.data
+                        binding.productName.text = product.name
+                        if (product.discount_percent > 0) {
+                            binding.productOldPrice.text = requireContext().getString(R.string.money_format_sum, product.price)
+                            binding.productPrice.text = requireContext().getString(R.string.money_format_sum, product.price_discount)
+                        } else {
+                            binding.productPrice.text  = requireContext().getString(R.string.money_format_sum, product.price)
+                            binding.productOldPrice.visibility=View.INVISIBLE
+                            binding.discountTag.visibility=View.INVISIBLE
+
+                        }
+
+                        product.products_related?.let { similarItems ->
+                            similarItemAdapter.updateList(similarItems)
+                        }
+
+                    }
+                    is Resource.GenericError -> {
+                    }
+                    is Resource.Error -> {
+                    }
+                }
+            }
+        })
     }
 
     override fun onCreateView(
@@ -42,6 +82,8 @@ class SelectedProductFragment : Fragment() {
         setUpData()
         setUpOnClick()
         setUpPager()
+
+        setUpObservers()
         feedbackBottomSheet= createBottomSheet(R.layout.feedback_bottomsheet)
         return binding.root
     }
@@ -63,7 +105,7 @@ class SelectedProductFragment : Fragment() {
     private fun setUpRecyclerAdapters() {
         binding.similarItemsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.similarItemsRecycler.adapter = similarItemAdapter
-        binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+        binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
         binding.feedbackRecycler.adapter = feedbackListAdapter
         binding.feedbackRecycler.layoutManager = LinearLayoutManager(requireContext())

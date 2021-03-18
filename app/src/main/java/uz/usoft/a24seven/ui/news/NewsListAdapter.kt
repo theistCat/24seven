@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ItemNewsBinding
 import uz.usoft.a24seven.databinding.ItemNewsGridBinding
 import uz.usoft.a24seven.network.models.Post
@@ -52,13 +53,13 @@ class NewsListAdapter(val context: Context, val isGrid: Boolean = false) :
         fun bindData(news: Post) {
             if(isGrid) {
                 val binding = binding as ItemNewsGridBinding
-                binding.newsImage.image(context,news.image)
+                binding.newsImage.image(context,news.image, R.drawable.placeholder_news)
                 binding.newsTitle.text=news.name
                 binding.newsDate.text=news.created_at
             }
             else {
                 val binding = binding as ItemNewsBinding
-                binding.newsImage.image(context,news.image)
+                binding.newsImage.image(context,news.image,R.drawable.placeholder_news)
                 binding.newsTitle.text=news.name
                 binding.newsDate.text=news.created_at
             }

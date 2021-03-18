@@ -7,13 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_my_active_orders_list.*
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyActiveOrdersListBinding
-import uz.usoft.a24seven.databinding.FragmentMyFavouriteItemsBinding
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.toDpi
+import uz.usoft.a24seven.utils.toDp
 
 
 class MyActiveOrdersListFragment : Fragment() {
@@ -48,7 +46,7 @@ class MyActiveOrdersListFragment : Fragment() {
     private fun setUpClickListener() {
         binding.activeOrdersRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.activeOrdersRecycler.adapter = myOrderListRecyclerAdapter
-        binding.activeOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), true, 1))
+        binding.activeOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true, 1))
 
     }
 }

@@ -1,7 +1,6 @@
 package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -18,7 +17,7 @@ import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.ImageCollectionAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.setUpViewPager
-import uz.usoft.a24seven.utils.toDpi
+import uz.usoft.a24seven.utils.toDp
 
 class HomeFragment : Fragment() {
 
@@ -99,23 +98,23 @@ class HomeFragment : Fragment() {
         popularProductsAdapter = ProductsListAdapter( requireContext())
 
         popularProductsAdapter.onItemClick = {
-            val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items))
-            findNavController().navigate(action)
+//            val action =
+//                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items))
+//            findNavController().navigate(action)
         }
 
         onSaleProductsAdapter = ProductsListAdapter(requireContext())
 
         onSaleProductsAdapter.onItemClick = {
-            val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items))
-            findNavController().navigate(action)
+//            val action =
+//                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items))
+//            findNavController().navigate(action)
         }
 
         newProductsAdapter.onItemClick = {
-            val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts))
-            findNavController().navigate(action)
+//            val action =
+//                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts))
+//            findNavController().navigate(action)
         }
 
         newsAdapter = NewsListAdapter(requireContext())
@@ -130,23 +129,23 @@ class HomeFragment : Fragment() {
         binding.newItemsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.newItemsRecycler.adapter = newProductsAdapter
-        binding.newItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+        binding.newItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
 
         binding.popularItemsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.popularItemsRecycler.adapter = popularProductsAdapter
-        binding.popularItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+        binding.popularItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
         binding.onSaleItemsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.onSaleItemsRecycler.adapter = onSaleProductsAdapter
-        binding.onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+        binding.onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
         binding.newsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.newsRecycler.adapter = newsAdapter
-        binding.newsRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), false))
+        binding.newsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
     }
 

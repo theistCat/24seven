@@ -11,7 +11,7 @@ import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyDeliveredOrdersBinding
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.toDpi
+import uz.usoft.a24seven.utils.toDp
 
 
 class MyDeliveredOrdersListFragment : Fragment() {
@@ -47,7 +47,7 @@ class MyDeliveredOrdersListFragment : Fragment() {
     private fun setUpRecycler() {
         binding.deliveredOrdersRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.deliveredOrdersRecycler.adapter = myOrderListRecyclerAdapter
-        binding.deliveredOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDpi(16), true, 1))
+        binding.deliveredOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true, 1))
 
     }
 
