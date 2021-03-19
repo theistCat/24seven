@@ -44,6 +44,8 @@ class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.V
         fun bindData(product:CategoryObject) {
             val binding = binding as ItemSubCategoryBinding
             binding.subCategoryName.text = product.name
+            binding.productCount.text = product.products_count.toString()
+
         }
     }
 }

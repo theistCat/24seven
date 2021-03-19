@@ -1,10 +1,6 @@
 package uz.usoft.a24seven.network.models
 
-data class CategoryProductsResponse(
+data class NewsResponse(
     val pagination: Pagination,
-    val items: List<Product>
+    val items:List<Post>
 )
-
-
-
-

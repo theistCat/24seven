@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
+import uz.usoft.a24seven.network.models.Compilation
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.news.NewsListAdapter
@@ -31,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var popularProductsAdapter: ProductsListAdapter
     private lateinit var onSaleProductsAdapter: ProductsListAdapter
     private lateinit var newsAdapter: NewsListAdapter
+    private var recyclers: List<Compilation>?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,17 +62,8 @@ class HomeFragment : Fragment() {
                     is Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        resource.data.compilations.forEach { it->
-                            when(it.title)
-                            {
-                                "Новые товары"->
-                                    showRecycler(binding.newItemsRecycler,newProductsAdapter,it.products as ArrayList<Product>,binding.newItems,binding.newItemsAll)
-                                "Популярные товары"->
-                                    showRecycler(binding.popularItemsRecycler,popularProductsAdapter,it.products as ArrayList<Product>,binding.popularItems,binding.allPopularItems)
-                                "Скидки"->
-                                    showRecycler(binding.onSaleItemsRecycler,onSaleProductsAdapter,it.products as ArrayList<Product>,binding.onSaleItems,binding.allOnSaleItems)
-                            }
-                        }
+                        recyclers=resource.data.compilations
+                        unhideRecyclers()
                         newsAdapter.updateList(resource.data.posts)
 
                     }
@@ -112,28 +105,30 @@ class HomeFragment : Fragment() {
 
 
         popularProductsAdapter.onItemClick = {
-//            val action =
-//                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items))
-//            findNavController().navigate(action)
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items),it.id)
+            navigate(action)
         }
 
 
         onSaleProductsAdapter.onItemClick = {
-//            val action =
-//                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items))
-//            findNavController().navigate(action)
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items),it.id)
+            navigate(action)
         }
 
         newProductsAdapter.onItemClick = {
-//            val action =
-//                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts))
-//            findNavController().navigate(action)
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts),it.id)
+            navigate(action)
         }
 
         newsAdapter = NewsListAdapter(requireContext())
 
         newsAdapter.onItemClick = {
-            findNavController().navigate(R.id.action_nav_home_to_selectedNewsFragment)
+
+            val action=HomeFragmentDirections.actionNavHomeToSelectedNewsFragment(it.id)
+            navigate(action)
         }
 
     }
@@ -162,18 +157,18 @@ class HomeFragment : Fragment() {
 
     private fun setOnClickListener() {
         binding.newItems.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+           // findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
         }
         binding.newItemsAll.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+        //    findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
         }
 
         binding.news.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
+            navigate(R.id.action_nav_home_to_newsFragment)
         }
 
         binding.allNews.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_home_to_newsFragment)
+            navigate(R.id.action_nav_home_to_newsFragment)
         }
 
         //        scanBarCode.setOnClickListener {
@@ -185,6 +180,26 @@ class HomeFragment : Fragment() {
 //        }
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        unhideRecyclers()
+    }
+
+    private fun unhideRecyclers()
+    {
+        recyclers?.forEach { it->
+            when(it.title)
+            {
+                "Новые товары"->
+                    showRecycler(binding.newItemsRecycler,newProductsAdapter,it.products as ArrayList<Product>,binding.newItems,binding.newItemsAll)
+                "Популярные товары"->
+                    showRecycler(binding.popularItemsRecycler,popularProductsAdapter,it.products as ArrayList<Product>,binding.popularItems,binding.allPopularItems)
+                "Скидки"->
+                    showRecycler(binding.onSaleItemsRecycler,onSaleProductsAdapter,it.products as ArrayList<Product>,binding.onSaleItems,binding.allOnSaleItems)
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

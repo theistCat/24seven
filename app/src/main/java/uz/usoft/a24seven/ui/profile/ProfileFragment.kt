@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.fragment_profile.*
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.FragmentMyOrdersBinding
 import uz.usoft.a24seven.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {

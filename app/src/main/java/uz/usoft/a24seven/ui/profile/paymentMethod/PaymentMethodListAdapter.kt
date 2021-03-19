@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import kotlinx.android.synthetic.main.item_payment_method.view.*
 import uz.usoft.a24seven.databinding.ItemPaymentMethodBinding
 import uz.usoft.a24seven.network.models.MockData
 
@@ -35,7 +34,7 @@ class PaymentMethodListAdapter() : RecyclerView.Adapter<PaymentMethodListAdapter
         holder.bindData(productsList!![position])
     }
 
-    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemPaymentMethodBinding) : RecyclerView.ViewHolder(binding.root) {
 
 
         init {
@@ -54,7 +53,7 @@ class PaymentMethodListAdapter() : RecyclerView.Adapter<PaymentMethodListAdapter
                 notifyDataSetChanged()
             }
 
-            itemView.checkBox.setOnClickListener {
+            binding.checkBox.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
 
                 if (!productsList!![adapterPosition].isDefault) {

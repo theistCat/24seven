@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,10 +20,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.CallSuper
-import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.constraintlayout.widget.Placeholder
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -46,9 +43,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
-import kotlinx.android.synthetic.main.fragment_collection_object.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
 import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
 import java.util.*
@@ -161,14 +158,15 @@ fun Fragment.navigate(resId:Int, args:Bundle?=null){
     this.findNavController().navigate(resId,args,builder.build())
 }
 
-fun Fragment.navigate(action:NavDirections){
+fun Fragment.navigate(action:NavDirections,slowLoad:Boolean=false){
 
     val builder = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in)
         .setExitAnim(R.anim.fade_out)
         .setPopEnterAnim(R.anim.fade_in)
         .setPopExitAnim(R.anim.slide_out)
-    this.findNavController().navigate(action,builder.build())
+
+    this.findNavController().navigate(action, builder.build())
 }
 //fun EditText.formatPhoneMask() {
 //    val affineFormats: MutableList<String> = ArrayList()
@@ -216,19 +214,24 @@ private const val ARG_IMG_LINK = "imageLink"
 
 
 class ImageObjectFragment() : Fragment() {
+
+    private var _binding: FragmentCollectionObjectBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_collection_object, container, false)
+        _binding= FragmentCollectionObjectBinding.inflate(layoutInflater,container,false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
-            var imageLink = it.getString(ARG_IMG_LINK)
+            val imageLink = it.getString(ARG_IMG_LINK)
             Glide.with(requireContext()).load(imageLink).placeholder(R.drawable.banner)
-                .into(imageView)
+                .into(binding.imageView)
         }
     }
 

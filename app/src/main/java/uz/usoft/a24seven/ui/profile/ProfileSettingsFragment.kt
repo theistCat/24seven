@@ -7,10 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
-import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.FragmentProfileBinding
 import uz.usoft.a24seven.databinding.FragmentProfileSettingsBinding
 import uz.usoft.a24seven.utils.createBottomSheet
 import java.util.*

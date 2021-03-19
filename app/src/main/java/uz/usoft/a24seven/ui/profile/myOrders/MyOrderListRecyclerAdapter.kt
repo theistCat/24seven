@@ -4,8 +4,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
-import kotlinx.android.synthetic.main.item_order.view.*
 import uz.usoft.a24seven.databinding.ItemOrderBinding
 import uz.usoft.a24seven.network.models.MockData
 
@@ -35,17 +33,15 @@ class MyOrderListRecyclerAdapter(val orderListType: String = "") :
         holder.bindData(productsList!![position])
     }
 
-    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
-
+    inner class ViewHolder(val binding: ItemOrderBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            itemView.orderDetails.setOnClickListener {
+            binding.orderDetails.setOnClickListener {
                 onItemClick?.invoke(productsList!![adapterPosition])
             }
         }
 
         fun bindData(product: MockData.ProductObject) {
-            val binding = binding as ItemOrderBinding
             when (orderListType) {
                 "active" -> {
                     binding.orderStatus.setTextColor(Color.parseColor("#1BC06D"))

@@ -10,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import uz.usoft.a24seven.BuildConfig
 import uz.usoft.a24seven.network.SevenApi
+import uz.usoft.a24seven.network.utils.ConnectivityInterceptor
 import uz.usoft.kidya.data.PrefManager
 import java.util.concurrent.TimeUnit
 
@@ -45,7 +46,7 @@ val networkModule = module {
             .readTimeout(5, TimeUnit.SECONDS)
             .writeTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
-            //     .addInterceptor(LogoutInterceptor(get()))
+            .addInterceptor(ConnectivityInterceptor())
             .addInterceptor { chain ->
                 val token = " "
                 val locale: String = PrefManager.getLocale(get())

@@ -5,9 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_new_products.*
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentNewProductsBinding
@@ -51,9 +49,9 @@ class NewProductsFragment : Fragment() {
     }
 
     private fun setUpRecycler() {
-        newProductsRecycler.adapter = adapter
-        newProductsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
-        newProductsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
+        binding.newProductsRecycler.adapter = adapter
+        binding.newProductsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.newProductsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
 
     }
 

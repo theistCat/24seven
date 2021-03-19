@@ -6,9 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_selected_order.*
-import uz.usoft.a24seven.R
-import uz.usoft.a24seven.databinding.FragmentMyInactiveOrdersBinding
 import uz.usoft.a24seven.databinding.FragmentSelectedOrderBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 
