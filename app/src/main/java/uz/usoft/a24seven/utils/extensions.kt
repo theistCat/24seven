@@ -25,6 +25,7 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.constraintlayout.widget.Placeholder
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -39,6 +40,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
@@ -132,6 +134,14 @@ fun ImageView.image(context: Context,imageLink: String,placeholder: Int=R.drawab
     Glide.with(context).load(imageLink).placeholder(placeholder).into(this)
 }
 
+/**
+ * Transforms static java function Snackbar.make() to an extension function on View.
+ */
+fun Fragment.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar.make(requireView(), snackbarText, timeLength)
+        .setBackgroundTint(ContextCompat.getColor(requireContext(),R.color.snackbar))
+        .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white)).show()
+}
 
 /**
  * navigate with animations.

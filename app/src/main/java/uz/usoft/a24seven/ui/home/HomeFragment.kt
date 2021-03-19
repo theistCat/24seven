@@ -5,19 +5,20 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
+import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.news.NewsListAdapter
-import uz.usoft.a24seven.utils.ImageCollectionAdapter
-import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.setUpViewPager
-import uz.usoft.a24seven.utils.toDp
+import uz.usoft.a24seven.utils.*
 
 class HomeFragment : Fragment() {
 
@@ -63,23 +64,34 @@ class HomeFragment : Fragment() {
                             when(it.title)
                             {
                                 "Новые товары"->
-                                    newProductsAdapter.updateList(it.products)
+                                    showRecycler(binding.newItemsRecycler,newProductsAdapter,it.products as ArrayList<Product>,binding.newItems,binding.newItemsAll)
                                 "Популярные товары"->
-                                    popularProductsAdapter.updateList(it.products)
+                                    showRecycler(binding.popularItemsRecycler,popularProductsAdapter,it.products as ArrayList<Product>,binding.popularItems,binding.allPopularItems)
                                 "Скидки"->
-                                    onSaleProductsAdapter.updateList(it.products)
+                                    showRecycler(binding.onSaleItemsRecycler,onSaleProductsAdapter,it.products as ArrayList<Product>,binding.onSaleItems,binding.allOnSaleItems)
                             }
                         }
                         newsAdapter.updateList(resource.data.posts)
 
                     }
                     is Resource.GenericError -> {
+                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
                     }
                     is Resource.Error -> {
+                        resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
                 }
             }
         })
+    }
+
+
+    private fun showRecycler(recycler:RecyclerView,adapter: ProductsListAdapter,list:ArrayList<Product>,title:TextView,showAll:TextView)
+    {
+        adapter.updateList(list)
+        title.isVisible=true
+        recycler.isVisible=true
+        showAll.isVisible=true
     }
 
     private fun setUpPager(){
@@ -96,6 +108,8 @@ class HomeFragment : Fragment() {
     private fun setUpAdapter() {
         newProductsAdapter = ProductsListAdapter(requireContext())
         popularProductsAdapter = ProductsListAdapter( requireContext())
+        onSaleProductsAdapter = ProductsListAdapter(requireContext())
+
 
         popularProductsAdapter.onItemClick = {
 //            val action =
@@ -103,7 +117,6 @@ class HomeFragment : Fragment() {
 //            findNavController().navigate(action)
         }
 
-        onSaleProductsAdapter = ProductsListAdapter(requireContext())
 
         onSaleProductsAdapter.onItemClick = {
 //            val action =
@@ -126,21 +139,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpRecycler() {
-        binding.newItemsRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.newItemsRecycler.adapter = newProductsAdapter
-        binding.newItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
-
-
-        binding.popularItemsRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.popularItemsRecycler.adapter = popularProductsAdapter
-        binding.popularItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
-
-        binding.onSaleItemsRecycler.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.onSaleItemsRecycler.adapter = onSaleProductsAdapter
-        binding.onSaleItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
+        initProductRecyclers(binding.newItemsRecycler,newProductsAdapter)
+        initProductRecyclers(binding.popularItemsRecycler,popularProductsAdapter)
+        initProductRecyclers(binding.onSaleItemsRecycler,onSaleProductsAdapter)
 
         binding.newsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -148,6 +149,15 @@ class HomeFragment : Fragment() {
         binding.newsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
     }
+
+    private fun initProductRecyclers(recycler: RecyclerView, adapter: ProductsListAdapter)
+    {
+        recycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recycler.adapter = adapter
+        recycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
+    }
+
 
 
     private fun setOnClickListener() {
