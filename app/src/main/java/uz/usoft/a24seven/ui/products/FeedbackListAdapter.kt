@@ -2,22 +2,26 @@ package uz.usoft.a24seven.ui.products
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.databinding.ItemFeedbackBinding
+import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.MockData
+import uz.usoft.a24seven.network.models.Product
 
-class FeedbackListAdapter() : RecyclerView.Adapter<FeedbackListAdapter.ViewHolder>() {
+class FeedbackListAdapter() : PagingDataAdapter<Comment,FeedbackListAdapter.ViewHolder>(COMMENT) {
 
-    var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
+   // var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
 
-    fun updateList(productsList: List<MockData.ProductObject>) {
-        this.productsList = productsList
-        notifyDataSetChanged()
-    }
+//    fun updateList(productsList: List<MockData.ProductObject>) {
+//        this.productsList = productsList
+//        notifyDataSetChanged()
+//    }
 
 
-    var onItemClick: ((MockData.ProductObject) -> Unit)? = null
+    var onItemClick: ((Comment) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemFeedbackBinding.inflate(
@@ -26,21 +30,38 @@ class FeedbackListAdapter() : RecyclerView.Adapter<FeedbackListAdapter.ViewHolde
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = productsList?.size ?: 0
-
     override fun onBindViewHolder(holder: FeedbackListAdapter.ViewHolder, position: Int) {
-        holder.bindData(productsList!![position])
+        holder.bindData(getItem(position) as Comment)
     }
 
-    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemFeedbackBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(getItem(bindingAdapterPosition) as Comment)
             }
         }
 
-        fun bindData(product: MockData.ProductObject) {
+        fun bindData(comment: Comment) {
+            binding.userName.text=comment.first_name
+            binding.feedbackDate.text=comment.created_at
+            binding.feedbackBody.text=comment.body
+
+        }
+    }
+
+    companion object {
+        private val COMMENT = object :
+            DiffUtil.ItemCallback<Comment>() {
+            // Concert details may have changed if reloaded from the database,
+            // but ID is fixed.
+            override fun areItemsTheSame(oldConcert: Comment,
+                                         newConcert: Comment
+            ) = oldConcert.id == newConcert.id
+
+            override fun areContentsTheSame(oldConcert: Comment,
+                                            newConcert: Comment
+            ) = oldConcert == newConcert
         }
     }
 }

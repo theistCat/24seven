@@ -6,9 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
@@ -36,7 +39,18 @@ class SelectedProductFragment : Fragment() {
         arguments?.let {
         }
         setUpAdapters()
+        getProductComments()
         productViewModel.getProduct(safeArgs.productId)
+
+    }
+
+    private fun getProductComments() {
+        lifecycleScope.launch {
+            productViewModel.getProductCommentsResponse(safeArgs.productId).collect {
+                feedbackListAdapter.submitData(it)
+                return@collect
+            }
+        }
     }
 
     private fun setUpObservers() {

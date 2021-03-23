@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
@@ -19,6 +20,12 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
     fun getProductsResponse(categoryId: Int,
                             orderBy: String): Flow<PagingData<Product>> {
         return repository.getCategoryProducts(categoryId, orderBy)
+            .cachedIn(viewModelScope)
+    }
+
+
+    fun getProductCommentsResponse(productId: Int): Flow<PagingData<Comment>> {
+        return repository.getProductComments(productId)
             .cachedIn(viewModelScope)
     }
 

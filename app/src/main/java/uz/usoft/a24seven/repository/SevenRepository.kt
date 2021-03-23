@@ -6,15 +6,18 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import uz.usoft.a24seven.network.SevenApi
+import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Post
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.safeApiCall
 import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingSource
 import uz.usoft.a24seven.ui.news.NewsPagingSource
+import uz.usoft.a24seven.ui.products.CommentsPagingSource
 
 class SevenRepository(private val api: SevenApi) {
     private val PRODUCT_PAGING_SIZE = 5
+    private val COMMENT_PAGING_SIZE = 5
     private val NEWS_PAGING_SIZE = 5
 
     suspend fun getHome() = flow {
@@ -44,6 +47,20 @@ class SevenRepository(private val api: SevenApi) {
             ),
             pagingSourceFactory = { ProductPagingSource(api, categoryId, orderBy) }
         ).flow
+    }
+
+    fun getProductComments(
+        productID: Int,
+    ): Flow<PagingData<Comment>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = COMMENT_PAGING_SIZE,
+                enablePlaceholders = true,
+                maxSize = 50
+            ),
+            pagingSourceFactory = { CommentsPagingSource(api, productID) }
+        ).flow
+
     }
 
     fun getNews(): Flow<PagingData<Post>> {
