@@ -9,6 +9,7 @@ import uz.usoft.a24seven.network.SevenApi
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Post
 import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.safeApiCall
 import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingSource
@@ -45,7 +46,7 @@ class SevenRepository(private val api: SevenApi) {
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { ProductPagingSource(api, categoryId, orderBy) }
+            pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy)}catch (e:NoConnectivityException) { throw  e} }
         ).flow
     }
 

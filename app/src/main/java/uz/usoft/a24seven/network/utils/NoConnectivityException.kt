@@ -7,5 +7,5 @@ import java.io.IOException
 
 class NoConnectivityException() : IOException(){
     override val message: String?
-        get() = MainApplication.mContext.getString(R.string.no_connectivity_exception)
+    get() = MainApplication.mContext.getString(R.string.no_connectivity_exception)
 }

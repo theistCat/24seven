@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             bottomNavigationView.show()
             binding.searchLay.hide()
             binding.imageView2.visibility = View.GONE
+            supportActionBar?.show()
             when (destination.id) {
                 R.id.nav_home,
                 R.id.nav_categories  -> {
@@ -96,7 +97,21 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         bottomNavigationView.hide()
     }
 
+    fun hideToolbar()
+    {
+        supportActionBar?.hide()
+    }
 
+
+    fun showBottomNavigation()
+    {
+        bottomNavigationView.show()
+    }
+
+    fun showToolbar()
+    {
+        supportActionBar?.show()
+    }
     fun openDrawer() {
         drawerLayout.openDrawer(GravityCompat.END)
     }

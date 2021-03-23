@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Event
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
 
@@ -19,8 +20,12 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
 
     fun getProductsResponse(categoryId: Int,
                             orderBy: String): Flow<PagingData<Product>> {
-        return repository.getCategoryProducts(categoryId, orderBy)
-            .cachedIn(viewModelScope)
+        return try {
+         repository.getCategoryProducts(categoryId, orderBy)
+            .cachedIn(viewModelScope) }
+        catch (e:NoConnectivityException) {
+            throw e
+        }
     }
 
 

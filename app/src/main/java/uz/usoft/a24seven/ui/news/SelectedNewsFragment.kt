@@ -10,17 +10,20 @@ import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedNewsBinding
+import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.utils.image
 import uz.usoft.a24seven.utils.showSnackbar
 
-class SelectedNewsFragment : Fragment() {
+class SelectedNewsFragment : BaseFragment() {
 
     private var _binding: FragmentSelectedNewsBinding? = null
     private val binding get() = _binding!!
     private val safeArgs: SelectedNewsFragmentArgs by navArgs()
     private lateinit var newsAdapter: NewsListAdapter
     private val newsViewModel: NewsViewModel by viewModel()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +38,30 @@ class SelectedNewsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSelectedNewsBinding.inflate(inflater, container, false)
-       // setUpRecyclerView()
-        setUpObserver()
-        return binding.root
+        return superOnCreateView(binding)
     }
 
-    private fun setUpObserver() {
+    override fun onRetryClicked() {
+        newsViewModel.showNews(safeArgs.newsId)
+        mainActivity.showToolbar()
+        mainActivity.showBottomNavigation()
+    }
+
+
+    override fun setUpRecyclers() {
+        //  TODO("removed for now")
+
+//        binding.otherNewsRecycler.layoutManager =
+//            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//        binding.otherNewsRecycler.adapter = newsAdapter
+//        binding.otherNewsRecycler.addItemDecoration(SpacesItemDecoration(16, false))
+    }
+
+    override fun setUpOnClickListeners() {
+      //  TODO("Not yet implemented")
+    }
+
+    override fun setUpObservers() {
         newsViewModel.showNewsResponse.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
@@ -52,18 +73,27 @@ class SelectedNewsFragment : Fragment() {
                         binding.newsTitle.text=news.name
                         binding.newsDate.text=news.created_at
                         binding.newsImage.image(requireContext(),news.image, R.drawable.placeholder_news)
+                        hideNoConnectionDialog()
                     }
                     is Resource.GenericError -> {
                         showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
                     }
                     is Resource.Error -> {
-                        resource.exception.message?.let { it1 -> showSnackbar(it1) }
+                        if(resource.exception is NoConnectivityException)
+                            showNoConnectionDialog()
                     }
                 }
             }
         })
     }
 
+    override fun setUpPagers() {
+        //TODO("Not yet implemented")
+    }
+
+    override fun setUpData() {
+        //TODO("Not yet implemented")
+    }
 
     // removed for now
 //    private fun setUpAdapter() {

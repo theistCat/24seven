@@ -16,11 +16,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
+import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.*
 
-class SelectedProductFragment : Fragment() {
+class SelectedProductFragment : BaseFragment() {
 
     private var _binding: FragmentSelectedProductBinding? = null
     private val binding get() = _binding!!
@@ -44,6 +46,15 @@ class SelectedProductFragment : Fragment() {
 
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSelectedProductBinding.inflate(inflater, container, false)
+        feedbackBottomSheet= createBottomSheet(R.layout.feedback_bottomsheet)
+        return superOnCreateView(binding)
+    }
+
     private fun getProductComments() {
         lifecycleScope.launch {
             productViewModel.getProductCommentsResponse(safeArgs.productId).collect {
@@ -53,7 +64,22 @@ class SelectedProductFragment : Fragment() {
         }
     }
 
-    private fun setUpObservers() {
+    override fun setUpRecyclers() {
+        binding.similarItemsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.similarItemsRecycler.adapter = similarItemAdapter
+        binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
+
+        binding.feedbackRecycler.adapter = feedbackListAdapter
+        binding.feedbackRecycler.layoutManager = LinearLayoutManager(requireContext())
+    }
+
+    override fun setUpOnClickListeners() {
+        binding.leaveFeedback.setOnClickListener {
+            feedbackBottomSheet.show()
+        }
+    }
+
+    override fun setUpObservers() {
 
         productViewModel.getProductResponse.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { resource ->
@@ -76,33 +102,22 @@ class SelectedProductFragment : Fragment() {
                         product.products_related?.let { similarItems ->
                             similarItemAdapter.updateList(similarItems)
                         }
+                        hideNoConnectionDialog()
 
                     }
                     is Resource.GenericError -> {
+                        showSnackbar(resource.errorResponse.message)
                     }
                     is Resource.Error -> {
+                        if(resource.exception is NoConnectivityException)
+                            showNoConnectionDialog()
                     }
                 }
             }
         })
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSelectedProductBinding.inflate(inflater, container, false)
-        setUpRecyclerAdapters()
-        setUpData()
-        setUpOnClick()
-        setUpPager()
-
-        setUpObservers()
-        feedbackBottomSheet= createBottomSheet(R.layout.feedback_bottomsheet)
-        return binding.root
-    }
-
-    private fun setUpPager() {
+    override fun setUpPagers() {
         imgList.add("https://i.imgur.com/0Qy.png")
         imgList.add("https://i.imgur.com/0Qy.png")
         imgList.add("https://i.imgur.com/0Qy.png")
@@ -111,27 +126,20 @@ class SelectedProductFragment : Fragment() {
         setUpViewPager(pagerAdapter, binding.productPager, binding.productTabLayout)
     }
 
+    override fun onRetryClicked() {
+        getProductComments()
+        productViewModel.getProduct(safeArgs.productId)
+        mainActivity.showToolbar()
+        mainActivity.showBottomNavigation()
+    }
+
     private fun setUpAdapters() {
         similarItemAdapter = ProductsListAdapter(requireContext())
         feedbackListAdapter = FeedbackListAdapter()
     }
 
-    private fun setUpRecyclerAdapters() {
-        binding.similarItemsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.similarItemsRecycler.adapter = similarItemAdapter
-        binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
-        binding.feedbackRecycler.adapter = feedbackListAdapter
-        binding.feedbackRecycler.layoutManager = LinearLayoutManager(requireContext())
-    }
-
-    private fun setUpData() {
-        (requireActivity() as MainActivity).setTitle(safeArgs.selectedCategoryName)
-    }
-
-    private fun setUpOnClick() {
-        binding.leaveFeedback.setOnClickListener {
-            feedbackBottomSheet.show()
-        }
+    override fun setUpData() {
+        mainActivity.setTitle(safeArgs.selectedCategoryName)
     }
 }

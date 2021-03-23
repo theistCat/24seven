@@ -13,15 +13,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.network.models.Compilation
 import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.network.utils.NoConnectionDialogListener
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.news.NewsListAdapter
+import uz.usoft.a24seven.ui.noConnection.NoConnectionFragment
 import uz.usoft.a24seven.utils.*
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment(){
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -38,7 +43,6 @@ class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpAdapter()
-
         homeViewModel.getHome()
     }
 
@@ -48,30 +52,30 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        setUpRecycler()
-        setOnClickListener()
-        setUpPager()
-        setUpObservers()
-        return binding.root
+        return superOnCreateView(binding)
     }
 
-    private fun setUpObservers() {
+    override fun setUpObservers() {
         homeViewModel.getHomeResponse.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        recyclers=resource.data.compilations
+                        recyclers = resource.data.compilations
                         unhideRecyclers()
                         newsAdapter.updateList(resource.data.posts)
+                        hideNoConnectionDialog()
 
                     }
                     is Resource.GenericError -> {
                         showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
                     }
                     is Resource.Error -> {
-                        resource.exception.message?.let { it1 -> showSnackbar(it1) }
+                        if (resource.exception is NoConnectivityException) {
+                            showNoConnectionDialog()
+                        }
+                        //resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
                 }
             }
@@ -87,7 +91,7 @@ class HomeFragment : Fragment() {
         showAll.isVisible=true
     }
 
-    private fun setUpPager(){
+    override fun setUpPagers(){
 
         imgList.clear()
         imgList.add("https://i.imgur.com/0Q.png")
@@ -96,6 +100,10 @@ class HomeFragment : Fragment() {
         pagerAdapter = ImageCollectionAdapter(this)
         pagerAdapter.updateImageList(imgList)
         setUpViewPager(pagerAdapter, binding.homePager, binding.homeTabLayout)
+    }
+
+    override fun setUpData() {
+        //TODO("Not yet implemented")
     }
 
     private fun setUpAdapter() {
@@ -133,7 +141,7 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun setUpRecycler() {
+    override fun setUpRecyclers() {
         initProductRecyclers(binding.newItemsRecycler,newProductsAdapter)
         initProductRecyclers(binding.popularItemsRecycler,popularProductsAdapter)
         initProductRecyclers(binding.onSaleItemsRecycler,onSaleProductsAdapter)
@@ -155,7 +163,7 @@ class HomeFragment : Fragment() {
 
 
 
-    private fun setOnClickListener() {
+    override fun setUpOnClickListeners() {
         binding.newItems.setOnClickListener {
            // findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
         }
@@ -204,6 +212,13 @@ class HomeFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return super.onOptionsItemSelected(item)
+
+    }
+
+    override fun onRetryClicked() {
+        homeViewModel.getHome()
+        mainActivity.showBottomNavigation()
+        mainActivity.showToolbar()
 
     }
 }
