@@ -1,0 +1,57 @@
+package uz.usoft.a24seven.ui.loader
+
+import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
+import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.FragmentLoaderDialogBinding
+
+class LoaderDialogFragment : DialogFragment() {
+
+    private var _binding:FragmentLoaderDialogBinding?=null
+    private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        _binding= FragmentLoaderDialogBinding.inflate(layoutInflater,container,false)
+        return binding.root
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            LoaderDialogFragment().apply {
+                arguments = Bundle().apply {
+                }
+            }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        dialog?.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(),R.color.background)))
+
+        val loadingAnimation=AnimationUtils.loadAnimation(requireContext(),R.anim.loading)
+        binding.imageView3.startAnimation(loadingAnimation)
+    }
+}

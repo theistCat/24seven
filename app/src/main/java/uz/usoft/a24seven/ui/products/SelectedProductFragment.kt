@@ -81,10 +81,12 @@ class SelectedProductFragment : BaseFragment() {
 
     override fun setUpObservers() {
 
-        productViewModel.getProductResponse.observe(viewLifecycleOwner, Observer {
+        productViewModel.getProductResponse.observe(viewLifecycleOwner,  {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
+                        hideNoConnectionDialog()
+                        showLoadingDialog()
                     }
                     is Resource.Success -> {
                         val product = resource.data
@@ -103,12 +105,15 @@ class SelectedProductFragment : BaseFragment() {
                             similarItemAdapter.updateList(similarItems)
                         }
                         hideNoConnectionDialog()
+                        hideLoadingDialog()
 
                     }
                     is Resource.GenericError -> {
+                        hideLoadingDialog()
                         showSnackbar(resource.errorResponse.message)
                     }
                     is Resource.Error -> {
+                        hideLoadingDialog()
                         if(resource.exception is NoConnectivityException)
                             showNoConnectionDialog()
                     }

@@ -115,8 +115,13 @@ class SelectedSubCategoryFragment : BaseFragment() {
                             showNoConnectionDialog()
                         }
                     }
+                    is LoadState.Loading->{
+                        hideNoConnectionDialog()
+                        showLoadingDialog()
+                    }
                     else->{
                         hideNoConnectionDialog()
+                        hideLoadingDialog()
                     }
                 }
 

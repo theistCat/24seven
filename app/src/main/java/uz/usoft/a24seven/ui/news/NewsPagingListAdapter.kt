@@ -63,13 +63,13 @@ class NewsPagingListAdapter(val context: Context) : PagingDataAdapter<Post,NewsP
             DiffUtil.ItemCallback<Post>() {
             // Concert details may have changed if reloaded from the database,
             // but ID is fixed.
-            override fun areItemsTheSame(oldConcert: Post,
-                                         newConcert: Post
-            ) = oldConcert.id == newConcert.id
+            override fun areItemsTheSame(oldItem: Post,
+                                         newItem: Post
+            ) = oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldConcert: Post,
-                                            newConcert: Post
-            ) = oldConcert == newConcert
+            override fun areContentsTheSame(oldItem: Post,
+                                            newItem: Post
+            ) = oldItem == newItem
         }
     }
 }

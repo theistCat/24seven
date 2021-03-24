@@ -56,22 +56,26 @@ class HomeFragment : BaseFragment(){
     }
 
     override fun setUpObservers() {
-        homeViewModel.getHomeResponse.observe(viewLifecycleOwner, Observer {
+        homeViewModel.getHomeResponse.observe(viewLifecycleOwner,  {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
+                        hideNoConnectionDialog()
+                        showLoadingDialog()
                     }
                     is Resource.Success -> {
                         recyclers = resource.data.compilations
                         unhideRecyclers()
                         newsAdapter.updateList(resource.data.posts)
                         hideNoConnectionDialog()
-
+                        hideLoadingDialog()
                     }
                     is Resource.GenericError -> {
+                        hideLoadingDialog()
                         showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
                     }
                     is Resource.Error -> {
+                        hideLoadingDialog()
                         if (resource.exception is NoConnectivityException) {
                             showNoConnectionDialog()
                         }

@@ -62,10 +62,12 @@ class SelectedNewsFragment : BaseFragment() {
     }
 
     override fun setUpObservers() {
-        newsViewModel.showNewsResponse.observe(viewLifecycleOwner, Observer {
+        newsViewModel.showNewsResponse.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
+                        hideNoConnectionDialog()
+                        showLoadingDialog()
                     }
                     is Resource.Success -> {
                         val news=resource.data
@@ -74,11 +76,14 @@ class SelectedNewsFragment : BaseFragment() {
                         binding.newsDate.text=news.created_at
                         binding.newsImage.image(requireContext(),news.image, R.drawable.placeholder_news)
                         hideNoConnectionDialog()
+                        hideLoadingDialog()
                     }
                     is Resource.GenericError -> {
+                        hideLoadingDialog()
                         showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
                     }
                     is Resource.Error -> {
+                        hideLoadingDialog()
                         if(resource.exception is NoConnectivityException)
                             showNoConnectionDialog()
                     }

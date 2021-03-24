@@ -4,11 +4,13 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.MainActivity
+import uz.usoft.a24seven.ui.loader.LoaderDialogFragment
 import uz.usoft.a24seven.ui.noConnection.NoConnectionFragment
 
 abstract class BaseFragment : Fragment() , NoConnectionDialogListener{
 
     var noConnectionFragment: NoConnectionFragment?=null
+    var loadingDialog: LoaderDialogFragment?=null
     lateinit var  mainActivity:MainActivity
 
     abstract fun setUpRecyclers()
@@ -34,16 +36,28 @@ abstract class BaseFragment : Fragment() , NoConnectionDialogListener{
         setUpData()
     }
 
+    fun showLoadingDialog(){
+        val fm = requireActivity().supportFragmentManager
+        if (loadingDialog == null) {
+            loadingDialog = LoaderDialogFragment()
+        }
+        loadingDialog!!.show(fm, "Loading")
+        loadingDialog!!.isCancelable = false
+    }
+
     fun showNoConnectionDialog(){
-            if (noConnectionFragment == null) {
+        val fm = requireActivity().supportFragmentManager
+        if (noConnectionFragment == null) {
                 noConnectionFragment = NoConnectionFragment(this)
-                val fm = requireActivity().supportFragmentManager
-                noConnectionFragment!!.show(fm, "NoConnection")
-                noConnectionFragment!!.isCancelable = false
-            }
+        }
+        noConnectionFragment!!.show(fm, "NoConnection")
+        noConnectionFragment!!.isCancelable = false
     }
 
     fun hideNoConnectionDialog() {
         noConnectionFragment?.dismiss()
+    }
+    fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
     }
 }
