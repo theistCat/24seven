@@ -19,6 +19,7 @@ import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
 import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.createBottomSheet
@@ -105,7 +106,20 @@ class SelectedSubCategoryFragment : BaseFragment() {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading
                 //retry.isVisible = loadState.refresh !is LoadState.Loading
-                //errorMsg.isVisible = loadState.refresh is LoadState.Error
+                when(loadStates.refresh)
+                {
+                    is LoadState.Error->{
+                        val error = loadStates.refresh as LoadState.Error
+                        if (error.error is NoConnectivityException)
+                        {
+                            showNoConnectionDialog()
+                        }
+                    }
+                    else->{
+                        hideNoConnectionDialog()
+                    }
+                }
+
             }
         }
     }

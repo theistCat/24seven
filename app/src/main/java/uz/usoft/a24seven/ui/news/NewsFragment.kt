@@ -7,13 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentNewsBinding
 import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.toDp
@@ -29,7 +32,7 @@ class NewsFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-        setUpOnAdapter()
+        setUpAdapter()
         getNews()
     }
 
@@ -47,7 +50,7 @@ class NewsFragment : BaseFragment() {
         mainActivity.showBottomNavigation()
     }
 
-    private fun setUpOnAdapter() {
+    private fun setUpAdapter() {
         newsAdapter = NewsPagingListAdapter(requireContext())
         newsAdapter.onItemClick = {
             val action = NewsFragmentDirections.actionNavNewsToSelectedNewsFragment(it.id)
@@ -75,7 +78,26 @@ class NewsFragment : BaseFragment() {
     }
 
     override fun setUpObservers() {
-        //TODO("Not yet implemented")
+        lifecycleScope.launch {
+            newsAdapter.loadStateFlow.collectLatest { loadStates ->
+                //progressBar.isVisible = loadStates.refresh is LoadState.Loading
+                //retry.isVisible = loadState.refresh !is LoadState.Loading
+                when(loadStates.refresh)
+                {
+                    is LoadState.Error->{
+                        val error = loadStates.refresh as LoadState.Error
+                        if (error.error is NoConnectivityException)
+                        {
+                            showNoConnectionDialog()
+                        }
+                    }
+                    else->{
+                        hideNoConnectionDialog()
+                    }
+                }
+
+            }
+        }
     }
 
     override fun setUpPagers() {

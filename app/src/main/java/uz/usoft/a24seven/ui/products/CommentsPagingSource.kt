@@ -6,6 +6,7 @@ import androidx.paging.PagingState
 import retrofit2.HttpException
 import uz.usoft.a24seven.network.SevenApi
 import uz.usoft.a24seven.network.models.Comment
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import java.io.IOException
 
 private const val STARTING_PAGE_INDEX = 1
@@ -26,7 +27,9 @@ class CommentsPagingSource(
                 prevKey = response.pagination.previous,
                 nextKey = response.pagination.next,
             )
-        } catch (exception: IOException) {
+        } catch (exception: NoConnectivityException) {
+            return LoadResult.Error(exception)
+        }catch (exception: IOException) {
             return LoadResult.Error(exception)
         } catch (exception: HttpException) {
             return LoadResult.Error(exception)
