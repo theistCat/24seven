@@ -49,7 +49,7 @@ class LoaderDialogFragment : DialogFragment() {
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.MATCH_PARENT
         )
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(),R.color.background)))
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(requireContext(),R.color.background_transparent)))
 
         val loadingAnimation=AnimationUtils.loadAnimation(requireContext(),R.anim.loading)
         binding.imageView3.startAnimation(loadingAnimation)
