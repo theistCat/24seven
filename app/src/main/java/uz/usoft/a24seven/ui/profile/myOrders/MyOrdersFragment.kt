@@ -66,7 +66,10 @@ class MyOrdersFragment : Fragment() {
                 R.color.tabInactiveOrder
             )
         )
-        binding.tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)
+
+        //for some reason this line is causing a bug where indicator is not visible
+        //binding.tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)
+
         binding.tabLayout.setSelectedTabIndicatorGravity(TabLayout.INDICATOR_GRAVITY_CENTER)
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
