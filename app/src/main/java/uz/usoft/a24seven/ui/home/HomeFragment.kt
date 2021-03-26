@@ -7,23 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.network.models.Compilation
 import uz.usoft.a24seven.network.models.Product
-import uz.usoft.a24seven.network.utils.BaseFragment
-import uz.usoft.a24seven.network.utils.NoConnectionDialogListener
+import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.news.NewsListAdapter
-import uz.usoft.a24seven.ui.noConnection.NoConnectionFragment
 import uz.usoft.a24seven.utils.*
 
 class HomeFragment : BaseFragment(){
@@ -52,6 +46,7 @@ class HomeFragment : BaseFragment(){
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+
         return superOnCreateView(binding)
     }
 
@@ -79,7 +74,7 @@ class HomeFragment : BaseFragment(){
                         if (resource.exception is NoConnectivityException) {
                             showNoConnectionDialog()
                         }
-                        //resource.exception.message?.let { it1 -> showSnackbar(it1) }
+                        else resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
                 }
             }

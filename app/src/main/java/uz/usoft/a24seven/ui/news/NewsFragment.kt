@@ -1,21 +1,18 @@
 package uz.usoft.a24seven.ui.news
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentNewsBinding
-import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate

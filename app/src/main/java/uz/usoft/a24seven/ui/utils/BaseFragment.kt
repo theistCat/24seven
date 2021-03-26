@@ -1,13 +1,14 @@
-package uz.usoft.a24seven.network.utils
+package uz.usoft.a24seven.ui.utils
 
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.MainActivity
+import uz.usoft.a24seven.network.utils.NoConnectionDialogListener
 import uz.usoft.a24seven.ui.loader.LoaderDialogFragment
 import uz.usoft.a24seven.ui.noConnection.NoConnectionFragment
 
-abstract class BaseFragment : Fragment() , NoConnectionDialogListener{
+abstract class BaseFragment : Fragment() , NoConnectionDialogListener {
 
     var noConnectionFragment: NoConnectionFragment?=null
     var loadingDialog: LoaderDialogFragment?=null
@@ -41,8 +42,10 @@ abstract class BaseFragment : Fragment() , NoConnectionDialogListener{
         if (loadingDialog == null) {
             loadingDialog = LoaderDialogFragment()
         }
-        loadingDialog!!.show(fm, "Loading")
-        loadingDialog!!.isCancelable = false
+        if(!loadingDialog!!.isAdded) {
+            loadingDialog!!.show(fm, "Loading")
+            loadingDialog!!.isCancelable = false
+        }
     }
 
     fun showNoConnectionDialog(){
@@ -50,8 +53,10 @@ abstract class BaseFragment : Fragment() , NoConnectionDialogListener{
         if (noConnectionFragment == null) {
                 noConnectionFragment = NoConnectionFragment(this)
         }
-        noConnectionFragment!!.show(fm, "NoConnection")
-        noConnectionFragment!!.isCancelable = false
+        if(!noConnectionFragment!!.isAdded) {
+            noConnectionFragment!!.show(fm, "NoConnection")
+            noConnectionFragment!!.isCancelable = false
+        }
     }
 
     fun hideNoConnectionDialog() {

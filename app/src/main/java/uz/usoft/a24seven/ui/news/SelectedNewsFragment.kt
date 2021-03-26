@@ -1,16 +1,14 @@
 package uz.usoft.a24seven.ui.news
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedNewsBinding
-import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.utils.image
@@ -86,7 +84,9 @@ class SelectedNewsFragment : BaseFragment() {
                         hideLoadingDialog()
                         if(resource.exception is NoConnectivityException)
                             showNoConnectionDialog()
+                        else resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
+
                 }
             }
         })

@@ -1,11 +1,9 @@
 package uz.usoft.a24seven.ui.products
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,10 +11,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
-import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
@@ -116,6 +113,7 @@ class SelectedProductFragment : BaseFragment() {
                         hideLoadingDialog()
                         if(resource.exception is NoConnectivityException)
                             showNoConnectionDialog()
+                        else resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
                 }
             }

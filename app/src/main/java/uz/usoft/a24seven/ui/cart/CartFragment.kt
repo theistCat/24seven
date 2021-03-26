@@ -1,15 +1,13 @@
 package uz.usoft.a24seven.ui.cart
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCartBinding
-import uz.usoft.a24seven.network.utils.BaseFragment
+import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
 
