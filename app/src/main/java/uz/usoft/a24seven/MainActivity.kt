@@ -7,8 +7,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,6 +26,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +42,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         setSupportActionBar(binding.mainToolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -90,6 +93,13 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             }
         }
 
+        bottomNavigationView.setOnNavigationItemSelectedListener {item ->
+            if(navController.currentDestination?.id != item.itemId) {
+                onNavDestinationSelected(item, navController)
+            }
+            else false
+
+        }
     }
 
     fun hideBottomNavigation()
@@ -120,9 +130,10 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         drawerLayout.closeDrawer(GravityCompat.END)
     }
 
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         hideSoftKeyboard()
-        val navController = findNavController(R.id.nav_host_fragment)
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
@@ -132,7 +143,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             if (isOpen) bottomNavigationView.hide()
         }
 
-        when (findNavController(R.id.nav_host_fragment).currentDestination?.id) {
+        when (navController.currentDestination?.id) {
             R.id.nav_home -> {
                 binding.searchLay.show()
             }

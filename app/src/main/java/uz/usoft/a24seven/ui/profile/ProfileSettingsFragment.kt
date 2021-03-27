@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentProfileSettingsBinding
 import uz.usoft.a24seven.utils.createBottomSheet
@@ -33,13 +35,21 @@ class ProfileSettingsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentProfileSettingsBinding.inflate(inflater, container, false)
-        bottomsheet=createBottomSheet(R.layout.changepasword_bottomsheet)
+        bottomsheet=createBottomSheet(R.layout.change_language_bottomsheet)
         setUpOnClickListener()
         return binding.root
     }
 
     private fun setUpOnClickListener() {
-        binding.changePassword.setOnClickListener {
+        val mainActivity=requireActivity() as MainActivity
+        binding.switch1.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked){
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        binding.changeLanguage.setOnClickListener {
             bottomsheet.show()
         }
         binding.profileDOB.setOnClickListener {
