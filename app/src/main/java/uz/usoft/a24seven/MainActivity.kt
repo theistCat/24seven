@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+       
 
         bottomNavigationView = binding.navView
         drawerLayout = binding.drawerFragment
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
         binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_backicon)
 
         binding.scanBarCode.setOnClickListener {
             navController.navigate(R.id.nav_barcodeScanner)

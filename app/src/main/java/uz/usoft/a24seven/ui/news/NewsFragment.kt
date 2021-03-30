@@ -18,10 +18,8 @@ import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.toDp
 
-class NewsFragment : BaseFragment() {
+class NewsFragment : BaseFragment<FragmentNewsBinding>(FragmentNewsBinding::inflate) {
 
-    private var _binding: FragmentNewsBinding? = null
-    private val binding get() = _binding!!
     private lateinit var newsAdapter: NewsPagingListAdapter
     private val newsViewModel: NewsViewModel by viewModel()
 
@@ -33,15 +31,7 @@ class NewsFragment : BaseFragment() {
         getNews()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentNewsBinding.inflate(inflater, container, false)
-        return superOnCreateView(binding)
-    }
-
-    override fun onRetryClicked() {
+    override fun onRetry() {
         getNews()
         mainActivity.showToolbar()
         mainActivity.showBottomNavigation()
@@ -70,10 +60,6 @@ class NewsFragment : BaseFragment() {
         binding.newsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true, 2))
     }
 
-    override fun setUpOnClickListeners() {
-        //TODO("Not yet implemented")
-    }
-
     override fun setUpObservers() {
         lifecycleScope.launch {
             newsAdapter.loadStateFlow.collectLatest { loadStates ->
@@ -85,7 +71,7 @@ class NewsFragment : BaseFragment() {
                         val error = loadStates.refresh as LoadState.Error
                         if (error.error is NoConnectivityException)
                         {
-                            showNoConnectionDialog()
+                            showNoConnectionDialog(this@NewsFragment::onRetry)
                         }
                     }
                     is LoadState.Loading->{
@@ -101,14 +87,4 @@ class NewsFragment : BaseFragment() {
             }
         }
     }
-
-    override fun setUpPagers() {
-        //TODO("Not yet implemented")
-    }
-
-    override fun setUpData() {
-        //TODO("Not yet implemented")
-    }
-
-
 }

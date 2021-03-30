@@ -19,10 +19,7 @@ import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.utils.*
 
-class SelectedProductFragment : BaseFragment() {
-
-    private var _binding: FragmentSelectedProductBinding? = null
-    private val binding get() = _binding!!
+class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(FragmentSelectedProductBinding::inflate) {
 
     private lateinit var pagerAdapter: ImageCollectionAdapter
     private lateinit var similarItemAdapter: ProductsListAdapter
@@ -41,15 +38,6 @@ class SelectedProductFragment : BaseFragment() {
         getProductComments()
         productViewModel.getProduct(safeArgs.productId)
 
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSelectedProductBinding.inflate(inflater, container, false)
-        feedbackBottomSheet= createBottomSheet(R.layout.feedback_bottomsheet)
-        return superOnCreateView(binding)
     }
 
     private fun getProductComments() {
@@ -112,7 +100,7 @@ class SelectedProductFragment : BaseFragment() {
                     is Resource.Error -> {
                         hideLoadingDialog()
                         if(resource.exception is NoConnectivityException)
-                            showNoConnectionDialog()
+                            showNoConnectionDialog(this::onRetry)
                         else resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
                 }
@@ -129,7 +117,7 @@ class SelectedProductFragment : BaseFragment() {
         setUpViewPager(pagerAdapter, binding.productPager, binding.productTabLayout)
     }
 
-    override fun onRetryClicked() {
+    override fun onRetry() {
         getProductComments()
         productViewModel.getProduct(safeArgs.productId)
         mainActivity.showToolbar()
@@ -142,7 +130,7 @@ class SelectedProductFragment : BaseFragment() {
     }
 
 
-    override fun setUpData() {
+    override fun setUpUI() {
         mainActivity.setTitle(safeArgs.selectedCategoryName)
     }
 }

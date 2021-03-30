@@ -11,7 +11,7 @@ import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentNoConnectionBinding
 import uz.usoft.a24seven.network.utils.NoConnectionDialogListener
 
-class NoConnectionFragment(val listener: NoConnectionDialogListener) : DialogFragment() {
+class NoConnectionFragment(val retryCall:()->Unit) : DialogFragment() {
     private var _binding: FragmentNoConnectionBinding? = null
     private val binding get() = _binding!!
 
@@ -38,7 +38,7 @@ class NoConnectionFragment(val listener: NoConnectionDialogListener) : DialogFra
 
     private fun setUpClickListeners() {
         binding.tryAgain.setOnClickListener {
-            listener.onRetryClicked()
+            retryCall.invoke()
         }
     }
 

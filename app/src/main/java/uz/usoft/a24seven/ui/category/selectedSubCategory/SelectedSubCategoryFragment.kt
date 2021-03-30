@@ -24,10 +24,8 @@ import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.toDp
 
 
-class SelectedSubCategoryFragment : BaseFragment() {
+class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBinding>(FragmentSelectedSubCategoryBinding::inflate) {
 
-    private var _binding: FragmentSelectedSubCategoryBinding? = null
-    private val binding get() = _binding!!
     private lateinit var adapter: ProductPagingListAdapter
     private val safeArgs: SelectedSubCategoryFragmentArgs by navArgs()
     private val productViewModel: ProductViewModel by viewModel()
@@ -51,16 +49,6 @@ class SelectedSubCategoryFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSelectedSubCategoryBinding.inflate(inflater, container, false)
-        sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
-        return superOnCreateView(binding)
-
-    }
-
 
     override fun setUpRecyclers() {
         binding.selectedSubCategoryRecycler.adapter = adapter
@@ -77,7 +65,7 @@ class SelectedSubCategoryFragment : BaseFragment() {
         }
     }
 
-    override fun onRetryClicked() {
+    override fun onRetry() {
         getProducts()
         mainActivity.showToolbar()
         mainActivity.showBottomNavigation()
@@ -94,8 +82,9 @@ class SelectedSubCategoryFragment : BaseFragment() {
         }
     }
 
-    override fun setUpData() {
+    override fun setUpUI() {
         mainActivity.setTitle(safeArgs.subCategoryName)
+        sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
     }
 
     override fun setUpObservers() {
@@ -109,7 +98,7 @@ class SelectedSubCategoryFragment : BaseFragment() {
                         val error = loadStates.refresh as LoadState.Error
                         if (error.error is NoConnectivityException)
                         {
-                            showNoConnectionDialog()
+                            showNoConnectionDialog(this@SelectedSubCategoryFragment::onRetry)
                         }
                     }
                     is LoadState.Loading->{
@@ -124,9 +113,5 @@ class SelectedSubCategoryFragment : BaseFragment() {
 
             }
         }
-    }
-
-    override fun setUpPagers() {
-        //TODO("Not yet implemented")
     }
 }

@@ -27,6 +27,9 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
@@ -46,6 +49,7 @@ import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
+import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
 import java.util.*
@@ -125,6 +129,14 @@ fun Fragment.hideKeyboard() {
     activity?.hideSoftKeyboard()
 }
 
+
+fun <T> LifecycleOwner.observe(liveData: LiveData<T>, action: (t: T) -> Unit) {
+    liveData.observe(this, Observer { it?.let { t -> action(t) } })
+}
+
+fun <T> LifecycleOwner.observeEvent(liveData: LiveData<Event<T>>, action: (t: Event<T>) -> Unit) {
+    liveData.observe(this, Observer { it?.let { t -> action(t) } })
+}
 
 fun ImageView.image(context: Context,imageLink: String,placeholder: Int=R.drawable.img)
 {

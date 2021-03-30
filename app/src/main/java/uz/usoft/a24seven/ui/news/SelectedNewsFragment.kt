@@ -14,10 +14,8 @@ import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.utils.image
 import uz.usoft.a24seven.utils.showSnackbar
 
-class SelectedNewsFragment : BaseFragment() {
+class SelectedNewsFragment : BaseFragment<FragmentSelectedNewsBinding>(FragmentSelectedNewsBinding::inflate) {
 
-    private var _binding: FragmentSelectedNewsBinding? = null
-    private val binding get() = _binding!!
     private val safeArgs: SelectedNewsFragmentArgs by navArgs()
     private lateinit var newsAdapter: NewsListAdapter
     private val newsViewModel: NewsViewModel by viewModel()
@@ -31,15 +29,8 @@ class SelectedNewsFragment : BaseFragment() {
       //  setUpAdapter()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentSelectedNewsBinding.inflate(inflater, container, false)
-        return superOnCreateView(binding)
-    }
 
-    override fun onRetryClicked() {
+    override fun onRetry() {
         newsViewModel.showNews(safeArgs.newsId)
         mainActivity.showToolbar()
         mainActivity.showBottomNavigation()
@@ -55,9 +46,6 @@ class SelectedNewsFragment : BaseFragment() {
 //        binding.otherNewsRecycler.addItemDecoration(SpacesItemDecoration(16, false))
     }
 
-    override fun setUpOnClickListeners() {
-      //  TODO("Not yet implemented")
-    }
 
     override fun setUpObservers() {
         newsViewModel.showNewsResponse.observe(viewLifecycleOwner, {
@@ -83,21 +71,13 @@ class SelectedNewsFragment : BaseFragment() {
                     is Resource.Error -> {
                         hideLoadingDialog()
                         if(resource.exception is NoConnectivityException)
-                            showNoConnectionDialog()
+                            showNoConnectionDialog(this::onRetry)
                         else resource.exception.message?.let { it1 -> showSnackbar(it1) }
                     }
 
                 }
             }
         })
-    }
-
-    override fun setUpPagers() {
-        //TODO("Not yet implemented")
-    }
-
-    override fun setUpData() {
-        //TODO("Not yet implemented")
     }
 
     // removed for now

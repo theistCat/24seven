@@ -12,10 +12,8 @@ import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
 
 
-class CartFragment : BaseFragment() {
+class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::inflate) {
 
-    private var _binding: FragmentCartBinding? = null
-    private val binding get() = _binding!!
     private lateinit var adapter: CartItemListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,16 +22,6 @@ class CartFragment : BaseFragment() {
         }
         setUpAdapter()
     }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentCartBinding.inflate(inflater, container, false)
-        return superOnCreateView(binding)
-    }
-
 
     private fun setUpAdapter() {
         adapter = CartItemListAdapter()
@@ -51,19 +39,4 @@ class CartFragment : BaseFragment() {
         }
     }
 
-    override fun setUpObservers() {
-        //TODO("Not yet implemented")
-    }
-
-    override fun setUpPagers() {
-        //TODO("Not yet implemented")
-    }
-
-    override fun setUpData() {
-        //TODO("Not yet implemented")
-    }
-
-    override fun onRetryClicked() {
-        //TODO("Not yet implemented")
-    }
 }

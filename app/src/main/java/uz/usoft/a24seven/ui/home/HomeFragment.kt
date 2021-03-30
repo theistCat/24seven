@@ -1,10 +1,7 @@
 package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,17 +10,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.network.models.Compilation
+import uz.usoft.a24seven.network.models.HomeResponse
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.ui.utils.BaseFragment
-import uz.usoft.a24seven.network.utils.NoConnectivityException
-import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.*
 
-class HomeFragment : BaseFragment(){
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate){
 
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
     private var imgList = ArrayList<String>()
     private lateinit var pagerAdapter: ImageCollectionAdapter
     val homeViewModel: HomeViewModel by viewModel()
@@ -38,47 +32,31 @@ class HomeFragment : BaseFragment(){
         super.onCreate(savedInstanceState)
         setUpAdapter()
         homeViewModel.getHome()
+
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        return superOnCreateView(binding)
+    override fun getData() {
+        homeViewModel.getHome()
     }
 
     override fun setUpObservers() {
-        homeViewModel.getHomeResponse.observe(viewLifecycleOwner,  {
-            it.getContentIfNotHandled()?.let { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        hideNoConnectionDialog()
-                        showLoadingDialog()
-                    }
-                    is Resource.Success -> {
-                        recyclers = resource.data.compilations
-                        unhideRecyclers()
-                        newsAdapter.updateList(resource.data.posts)
-                        hideNoConnectionDialog()
-                        hideLoadingDialog()
-                    }
-                    is Resource.GenericError -> {
-                        hideLoadingDialog()
-                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
-                    }
-                    is Resource.Error -> {
-                        hideLoadingDialog()
-                        if (resource.exception is NoConnectivityException) {
-                            showNoConnectionDialog()
-                        }
-                        else resource.exception.message?.let { it1 -> showSnackbar(it1) }
-                    }
-                }
-            }
-        })
+        observeEvent(homeViewModel.getHomeResponse, ::handle)
+    }
+
+    override fun <T : Any> onSuccess(data: T) {
+        data as HomeResponse
+        recyclers = data.compilations
+        unhideRecyclers()
+        newsAdapter.updateList(data.posts)
+        hideNoConnectionDialog()
+        hideLoadingDialog()
+    }
+
+    override fun onRetry() {
+        homeViewModel.getHome()
+        mainActivity.showBottomNavigation()
+        mainActivity.showToolbar()
+
     }
 
 
@@ -99,10 +77,6 @@ class HomeFragment : BaseFragment(){
         pagerAdapter = ImageCollectionAdapter(this)
         pagerAdapter.updateImageList(imgList)
         setUpViewPager(pagerAdapter, binding.homePager, binding.homeTabLayout)
-    }
-
-    override fun setUpData() {
-        //TODO("Not yet implemented")
     }
 
     private fun setUpAdapter() {
@@ -214,10 +188,4 @@ class HomeFragment : BaseFragment(){
 
     }
 
-    override fun onRetryClicked() {
-        homeViewModel.getHome()
-        mainActivity.showBottomNavigation()
-        mainActivity.showToolbar()
-
-    }
 }
