@@ -12,6 +12,7 @@ import uz.usoft.a24seven.BuildConfig
 import uz.usoft.a24seven.network.SevenApi
 import uz.usoft.a24seven.network.utils.ConnectivityInterceptor
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.network.utils.LogoutInterceptor
 import java.util.concurrent.TimeUnit
 
 
@@ -47,9 +48,10 @@ val networkModule = module {
             .writeTimeout(5, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(ConnectivityInterceptor())
+            .addInterceptor(LogoutInterceptor(get()))
             .addInterceptor { chain ->
-                val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGktc2V2ZW4udXNvZnRkZXYudXpcL1wvb2F1dGhcL3ZlcmlmeSIsImlhdCI6MTYxNzQyODI4NCwiZXhwIjoxNjQ4OTY0Mjg0LCJuYmYiOjE2MTc0MjgyODQsImp0aSI6Ikpmd1B3ZnVSOWhDbGdLWVMiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xt0S-qmV3aSUNdn6hFrtPmRIVnVODmYaFqSdNzZaaos"
-               // val token = PrefManager.getToken(get())
+               // val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGktc2V2ZW4udXNvZnRkZXYudXpcL1wvb2F1dGhcL3ZlcmlmeSIsImlhdCI6MTYxNzQyODI4NCwiZXhwIjoxNjQ4OTY0Mjg0LCJuYmYiOjE2MTc0MjgyODQsImp0aSI6Ikpmd1B3ZnVSOWhDbGdLWVMiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xt0S-qmV3aSUNdn6hFrtPmRIVnVODmYaFqSdNzZaaos"
+                val token = PrefManager.getToken(get())
                 val locale: String = PrefManager.getLocale(get())
                 try {
                     val request = chain.request().newBuilder()

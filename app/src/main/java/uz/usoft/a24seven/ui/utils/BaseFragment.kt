@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.MainActivity
+import uz.usoft.a24seven.network.utils.ErrorResponse
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
@@ -67,11 +68,11 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
 
     fun init()
     {
+        setUpUI()
         setUpRecyclers()
         setUpOnClickListeners()
         setUpPagers()
         setUpObservers()
-        setUpUI()
     }
 
     fun showLoadingDialog(){
@@ -118,6 +119,18 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
         showLoadingDialog()
     }
 
+    open fun onGenericError(resource: Resource.GenericError){
+        hideLoadingDialog()
+        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+    }
+
+    open fun onError(resource: Resource.Error){
+        hideLoadingDialog()
+        if (resource.exception is NoConnectivityException) {
+            showNoConnectionDialog(this::onRetry)
+        } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
+    }
+
     fun <T : Any>handle(event: Event<Resource<T>>){
         event.getContentIfNotHandled()?.let { resource ->
             when (resource) {
@@ -128,14 +141,10 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
                     onSuccess(resource.data)
                 }
                 is Resource.GenericError -> {
-                    hideLoadingDialog()
-                    showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                    onGenericError(resource)
                 }
                 is Resource.Error -> {
-                    hideLoadingDialog()
-                    if (resource.exception is NoConnectivityException) {
-                        showNoConnectionDialog(this::onRetry)
-                    } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
+                    onError(resource)
                 }
             }
         }

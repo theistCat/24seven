@@ -21,6 +21,21 @@ class SevenRepository(private val api: SevenApi) {
     private val COMMENT_PAGING_SIZE = 5
     private val NEWS_PAGING_SIZE = 5
 
+    suspend fun verify(phone:String,code:String) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.verifyCode(phone, code) })
+    }
+
+    suspend fun authFirstStep(phone:String) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.authFirstStep(phone) })
+    }
+
+    suspend fun logout() = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.logout() })
+    }
+
     suspend fun getHome() = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getHome() })

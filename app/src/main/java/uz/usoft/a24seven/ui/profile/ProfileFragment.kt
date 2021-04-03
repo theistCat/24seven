@@ -5,29 +5,63 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentProfileBinding
+import uz.usoft.a24seven.network.utils.NoConnectivityException
+import uz.usoft.a24seven.network.utils.Resource
+import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.hideProgress
+import uz.usoft.a24seven.utils.observeEvent
+import uz.usoft.a24seven.utils.showAsProgress
+import uz.usoft.a24seven.utils.showSnackbar
 
-class ProfileFragment : Fragment() {
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
+class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
+    private val viewModel:ProfileViewModel by viewModel()
+
+    override fun setUpObservers() {
+        viewModel.logoutResponse.observe(this, Observer {
+            it.getContentIfNotHandled()?.let {resource->
+                when (resource) {
+                    is Resource.Loading -> {
+                        showLoadingDialog()
+                        hideNoConnectionDialog()
+                    }
+                    is Resource.Success -> {
+                        hideLoadingDialog()
+                        hideNoConnectionDialog()
+                        PrefManager.saveToken(requireContext(),"")
+                        mainActivity.recreate()
+                    }
+                    is Resource.GenericError -> {
+                        hideLoadingDialog()
+                        hideNoConnectionDialog()
+                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                    }
+                    is Resource.Error -> {
+                        hideLoadingDialog()
+                        if (resource.exception is NoConnectivityException) {
+                            showNoConnectionDialog(this::onRetry)
+                        } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
+                    }
+                }
+            }
+        })
+    }
+
+    override fun onRetry() {
+        hideNoConnectionDialog()
+    }
+
+    override fun setUpOnClickListeners()
+    {
+        binding.logout.setOnClickListener {
+            viewModel.getLogoutResponse()
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        setUpOnClick()
-        return binding.root
-    }
-
-    private fun setUpOnClick() {
         binding.myOrders.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myOrders)
         }
@@ -46,4 +80,5 @@ class ProfileFragment : Fragment() {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
         }
     }
+
 }

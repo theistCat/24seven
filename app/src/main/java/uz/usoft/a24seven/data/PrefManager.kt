@@ -7,7 +7,7 @@ import android.content.SharedPreferences
 class PrefManager {
     companion object {
         private const val TF_SEVEN = "tf_seven"
-        private const val TOKEN = "token"
+        private const val TOKEN = ""
         private const val FIREBASE_TOKEN = "firebase_token"
         private const val LOCALE_LANG = "localeLang"
         private const val PAYMENT_METHOD="PayMe"
@@ -67,6 +67,16 @@ class PrefManager {
 
         fun getLocale(context: Context): String {
             return getInstance(context).getString(LOCALE_LANG, "ru")!!
+        }
+
+        fun isLoggedIn(context: Context):Boolean{
+             return getToken(context).isNotBlank()
+        }
+
+        fun logout(context: Context){
+            getInstance(context).edit().putString(
+                TOKEN, ""
+            ).apply()
         }
 
     }

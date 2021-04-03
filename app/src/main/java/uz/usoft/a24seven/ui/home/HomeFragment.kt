@@ -12,6 +12,7 @@ import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.network.models.Compilation
 import uz.usoft.a24seven.network.models.HomeResponse
 import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.*
@@ -35,6 +36,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
+    override fun setUpUI() {
+        binding.swipeToRefresh.setOnRefreshListener {
+            homeViewModel.getHome()
+        }
+    }
+
     override fun getData() {
         homeViewModel.getHome()
     }
@@ -50,15 +57,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         newsAdapter.updateList(data.posts)
         hideNoConnectionDialog()
         hideLoadingDialog()
+        binding.swipeToRefresh.isRefreshing=false
     }
 
     override fun onRetry() {
         homeViewModel.getHome()
         mainActivity.showBottomNavigation()
         mainActivity.showToolbar()
-
     }
 
+    override fun onError(resource: Resource.Error) {
+        super.onError(resource)
+        binding.swipeToRefresh.isRefreshing=false
+    }
+
+    override fun onGenericError(resource: Resource.GenericError) {
+        super.onGenericError(resource)
+        binding.swipeToRefresh.isRefreshing=false
+    }
 
     private fun showRecycler(recycler:RecyclerView,adapter: ProductsListAdapter,list:ArrayList<Product>,title:TextView,showAll:TextView)
     {

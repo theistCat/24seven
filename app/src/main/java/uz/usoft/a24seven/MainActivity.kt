@@ -1,6 +1,7 @@
 package uz.usoft.a24seven
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -19,6 +20,7 @@ import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.*
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.ui.auth.AuthActivity
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
 
-        PrefManager
+//        PrefManager.saveToken(this,"")
 
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -99,7 +101,18 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         bottomNavigationView.setOnNavigationItemSelectedListener {item ->
             if(navController.currentDestination?.id != item.itemId) {
-                onNavDestinationSelected(item, navController)
+                if(item.itemId==R.id.nav_profile)
+                {
+                    Log.d("Auth",PrefManager.isLoggedIn(this).toString())
+                    if(PrefManager.isLoggedIn(this))
+                        onNavDestinationSelected(item, navController)
+                    else {
+                        val authIntent= Intent(this,AuthActivity::class.java)
+                        startActivity(authIntent)
+                        false
+                    }
+                }
+                else onNavDestinationSelected(item, navController)
             }
             else false
 

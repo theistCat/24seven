@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -150,6 +151,24 @@ fun Fragment.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGT
         .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white)).show()
 }
 
+fun Activity.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar.make(this.getRootView(), snackbarText, timeLength)
+        .setBackgroundTint(ContextCompat.getColor(this,R.color.snackbar))
+        .setActionTextColor(ContextCompat.getColor(this,android.R.color.white)).show()
+}
+
+
+fun View.showAsProgress(){
+    val loadingAnimation= AnimationUtils.loadAnimation(this.context,R.anim.spinning)
+    this.startAnimation(loadingAnimation)
+    this.visibility= View.VISIBLE
+}
+
+fun View.hideProgress()
+{
+    this.clearAnimation()
+    this.visibility= View.INVISIBLE
+}
 /**
  * navigate with animations.
  * has one animation at the moment,
