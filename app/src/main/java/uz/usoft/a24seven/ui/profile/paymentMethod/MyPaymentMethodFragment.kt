@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentMyPaymentMethodBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 
@@ -54,7 +55,7 @@ class MyPaymentMethodFragment : Fragment() {
 
     private fun setUpClickListener() {
         binding.savePaymentMethod.setOnClickListener {
-
+                    PrefManager.savePaymentMethod(requireContext(),adapter.getDefaultPaymentMethod())
         }
     }
 

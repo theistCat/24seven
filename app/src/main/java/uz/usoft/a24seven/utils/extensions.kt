@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -50,7 +49,6 @@ import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
 import uz.usoft.a24seven.network.utils.Event
-import uz.usoft.kidya.data.PrefManager
 import java.text.NumberFormat
 import java.util.*
 
@@ -419,25 +417,12 @@ fun AppCompatButton.hideError() {
     this.error = null
 }
 
-/**
- * Change language
- */
-fun Fragment.setAppLocale(localeCode: String, context: Context) {
-    activity?.setAppLocale(localeCode, context)
-}
-
-fun Activity.setAppLocale(localeCode: String, context: Context) {
+fun Activity.changeAppLocale(localeCode: String, context: Context) :Context{
     val resources = context.resources
-    val dm = resources.displayMetrics
     val config = resources.configuration
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        config.setLocale(Locale(localeCode.toLowerCase(Locale.ROOT)))
-        PrefManager.saveLocale(context, localeCode.toLowerCase(Locale.ROOT))
-    } else {
-        PrefManager.saveLocale(context, localeCode.toLowerCase(Locale.ROOT))
-        config.locale = Locale(localeCode.toLowerCase(Locale.ROOT))
-    }
-    resources.updateConfiguration(config, dm)
+    config.setLocale(Locale(localeCode.toLowerCase(Locale.ROOT)))
+    context.createConfigurationContext(config)
+    return context
 }
 
 
@@ -501,6 +486,15 @@ fun Fragment.createBottomSheet(layout: Int): BottomSheetDialog {
     return bottomSheetDialog
 }
 
+fun Fragment.createBottomSheet(view: View): BottomSheetDialog {
+    val bottomSheetDialog = BottomSheetDialog(requireContext())
+    bottomSheetDialog.setContentView(view)
+    val bottomSheetInternal = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet)
+    BottomSheetBehavior.from<View?>(bottomSheetInternal!!).peekHeight =
+        (requireContext().getDisplayMetrics().heightPixels * 0.8).toInt()
+
+    return bottomSheetDialog
+}
 
 //fragment_collection_object xml
 //

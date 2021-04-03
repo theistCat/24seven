@@ -1,5 +1,6 @@
 package uz.usoft.a24seven
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -16,10 +17,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
-import uz.usoft.a24seven.utils.KeyboardEventListener
-import uz.usoft.a24seven.utils.hide
-import uz.usoft.a24seven.utils.hideSoftKeyboard
-import uz.usoft.a24seven.utils.show
+import uz.usoft.a24seven.utils.*
+import uz.usoft.a24seven.data.PrefManager
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
@@ -31,6 +30,8 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
+
+        PrefManager
 
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -55,8 +56,8 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
         binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_backicon)
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        //supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_backicon)
 
         binding.scanBarCode.setOnClickListener {
             navController.navigate(R.id.nav_barcodeScanner)
@@ -211,6 +212,12 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     }
 
     override fun onDrawerStateChanged(newState: Int) {
+    }
+
+    override fun attachBaseContext(newContext: Context?) {
+        val context= newContext?.let {  changeAppLocale( PrefManager.getLocale(it) , it) }
+        Log.d("locale",PrefManager.getLocale(context!!))
+        super.attachBaseContext(context)
     }
 
 }

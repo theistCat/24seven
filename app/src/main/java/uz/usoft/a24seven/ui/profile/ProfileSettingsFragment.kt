@@ -1,27 +1,35 @@
 package uz.usoft.a24seven.ui.profile
 
 import android.app.DatePickerDialog
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentProfileSettingsBinding
 import uz.usoft.a24seven.utils.createBottomSheet
+import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.ui.utils.BaseFragment
 import java.util.*
+import kotlin.coroutines.Continuation
 
-class ProfileSettingsFragment : Fragment() {
+class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(FragmentProfileSettingsBinding::inflate) {
     private val c: Calendar = Calendar.getInstance()
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
-    private var _binding: FragmentProfileSettingsBinding? = null
-    private val binding get() = _binding!!
+
     private lateinit var bottomsheet : BottomSheetDialog
+    private var _bottomSheetBinding : ChangeLanguageBottomsheetBinding?=null
+    private val bottomSheetBinding get() = _bottomSheetBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,19 +37,28 @@ class ProfileSettingsFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentProfileSettingsBinding.inflate(inflater, container, false)
-        bottomsheet=createBottomSheet(R.layout.change_language_bottomsheet)
-        setUpOnClickListener()
-        return binding.root
+    override fun setUpUI() {
+        _bottomSheetBinding=ChangeLanguageBottomsheetBinding.inflate(layoutInflater)
+        bottomsheet=createBottomSheet(bottomSheetBinding.root)
+
+        when(PrefManager.getLocale(requireContext())){
+            "ru"->{
+                Log.d("locale", "russian")
+                bottomSheetBinding.ru.isChecked=true
+            }
+            "uz"->{
+                Log.d("locale", "uzbek")
+                bottomSheetBinding.uz.isChecked=true
+            }
+        }
+
+        val uiMode=resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+
+        binding.switch1.isChecked= uiMode == Configuration.UI_MODE_NIGHT_YES
+
     }
 
-    private fun setUpOnClickListener() {
-        val mainActivity=requireActivity() as MainActivity
+    override fun setUpOnClickListeners() {
         binding.switch1.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -49,33 +66,37 @@ class ProfileSettingsFragment : Fragment() {
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
 
+        bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->
+            when(i){
+                R.id.ru->{changeLocale("ru")}
+                R.id.uz->{changeLocale("uz")}
+            }
+        }
+
+
+
+
         binding.changeLanguage.setOnClickListener {
             bottomsheet.show()
         }
         binding.profileDOB.setOnClickListener {
             val dpd = DatePickerDialog(
                 requireContext(), R.style.datePicker,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { _s, year, monthOfYear, dayOfMonth ->
 
-                    var monthName = ""
+                    val monthName = resources.getStringArray(R.array.month)
                     // Display Selected date in textbox
-                    when (monthOfYear) {
-                        0 -> monthName = "Января"
-                        1 -> monthName = "Февраля"
-                        2 -> monthName = "Марта"
-                        3 -> monthName = "Апреля"
-                        4 -> monthName = "Майа"
-                        5 -> monthName = "Июня"
-                        6 -> monthName = "Июля"
-                        7 -> monthName = "Августа"
-                        8 -> monthName = "Сентября"
-                        9 -> monthName = "Октября"
-                        10 -> monthName = "Ноября"
-                        11 -> monthName = "Декабря"
-                    }
-                    binding.profileDOB.text = "$dayOfMonth $monthName $year"
+                    binding.profileDOB.text = "$dayOfMonth ${monthName[monthOfYear]} $year"
                 }, year, month, day
             ).show()
+        }
+    }
+
+    private fun changeLocale(locale:String){
+        val oldLocale = PrefManager.getLocale(requireContext())
+        if(oldLocale!=locale) {
+            PrefManager.saveLocale(requireContext(), locale.toLowerCase(Locale.ROOT))
+            ActivityCompat.recreate(requireActivity())
         }
     }
 }

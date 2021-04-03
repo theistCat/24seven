@@ -4,14 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ItemPaymentMethodBinding
 import uz.usoft.a24seven.network.models.MockData
 
 class PaymentMethodListAdapter() : RecyclerView.Adapter<PaymentMethodListAdapter.ViewHolder>() {
-    var productsList: List<MockData.PaymentMethodObject>? = MockData.getPaymentMethodList()
+    var paymentMethodList: List<MockData.PaymentMethodObject>? = MockData.getPaymentMethodList()
     var selected = ""
     fun updateList(productsList: List<MockData.PaymentMethodObject>) {
-        this.productsList = productsList
+        this.paymentMethodList = productsList
         notifyDataSetChanged()
     }
 
@@ -28,10 +29,10 @@ class PaymentMethodListAdapter() : RecyclerView.Adapter<PaymentMethodListAdapter
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = productsList?.size ?: 0
+    override fun getItemCount() = paymentMethodList?.size ?: 0
 
     override fun onBindViewHolder(holder: PaymentMethodListAdapter.ViewHolder, position: Int) {
-        holder.bindData(productsList!![position])
+        holder.bindData(paymentMethodList!![position])
     }
 
     inner class ViewHolder(var binding: ItemPaymentMethodBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -39,40 +40,40 @@ class PaymentMethodListAdapter() : RecyclerView.Adapter<PaymentMethodListAdapter
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(paymentMethodList!![bindingAdapterPosition])
 
-                if (!productsList!![adapterPosition].isDefault) {
-                    for (method in productsList!!)
+                if (!paymentMethodList!![bindingAdapterPosition].isDefault) {
+                    for (method in paymentMethodList!!)
                         method.isDefault = false
 
-                    productsList!![adapterPosition].isDefault = true
-                    selected = productsList!![adapterPosition].name
+                    paymentMethodList!![bindingAdapterPosition].isDefault = true
+                    selected = paymentMethodList!![bindingAdapterPosition].name
                 } else {
-                    productsList!![adapterPosition].isDefault = false
+                    paymentMethodList!![bindingAdapterPosition].isDefault = false
                 }
                 notifyDataSetChanged()
             }
 
             binding.checkBox.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(paymentMethodList!![bindingAdapterPosition])
 
-                if (!productsList!![adapterPosition].isDefault) {
-                    for (method in productsList!!)
+                if (!paymentMethodList!![bindingAdapterPosition].isDefault) {
+                    for (method in paymentMethodList!!)
                         method.isDefault = false
 
-                    productsList!![adapterPosition].isDefault = true
+                    paymentMethodList!![bindingAdapterPosition].isDefault = true
                 } else {
-                    productsList!![adapterPosition].isDefault = false
+                    paymentMethodList!![bindingAdapterPosition].isDefault = false
                 }
                 notifyDataSetChanged()
             }
         }
 
-        fun bindData(product: MockData.PaymentMethodObject) {
+        fun bindData(paymentMethod: MockData.PaymentMethodObject) {
             val binding = binding as ItemPaymentMethodBinding
 
-            binding.paymentMethod.text = product.name
-            binding.checkBox.isChecked = product.isDefault
+            binding.paymentMethod.text = paymentMethod.name
+            binding.checkBox.isChecked =  paymentMethod.isDefault
         }
     }
 }
