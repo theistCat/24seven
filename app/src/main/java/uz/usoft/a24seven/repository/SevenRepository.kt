@@ -41,6 +41,10 @@ class SevenRepository(private val api: SevenApi) {
         emit(safeApiCall { api.getProfile() })
     }
 
+    suspend fun updateProfile(firstName:String,lastName:String,dob:String,gender:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender) })
+    }
 
     suspend fun getHome() = flow {
         emit(Resource.Loading)

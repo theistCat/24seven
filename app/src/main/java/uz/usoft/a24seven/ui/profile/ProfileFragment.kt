@@ -15,12 +15,14 @@ import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.observeEvent
 import uz.usoft.a24seven.utils.showSnackbar
 
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
     private val viewModel:ProfileViewModel by viewModel()
+    private var userData: ProfileResponse?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +32,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
         data as ProfileResponse
-        binding.userPhone.text=getString(R.string.phone_format, data.phone)
+        userData=data
+        parseData(data)
+
     }
+
+    private fun parseData(data:ProfileResponse)
+    {
+        binding.userPhone.text=getString(R.string.phone_format, data.phone)
+        binding.userName.text=getString(R.string.full_name_format, data.firstName, data.lastName)
+        binding.orderCount.text=getString(R.string.order_count, data.orders_count)
+        binding.favCount.text=getString(R.string.items_count, data.favorites_count)
+        binding.addressCount.text=getString(R.string.address_count, data.addresses_count)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(userData!=null) parseData(userData!!)
+    }
+
 
     override fun setUpObservers() {
         observeEvent(viewModel.profileResponse,::handle)
@@ -81,16 +100,18 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             findNavController().navigate(R.id.action_nav_profile_to_nav_addressList)
         }
         binding.myPaymentMethod.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
+           findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
         }
 
         binding.profileSettings.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_profileSettings)
+            val action= ProfileFragmentDirections.actionNavProfileToNavProfileSettings()
+            navigate(action)
         }
 
         binding.myFavouriteItems.setOnClickListener {
             findNavController().navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
         }
     }
+
 
 }

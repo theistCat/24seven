@@ -189,11 +189,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         recyclers?.forEach { it->
             when(it.title)
             {
-                "Новые товары"->
+                getString(R.string.new_items)->
                     showRecycler(binding.newItemsRecycler,newProductsAdapter,it.products as ArrayList<Product>,binding.newItems,binding.newItemsAll)
-                "Популярные товары"->
+                getString(R.string.popular_items)->
                     showRecycler(binding.popularItemsRecycler,popularProductsAdapter,it.products as ArrayList<Product>,binding.popularItems,binding.allPopularItems)
-                "Скидки"->
+                getString(R.string.on_sale_items)->
                     showRecycler(binding.onSaleItemsRecycler,onSaleProductsAdapter,it.products as ArrayList<Product>,binding.onSaleItems,binding.allOnSaleItems)
             }
         }

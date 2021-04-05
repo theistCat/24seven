@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
@@ -14,7 +15,8 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
 {
 
     val logoutResponse = MutableLiveData<Event<Resource<Any>>>()
-    val profileResponse = MutableLiveData<Event<Resource<Any>>>()
+    val profileResponse = MutableLiveData<Event<Resource<ProfileResponse>>>()
+    val updateResponse = MutableLiveData<Event<Resource<ProfileResponse>>>()
 
     fun getLogoutResponse() {
         viewModelScope.launch {
@@ -32,4 +34,12 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
         }
     }
 
+
+    fun getUpdateProfileResponse(firstName:String,lastName:String,dob:String,gender:Int) {
+        viewModelScope.launch {
+            repository.updateProfile(firstName, lastName, dob, gender).onEach {
+                updateResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
 }

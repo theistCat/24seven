@@ -16,4 +16,6 @@ data class ProfileResponse (
 )
 {
     val lastName get()=last_name?:""
+    val firstName get()=first_name?:""
+    val dob get()=birth_day?:""
 }

@@ -11,17 +11,23 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentProfileSettingsBinding
 import uz.usoft.a24seven.utils.createBottomSheet
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.observeEvent
 import java.util.*
 import kotlin.coroutines.Continuation
 
 class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(FragmentProfileSettingsBinding::inflate) {
+
+    private val viewModel:ProfileViewModel by viewModel()
+
     private val c: Calendar = Calendar.getInstance()
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
@@ -33,8 +39,27 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
+        viewModel.getProfileResponse()
+    }
+
+    override fun <T : Any> onSuccess(data: T) {
+        super.onSuccess(data)
+        data as ProfileResponse
+        binding.profilePhone.setText(getString(R.string.phone_format, data.phone))
+        Log.d("profile",data.firstName)
+        val monthName = resources.getStringArray(R.array.month)
+        binding.profileFullName.setText(getString(R.string.full_name_format, data.firstName, data.lastName))
+        if (data.dob.isNotEmpty()) {
+            val dob= data.dob.split("-")
+            binding.profileDOB.text =
+                getString(R.string.dob_format, dob[2].toInt(), monthName[dob[1].toInt()-1], dob[0].toInt())
         }
+    }
+
+
+    override fun setUpObservers() {
+
+        observeEvent(viewModel.profileResponse,::handle)
     }
 
     override fun setUpUI() {
@@ -73,6 +98,10 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
             }
         }
 
+        binding.updateProfile.setOnClickListener {
+           // viewModel.getUpdateProfileResponse()
+        }
+
 
 
 
@@ -86,7 +115,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
                     val monthName = resources.getStringArray(R.array.month)
                     // Display Selected date in textbox
-                    binding.profileDOB.text = "$dayOfMonth ${monthName[monthOfYear]} $year"
+                    binding.profileDOB.text = getString(R.string.dob_format, dayOfMonth ,monthName[monthOfYear], year)
                 }, year, month, day
             ).show()
         }
