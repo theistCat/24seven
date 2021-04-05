@@ -1,5 +1,7 @@
 package uz.usoft.a24seven.ui.auth
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -7,7 +9,9 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ActivityAuthBinding
@@ -46,7 +50,9 @@ class AuthActivity : AppCompatActivity() {
                         }
                         is Resource.Success -> {
                             binding.loaderAuth.hideProgress()
-                            PrefManager.saveToken(this,resource.data.access_token)
+                            val  returnIntent = Intent();
+                            returnIntent.putExtra(MainActivity.ACCESS_TOKEN,resource.data.access_token);
+                            setResult(Activity.RESULT_OK,returnIntent);
                             finish()
                         }
                         is Resource.GenericError -> {
@@ -91,6 +97,7 @@ class AuthActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        setResult(Activity.RESULT_CANCELED,Intent());
         finish()
         return super.onOptionsItemSelected(item)
     }

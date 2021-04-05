@@ -10,15 +10,24 @@ import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
 
-class ProfileViewModel constructor(val repository: SevenRepository) : ViewModel()
+class ProfileViewModel constructor(private val repository: SevenRepository) : ViewModel()
 {
 
     val logoutResponse = MutableLiveData<Event<Resource<Any>>>()
+    val profileResponse = MutableLiveData<Event<Resource<Any>>>()
 
     fun getLogoutResponse() {
         viewModelScope.launch {
             repository.logout().onEach {
                 logoutResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun getProfileResponse() {
+        viewModelScope.launch {
+            repository.getProfile().onEach {
+                profileResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }

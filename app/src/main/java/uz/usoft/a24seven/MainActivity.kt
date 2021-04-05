@@ -1,11 +1,14 @@
 package uz.usoft.a24seven
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -20,9 +23,15 @@ import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.*
 import uz.usoft.a24seven.data.PrefManager
-import uz.usoft.a24seven.ui.auth.AuthActivity
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
+
+    companion object{
+
+        lateinit var openAuthActivityCustom:ActivityResultLauncher<Intent>
+        const val ACCESS_TOKEN="acces_token"
+     
+    }
 
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
@@ -37,7 +46,20 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-       
+
+
+        openAuthActivityCustom =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when(result.resultCode){
+                    Activity.RESULT_OK -> {
+                        Log.d(ACCESS_TOKEN, "access_token : ${result.data?.getStringExtra(ACCESS_TOKEN).toString()}")
+                        PrefManager.saveToken(this, result.data?.getStringExtra(ACCESS_TOKEN).toString())
+                    }
+                    Activity.RESULT_CANCELED->{
+                        navController.popBackStack()
+                    }
+                }
+            }
 
         bottomNavigationView = binding.navView
         drawerLayout = binding.drawerFragment
@@ -58,8 +80,6 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         //setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)
         binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
-        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        //supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_backicon)
 
         binding.scanBarCode.setOnClickListener {
             navController.navigate(R.id.nav_barcodeScanner)
@@ -101,18 +121,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         bottomNavigationView.setOnNavigationItemSelectedListener {item ->
             if(navController.currentDestination?.id != item.itemId) {
-                if(item.itemId==R.id.nav_profile)
-                {
-                    Log.d("Auth",PrefManager.isLoggedIn(this).toString())
-                    if(PrefManager.isLoggedIn(this))
-                        onNavDestinationSelected(item, navController)
-                    else {
-                        val authIntent= Intent(this,AuthActivity::class.java)
-                        startActivity(authIntent)
-                        false
-                    }
-                }
-                else onNavDestinationSelected(item, navController)
+                onNavDestinationSelected(item, navController)
             }
             else false
 
@@ -161,39 +170,34 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         }
 
         when (navController.currentDestination?.id) {
-            R.id.nav_home -> {
+            R.id.nav_home,R.id.nav_categories,R.id.nav_subCategories,
+            R.id.nav_selectedSubCategory  -> {
                 binding.searchLay.show()
             }
-            R.id.nav_addressList -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_selectedAddress -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_myPaymentMethod -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_addAddress -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_profileSettings -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_myFavouriteItems -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_barcodeScanner -> {
-                bottomNavigationView.hide()
-            }
-            R.id.nav_categories -> {
-                binding.searchLay.show()
-            }
-            R.id.nav_subCategories -> {
-                binding.searchLay.show()
-            }
-            R.id.nav_selectedSubCategory -> {
-                binding.searchLay.show()
-            }
+            else -> bottomNavigationView.hide()
+
+//            R.id.nav_addressList -> {
+//                bottomNavigationView.hide()
+//            }
+//            R.id.nav_selectedAddress -> {
+//                bottomNavigationView.hide()
+//            }
+//            R.id.nav_myPaymentMethod -> {
+//                bottomNavigationView.hide()
+//            }
+//            R.id.nav_addAddress -> {
+//                bottomNavigationView.hide()
+//            }
+//            R.id.nav_profileSettings -> {
+//                bottomNavigationView.hide()
+//            }
+//            R.id.nav_myFavouriteItems -> {
+//                bottomNavigationView.hide()
+//            }
+//            R.id.nav_barcodeScanner -> {
+//                bottomNavigationView.hide()
+//            }
+
         }
     }
 

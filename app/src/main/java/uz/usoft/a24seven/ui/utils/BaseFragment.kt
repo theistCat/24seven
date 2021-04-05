@@ -105,7 +105,10 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
     }
 
 
-    open fun <T : Any>onSuccess(data: T){}
+    open fun <T : Any>onSuccess(data: T){
+        hideNoConnectionDialog()
+        hideLoadingDialog()
+    }
 
     open fun onLoading(){
 
