@@ -49,6 +49,18 @@ class SevenRepository(private val api: SevenApi) {
         emit(Resource.Loading)
         emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender) })
     }
+
+    fun getFavProducts(): Flow<PagingData<Product>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = PRODUCT_PAGING_SIZE,
+                enablePlaceholders = true,
+                maxSize = 50
+            ),
+            pagingSourceFactory = { try{ ProductPagingSource(api,getFav = true) } catch (e:NoConnectivityException) { throw  e} }
+        ).flow
+
+    }
     //endregion
 
     //region Home

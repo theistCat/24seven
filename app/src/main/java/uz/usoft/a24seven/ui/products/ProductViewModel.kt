@@ -44,4 +44,22 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
         }
     }
 
+    val favResponse = MutableLiveData<Event<Resource<Any>>>()
+
+    fun addFav(productId:Int) {
+        viewModelScope.launch {
+            repository.addFav(productId).onEach {
+                favResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun removeFav(productId:Int) {
+        viewModelScope.launch {
+            repository.removeFav(productId).onEach {
+                favResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
 }

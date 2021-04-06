@@ -18,10 +18,7 @@ import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.ui.products.ProductViewModel
-import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.createBottomSheet
-import uz.usoft.a24seven.utils.navigate
-import uz.usoft.a24seven.utils.toDp
+import uz.usoft.a24seven.utils.*
 
 
 class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBinding>(FragmentSelectedSubCategoryBinding::inflate) {
@@ -31,6 +28,9 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     private val productViewModel: ProductViewModel by viewModel()
     private lateinit var sortBottomSheet: BottomSheetDialog
     private var orderBy="popular"
+
+    private var updatePosition:Int=-1
+    private var updateValue:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +63,18 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         binding.sortBy.setOnClickListener {
             sortBottomSheet.show()
         }
+
+        adapter.onFavClick = {product,position->
+            updatePosition = position
+            updateValue = !product.is_favorite
+
+            if(!product.is_favorite) {
+                productViewModel.addFav(product.id)
+            }
+            else{
+                productViewModel.removeFav(product.id)
+            }
+        }
     }
 
     override fun onRetry() {
@@ -87,7 +99,14 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         sortBottomSheet = createBottomSheet(R.layout.sort_bottomsheet)
     }
 
+    override fun <T : Any> onSuccess(data: T) {
+        super.onSuccess(data)
+
+        adapter.update(updatePosition,updateValue)
+    }
     override fun setUpObservers() {
+
+        observeEvent(productViewModel.favResponse,::handle)
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading

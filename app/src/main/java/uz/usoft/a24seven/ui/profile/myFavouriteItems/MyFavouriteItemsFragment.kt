@@ -5,60 +5,91 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyFavouriteItemsBinding
+import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingListAdapter
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
-import uz.usoft.a24seven.utils.SpacesItemDecoration
-import uz.usoft.a24seven.utils.createBottomSheet
-import uz.usoft.a24seven.utils.toDp
+import uz.usoft.a24seven.ui.profile.ProfileViewModel
+import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.*
 
-class MyFavouriteItemsFragment : Fragment() {
+class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(FragmentMyFavouriteItemsBinding::inflate) {
 
-    private var _binding: FragmentMyFavouriteItemsBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var adapter: ProductsListAdapter
+
+    private val viewModel: ProfileViewModel by viewModel()
+
+    private lateinit var adapter: ProductPagingListAdapter
     private lateinit var  sortBottomSheet: BottomSheetDialog
+
+    private var updatePosition:Int=-1
+    private var updateValue:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
         setUpAdapters()
+        getFavProducts()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMyFavouriteItemsBinding.inflate(inflater, container, false)
-        sortBottomSheet= createBottomSheet(R.layout.sort_bottomsheet)
-        setUpOnRecycler()
-        setUpOnClickerListener()
-        return binding.root
-    }
-
-    private fun setUpAdapters() {
-        adapter = ProductsListAdapter(requireContext(),isGrid = true)
-        adapter.onItemClick = {
-//            val action =
-//                MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(
-//                    resources.getString(R.string.title_myFavourites)
-//                )
-//            findNavController().navigate(action)
+    private fun getFavProducts() {
+        lifecycleScope.launch {
+            viewModel.getFavProductsResponse().collect {
+                adapter.submitData(it)
+                return@collect
+            }
         }
     }
 
-    private fun setUpOnRecycler() {
+    override fun setUpObservers() {
+        observeEvent(viewModel.favResponse,::handle)
+    }
+
+    override fun <T : Any> onSuccess(data: T) {
+        super.onSuccess(data)
+
+        adapter.update(updatePosition,updateValue)
+    }
+
+
+    private fun setUpAdapters() {
+        adapter = ProductPagingListAdapter(requireContext())
+        adapter.onItemClick = {
+            val action =
+                MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(
+                    resources.getString(R.string.title_myFavourites),it.id
+                )
+            navigate(action)
+        }
+        adapter.onFavClick = {product,position->
+            updatePosition = position
+            updateValue = !product.is_favorite
+
+            if(!product.is_favorite) {
+                viewModel.addFav(product.id)
+            }
+            else{
+                viewModel.removeFav(product.id)
+            }
+        }
+
+    }
+
+    override fun setUpRecyclers() {
         binding.favouriteProductsRecycler.adapter = adapter
         binding.favouriteProductsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.favouriteProductsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
     }
 
-    private fun setUpOnClickerListener() {
+    override fun setUpOnClickListeners() {
 
         binding.filter.setOnClickListener {
             (requireActivity() as MainActivity).openDrawer()

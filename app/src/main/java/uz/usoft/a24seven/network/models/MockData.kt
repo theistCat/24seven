@@ -76,7 +76,15 @@ class MockData (
             list.add(PaymentMethodObject("Наличные"))
             return list
         }
+
+
+
     }
+
+    data class FeedbackObject(
+        val name:String="",
+        val id:Int
+    )
 
     data class ProductObject(
         val name:String="",
@@ -84,12 +92,10 @@ class MockData (
         val code:String=""
     ):Serializable
 
-    data class FeedbackObject(
-        val name:String=""
-    )
 
     data class PaymentMethodObject(
         val name:String="",
         var isDefault:Boolean=false
     )
+
 }

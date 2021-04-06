@@ -20,6 +20,11 @@ import uz.usoft.a24seven.utils.observeEvent
 import uz.usoft.a24seven.utils.showSnackbar
 
 
+// TODO: myOrders
+// TODO: myAddresses
+// TODO: myPaymentMethod
+// TODO: myProfileImage?
+
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
     private val viewModel:ProfileViewModel by viewModel()
     private var userData: ProfileResponse?=null

@@ -11,7 +11,7 @@ import uz.usoft.a24seven.databinding.FragmentMyPaymentMethodBinding
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 
 
-//Todo: ave the changes to PrefManager
+//Todo: save the changes to PrefManager
 class MyPaymentMethodFragment : Fragment() {
 
     private var _binding: FragmentMyPaymentMethodBinding? = null

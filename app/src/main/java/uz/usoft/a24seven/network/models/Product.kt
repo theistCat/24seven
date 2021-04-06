@@ -7,7 +7,7 @@ data class Product(
     val price: Int,
     val price_discount: Int?,
     val unit: Unit,
-    val is_favorite: Boolean,
+    var is_favorite: Boolean,
     val category: Category,
     val characteristics: List<Any>?,
     val is_card: Boolean,

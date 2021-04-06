@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -15,19 +16,24 @@ import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.ui.news.NewsListAdapter
+import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.utils.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate){
 
     private var imgList = ArrayList<String>()
     private lateinit var pagerAdapter: ImageCollectionAdapter
-    val homeViewModel: HomeViewModel by viewModel()
+
+    private val homeViewModel: HomeViewModel by viewModel()
+
     private lateinit var newProductsAdapter: ProductsListAdapter
     private lateinit var popularProductsAdapter: ProductsListAdapter
     private lateinit var onSaleProductsAdapter: ProductsListAdapter
     private lateinit var newsAdapter: NewsListAdapter
     private var recyclers: List<Compilation>?=null
 
+    private var updateId=-1
+    private var updateValue=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,16 +54,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setUpObservers() {
         observeEvent(homeViewModel.getHomeResponse, ::handle)
+        observeEvent(homeViewModel.favResponse,::handle)
     }
 
     override fun <T : Any> onSuccess(data: T) {
-        data as HomeResponse
-        recyclers = data.compilations
-        unhideRecyclers()
-        newsAdapter.updateList(data.posts)
-        hideNoConnectionDialog()
-        hideLoadingDialog()
-        binding.swipeToRefresh.isRefreshing=false
+        super.onSuccess(data)
+        when(data) {
+            is HomeResponse -> {
+                recyclers = data.compilations
+                unhideRecyclers()
+                newsAdapter.updateList(data.posts)
+                binding.swipeToRefresh.isRefreshing = false
+            }
+            else ->{
+                    updateProductList()
+            }
+        }
+    }
+
+    private fun updateProductList() {
+        recyclers?.forEach { it->
+            when(it.title)
+            {
+                getString(R.string.new_items)->
+                    newProductsAdapter.update(updateId,updateValue)
+                getString(R.string.popular_items)->
+                    popularProductsAdapter.update(updateId,updateValue)
+                getString(R.string.on_sale_items)->
+                    onSaleProductsAdapter.update(updateId,updateValue)
+            }
+        }
     }
 
     override fun onRetry() {
@@ -100,12 +126,31 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         popularProductsAdapter = ProductsListAdapter( requireContext())
         onSaleProductsAdapter = ProductsListAdapter(requireContext())
 
+        val adapterList= ArrayList<ProductsListAdapter>()
+        adapterList.add(newProductsAdapter)
+        adapterList.add(popularProductsAdapter)
+        adapterList.add(onSaleProductsAdapter)
+
+        adapterList.forEach {
+            it.addFav = {product->
+                updateId=product.id
+                updateValue=true
+                homeViewModel.addFav(product.id)
+            }
+
+            it.removeFav = {product->
+                updateId=product.id
+                updateValue=false
+                homeViewModel.removeFav(product.id)
+            }
+        }
 
         popularProductsAdapter.onItemClick = {
             val action =
                 HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items),it.id)
             navigate(action)
         }
+
 
 
         onSaleProductsAdapter.onItemClick = {
@@ -119,6 +164,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts),it.id)
             navigate(action)
         }
+
+
 
         newsAdapter = NewsListAdapter(requireContext())
 

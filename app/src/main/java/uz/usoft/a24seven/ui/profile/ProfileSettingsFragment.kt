@@ -18,6 +18,7 @@ import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentProfileSettingsBinding
 import uz.usoft.a24seven.utils.createBottomSheet
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.network.models.MockData
 import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.observeEvent
@@ -50,6 +51,9 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         binding.profilePhone.setText(getString(R.string.phone_format, data.phone))
         Log.d("profile",data.firstName)
         val monthName = resources.getStringArray(R.array.month)
+        val feedback=ArrayList<MockData.FeedbackObject>()
+
+
         binding.profileFullName.setText(getString(R.string.full_name_format, data.firstName, data.lastName))
         if (data.dob.isNotEmpty()) {
             val dob= data.dob.split("-")

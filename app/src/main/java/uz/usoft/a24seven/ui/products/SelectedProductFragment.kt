@@ -28,7 +28,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private val safeArgs: SelectedProductFragmentArgs by navArgs()
     private val imgList = ArrayList<String>()
     private lateinit var feedbackBottomSheet : BottomSheetDialog
-
+    private var updateStatus=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +62,24 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         binding.leaveFeedback.setOnClickListener {
             feedbackBottomSheet.show()
         }
+        binding.isFavourite.setOnClickListener {
+            updateStatus = if(binding.isFavourite.isChecked){
+                productViewModel.addFav(safeArgs.productId)
+                true
+            } else{
+                productViewModel.removeFav(safeArgs.productId)
+                false
+            }
+        }
+    }
+
+    override fun <T : Any> onSuccess(data: T) {
+        super.onSuccess(data)
+        binding.isFavourite.isChecked=updateStatus
     }
 
     override fun setUpObservers() {
+        observeEvent(productViewModel.favResponse,::handle)
 
         productViewModel.getProductResponse.observe(viewLifecycleOwner,  {
             it.getContentIfNotHandled()?.let { resource ->
@@ -76,6 +91,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                     is Resource.Success -> {
                         val product = resource.data
                         binding.productName.text = product.name
+                        binding.isFavourite.isChecked=product.is_favorite
                         if (product.discount_percent > 0) {
                             binding.productOldPrice.text = requireContext().getString(R.string.money_format_sum, product.price)
                             binding.productPrice.text = requireContext().getString(R.string.money_format_sum, product.price_discount)

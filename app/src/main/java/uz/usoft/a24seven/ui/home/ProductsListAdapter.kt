@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.ui.home
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +24,19 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
         notifyDataSetChanged()
     }
 
+    fun update(updateId:Int,updateValue:Boolean)
+    {
+        this.productsList?.forEach {
+            if (it.id==updateId) {
+                it.is_favorite = updateValue
+                notifyDataSetChanged()
+            }
+        }
+    }
 
     var onItemClick: ((Product) -> Unit)? = null
+    var addFav: ((Product) -> Unit)? = null
+    var removeFav: ((Product) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -49,8 +61,29 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
     inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
+
             itemView.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(productsList!![bindingAdapterPosition])
+            }
+            when (binding) {
+                is ItemProductGridBinding -> {
+                    val binding = binding as ItemProductGridBinding
+                    binding.productIsFav.setOnClickListener {
+                        if(binding.productIsFav.isChecked)
+                            addFav?.invoke(productsList!![bindingAdapterPosition])
+                        else
+                            removeFav?.invoke(productsList!![bindingAdapterPosition])
+                    }
+                }
+                is ItemProductBinding -> {
+                    val binding = binding as ItemProductBinding
+                    binding.productIsFav.setOnClickListener {
+                        if(binding.productIsFav.isChecked)
+                            addFav?.invoke(productsList!![bindingAdapterPosition])
+                        else
+                            removeFav?.invoke(productsList!![bindingAdapterPosition])
+                    }
+                }
             }
         }
 

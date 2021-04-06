@@ -12,14 +12,15 @@ private const val STARTING_PAGE_INDEX = 1
 
 class ProductPagingSource(
     private val api: SevenApi,
-    private val categoryId: Int,
-    private val orderBy: String
+    private val categoryId: Int?=null,
+    private val orderBy: String?=null,
+    private val getFav:Boolean=false
 ) : PagingSource<Int, Product>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         val position = params.key ?: STARTING_PAGE_INDEX
 
         return try {
-            val response = api.getCategoryProducts(categoryId, position, orderBy)
+            val response = if(!getFav) api.getCategoryProducts(categoryId?:0, position, orderBy?:"") else api.getFavProduct(position)
             val feedPost = response.items
 
             LoadResult.Page(

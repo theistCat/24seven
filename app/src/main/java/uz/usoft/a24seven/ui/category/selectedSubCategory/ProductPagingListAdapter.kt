@@ -24,8 +24,14 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
         notifyDataSetChanged()
     }
 
+    fun update(position:Int,updateValue:Boolean)
+    {
+        getItem(position)?.is_favorite=updateValue
+        notifyItemChanged(position)
+    }
 
     var onItemClick: ((Product) -> Unit)? = null
+    var onFavClick: ((Product,position:Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductGridBinding.inflate(
@@ -43,11 +49,15 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
         holder.bindData(getItem(position) as Product)
     }
 
-    inner class ViewHolder(var binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemProductGridBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
+            val product=
             itemView.setOnClickListener {
                 onItemClick?.invoke(getItem(bindingAdapterPosition) as Product)
+            }
+            binding.productIsFav.setOnClickListener {
+                onFavClick?.invoke(getItem(bindingAdapterPosition) as Product,bindingAdapterPosition)
             }
         }
 
