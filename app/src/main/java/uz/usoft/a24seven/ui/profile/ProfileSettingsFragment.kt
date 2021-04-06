@@ -24,6 +24,8 @@ import uz.usoft.a24seven.utils.observeEvent
 import java.util.*
 import kotlin.coroutines.Continuation
 
+
+//Todo: disable update button if no update are made
 class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(FragmentProfileSettingsBinding::inflate) {
 
     private val viewModel:ProfileViewModel by viewModel()
@@ -54,12 +56,17 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
             binding.profileDOB.text =
                 getString(R.string.dob_format, dob[2].toInt(), monthName[dob[1].toInt()-1], dob[0].toInt())
         }
+        if(data.gender)
+            binding.male.isChecked=true
+        else
+            binding.female.isChecked=true
     }
 
 
     override fun setUpObservers() {
 
         observeEvent(viewModel.profileResponse,::handle)
+        observeEvent(viewModel.updateResponse,::handle)
     }
 
     override fun setUpUI() {
@@ -99,7 +106,25 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         }
 
         binding.updateProfile.setOnClickListener {
-           // viewModel.getUpdateProfileResponse()
+
+            val fio=(binding.profileFullName.text).split(" ")
+            val firstName=fio[0]
+            val lastName=fio[1]
+
+            val birthday=(binding.profileDOB.text).split(" ")
+            val year = birthday[2]
+            val monthName = resources.getStringArray(R.array.month)
+            val month = monthName.indexOf(birthday[1])+1
+            val day = birthday[0]
+
+            val gender=binding.male.isChecked
+
+            viewModel.getUpdateProfileResponse(
+                firstName,
+                lastName,
+                "$year-${if(month<10) "0$month" else month}-$day",
+                if (gender) 1 else 0
+            )
         }
 
 
@@ -111,7 +136,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         binding.profileDOB.setOnClickListener {
             val dpd = DatePickerDialog(
                 requireContext(), R.style.datePicker,
-                DatePickerDialog.OnDateSetListener { _s, year, monthOfYear, dayOfMonth ->
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
 
                     val monthName = resources.getStringArray(R.array.month)
                     // Display Selected date in textbox

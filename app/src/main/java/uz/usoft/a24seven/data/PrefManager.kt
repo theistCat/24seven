@@ -7,10 +7,10 @@ import android.content.SharedPreferences
 class PrefManager {
     companion object {
         private const val TF_SEVEN = "tf_seven"
-        private const val TOKEN = ""
+        private const val TOKEN = "token"
         private const val FIREBASE_TOKEN = "firebase_token"
         private const val LOCALE_LANG = "localeLang"
-        private const val PAYMENT_METHOD="PayMe"
+        private const val PAYMENT_METHOD="paymentMethod"
 
         private fun getInstance(context: Context): SharedPreferences {
             return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)

@@ -21,6 +21,8 @@ class SevenRepository(private val api: SevenApi) {
     private val COMMENT_PAGING_SIZE = 5
     private val NEWS_PAGING_SIZE = 5
 
+
+    //region Auth
     suspend fun verify(phone:String,code:String) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.verifyCode(phone, code) })
@@ -35,7 +37,9 @@ class SevenRepository(private val api: SevenApi) {
         emit(Resource.Loading)
         emit(safeApiCall { api.logout() })
     }
+//endregion
 
+    //region Profile
     suspend fun getProfile() = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getProfile() })
@@ -45,21 +49,21 @@ class SevenRepository(private val api: SevenApi) {
         emit(Resource.Loading)
         emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender) })
     }
+    //endregion
 
+    //region Home
     suspend fun getHome() = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getHome() })
     }
+    //endregion
 
+    //region Categories
     suspend fun getCategories() = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getCategories() })
     }
 
-    suspend fun getProduct(productID:Int) = flow {
-        emit(Resource.Loading)
-        emit(safeApiCall { api.getProduct(productID) })
-    }
 
     fun getCategoryProducts(
         categoryId: Int,
@@ -74,6 +78,15 @@ class SevenRepository(private val api: SevenApi) {
             pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy)}catch (e:NoConnectivityException) { throw  e} }
         ).flow
     }
+    //endregion
+
+    //region Product
+
+    suspend fun getProduct(productID:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.getProduct(productID) })
+    }
+
 
     fun getProductComments(
         productID: Int,
@@ -89,6 +102,24 @@ class SevenRepository(private val api: SevenApi) {
 
     }
 
+    suspend fun addComment(productID:Int,firstName: String,commentBody:String) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.postProductComments(productID,firstName, commentBody) })
+    }
+
+    suspend fun addFav(productID:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.addFav(productID) })
+    }
+
+    suspend fun removeFav(productID:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.removeFav(productID) })
+    }
+
+    //endregion
+
+    //region News
     fun getNews(): Flow<PagingData<Post>> {
         return Pager(
             config = PagingConfig(
@@ -103,4 +134,5 @@ class SevenRepository(private val api: SevenApi) {
         emit(Resource.Loading)
         emit(safeApiCall { api.showNews(newsId) })
     }
+    //endregion
 }

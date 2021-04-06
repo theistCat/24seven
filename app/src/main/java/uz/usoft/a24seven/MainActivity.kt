@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     companion object{
 
         lateinit var openAuthActivityCustom:ActivityResultLauncher<Intent>
-        const val ACCESS_TOKEN="acces_token"
+        const val ACCESS_TOKEN="access_token"
      
     }
 
@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                 R.id.nav_checkOut,R.id.nav_addressList ,R.id.nav_selectedAddress,
                 R.id.nav_myPaymentMethod ,R.id.nav_addAddress, R.id.nav_profileSettings,
                 R.id.nav_myFavouriteItems, R.id.nav_barcodeScanner-> {
-                    //bottomNavigationView.hide()
+                    bottomNavigationView.hide()
                 }
 
                 R.id.nav_subCategories,R.id.nav_selectedSubCategory -> {

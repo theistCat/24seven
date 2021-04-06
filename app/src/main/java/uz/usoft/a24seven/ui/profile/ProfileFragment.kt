@@ -24,11 +24,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private val viewModel:ProfileViewModel by viewModel()
     private var userData: ProfileResponse?=null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun setUpUI() {
+        super.setUpUI()
+
         viewModel.getProfileResponse()
     }
-
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
         data as ProfileResponse
@@ -44,11 +44,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.orderCount.text=getString(R.string.order_count, data.orders_count)
         binding.favCount.text=getString(R.string.items_count, data.favorites_count)
         binding.addressCount.text=getString(R.string.address_count, data.addresses_count)
+        binding.payMethod.text=PrefManager.getPaymentMethod(requireContext())
     }
 
     override fun onResume() {
         super.onResume()
         if(userData!=null) parseData(userData!!)
+        mainActivity.showBottomNavigation()
     }
 
 
