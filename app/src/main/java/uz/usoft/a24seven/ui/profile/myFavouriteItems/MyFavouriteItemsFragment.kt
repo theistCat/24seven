@@ -1,22 +1,19 @@
 package uz.usoft.a24seven.ui.profile.myFavouriteItems
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyFavouriteItemsBinding
+import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingListAdapter
-import uz.usoft.a24seven.ui.home.ProductsListAdapter
 import uz.usoft.a24seven.ui.profile.ProfileViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.*
@@ -51,6 +48,32 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
 
     override fun setUpObservers() {
         observeEvent(viewModel.favResponse,::handle)
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                //progressBar.isVisible = loadStates.refresh is LoadState.Loading
+                //retry.isVisible = loadState.refresh !is LoadState.Loading
+                when(loadStates.refresh)
+                {
+                    is LoadState.Error->{
+                        val error = loadStates.refresh as LoadState.Error
+                        if (error.error is NoConnectivityException)
+                        {
+                            showNoConnectionDialog(this@MyFavouriteItemsFragment::onRetry)
+                        }
+                    }
+                    is LoadState.Loading->{
+                        hideNoConnectionDialog()
+                        showLoadingDialog()
+                    }
+                    else->{
+                        hideNoConnectionDialog()
+                        hideLoadingDialog()
+                    }
+                }
+
+            }
+        }
     }
 
     override fun <T : Any> onSuccess(data: T) {

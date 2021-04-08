@@ -4,15 +4,10 @@ import android.app.DatePickerDialog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentProfileSettingsBinding
@@ -23,7 +18,6 @@ import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.observeEvent
 import java.util.*
-import kotlin.coroutines.Continuation
 
 
 //Todo: disable update button if no update are made
@@ -47,12 +41,11 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
+
         data as ProfileResponse
         binding.profilePhone.setText(getString(R.string.phone_format, data.phone))
-        Log.d("profile",data.firstName)
-        val monthName = resources.getStringArray(R.array.month)
-        val feedback=ArrayList<MockData.FeedbackObject>()
 
+        val monthName = resources.getStringArray(R.array.month)
 
         binding.profileFullName.setText(getString(R.string.full_name_format, data.firstName, data.lastName))
         if (data.dob.isNotEmpty()) {

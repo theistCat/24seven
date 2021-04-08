@@ -11,6 +11,7 @@ class PrefManager {
         private const val FIREBASE_TOKEN = "firebase_token"
         private const val LOCALE_LANG = "localeLang"
         private const val PAYMENT_METHOD="paymentMethod"
+        private const val PHONE="phone"
 
         private fun getInstance(context: Context): SharedPreferences {
             return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)
@@ -67,6 +68,15 @@ class PrefManager {
 
         fun getLocale(context: Context): String {
             return getInstance(context).getString(LOCALE_LANG, "ru")!!
+        }
+
+
+        fun savePhone(context: Context, phone: String) {
+            getInstance(context).edit().putString(PHONE, phone).apply()
+        }
+
+        fun getPhone(context: Context): String {
+            return getInstance(context).getString(PHONE, "")!!
         }
 
         fun isLoggedIn(context: Context):Boolean{

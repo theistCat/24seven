@@ -1,7 +1,6 @@
 package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -16,7 +15,6 @@ import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.ui.news.NewsListAdapter
-import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.utils.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate){

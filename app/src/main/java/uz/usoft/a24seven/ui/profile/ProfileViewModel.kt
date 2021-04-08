@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.Address
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.network.utils.Event
@@ -22,6 +23,12 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     val logoutResponse = MutableLiveData<Event<Resource<Any>>>()
     val profileResponse = MutableLiveData<Event<Resource<ProfileResponse>>>()
     val updateResponse = MutableLiveData<Event<Resource<ProfileResponse>>>()
+    val addAddressResponse = MutableLiveData<Event<Resource<Address>>>()
+    val updateAddressResponse = MutableLiveData<Event<Resource<Address>>>()
+    val showAddressResponse = MutableLiveData<Event<Resource<Address>>>()
+    val deleteAddressResponse = MutableLiveData<Event<Resource<Any>>>()
+
+    var update:Boolean=false
 
 
     val favResponse = MutableLiveData<Event<Resource<Any>>>()
@@ -73,6 +80,46 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
             repository.updateProfile(firstName, lastName, dob, gender).onEach {
                 updateResponse.value = Event(it)
             }.launchIn(viewModelScope)
+        }
+    }
+
+    fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) {
+        viewModelScope.launch {
+            repository.addAddress(name, address, city, region, lat, lng, phone).onEach {
+                addAddressResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+    fun updateAddress(id: Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) {
+        viewModelScope.launch {
+            repository.updateAddress(id,name, address, city, region, lat, lng, phone).onEach {
+                updateAddressResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun showAddress(id:Int) {
+        viewModelScope.launch {
+            repository.showAddress(id).onEach {
+                showAddressResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun deleteAddress(id:Int) {
+        viewModelScope.launch {
+            repository.deleteAddress(id).onEach {
+                deleteAddressResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun getAddresses(): Flow<PagingData<Address>> {
+        return try {
+            repository.getAddresses()
+                .cachedIn(viewModelScope) }
+        catch (e: NoConnectivityException) {
+            throw e
         }
     }
 }

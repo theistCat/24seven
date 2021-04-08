@@ -135,6 +135,7 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
         } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
     }
 
+    //TODO: make onSuccess reusable
     fun <T : Any>handle(event: Event<Resource<T>>){
         event.getContentIfNotHandled()?.let { resource ->
             when (resource) {

@@ -1,29 +1,49 @@
 package uz.usoft.a24seven.ui.profile.myAddresses
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import uz.usoft.a24seven.R
+import androidx.navigation.fragment.findNavController
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentAddAddressBinding
+import uz.usoft.a24seven.ui.profile.ProfileViewModel
+import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.observeEvent
+import uz.usoft.a24seven.utils.showErrorIfNotFilled
+import uz.usoft.a24seven.utils.showSnackbar
 
-class AddAddressFragment : Fragment() {
-    private var param2: String? = null
+class AddAddressFragment : BaseFragment<FragmentAddAddressBinding>(FragmentAddAddressBinding::inflate) {
 
-    private var _binding: FragmentAddAddressBinding? = null
-    private val binding get() = _binding!!
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
+    private var lat=46.00
+    private var lng=69.00
+
+
+
+    private val viewModel: ProfileViewModel by viewModel()
+
+    override fun setUpOnClickListeners() {
+        binding.addAddress.setOnClickListener {
+            val addressName=binding.addAddressName.text.toString()
+            val addressAddress=binding.addAddressAddress.text.toString()
+            val addressCity=binding.addAddressCity.text.toString()
+            val addressRegion=binding.addAddressDistrict.text.toString()
+            if(isValid())
+                viewModel.addAddress(addressName,addressAddress,addressCity,addressRegion,lat,lng,PrefManager.getPhone(requireContext()))
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentAddAddressBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun <T : Any> onSuccess(data: T) {
+        super.onSuccess(data)
+        showSnackbar("Success")
+        findNavController().popBackStack()
+    }
+
+    override fun setUpObservers() {
+        observeEvent(viewModel.addAddressResponse,::handle)
+    }
+
+    fun isValid():Boolean{
+        return (binding.addAddressName.showErrorIfNotFilled() &&
+                binding.addAddressAddress.showErrorIfNotFilled() &&
+                binding.addAddressCity.showErrorIfNotFilled() &&
+                binding.addAddressDistrict.showErrorIfNotFilled())
     }
 }

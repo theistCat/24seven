@@ -1,9 +1,6 @@
 package uz.usoft.a24seven.ui.category.selectedSubCategory
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
@@ -107,6 +104,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     override fun setUpObservers() {
 
         observeEvent(productViewModel.favResponse,::handle)
+
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading

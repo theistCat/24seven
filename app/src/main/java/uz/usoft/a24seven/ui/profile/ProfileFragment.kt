@@ -1,11 +1,6 @@
 package uz.usoft.a24seven.ui.profile
 
-import android.R.attr
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
@@ -104,7 +99,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             findNavController().navigate(R.id.action_nav_profile_to_nav_myOrders)
         }
         binding.myAddress.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_addressList)
+            val action=ProfileFragmentDirections.actionNavProfileToNavAddressList()
+            navigate(action)
         }
         binding.myPaymentMethod.setOnClickListener {
            findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)

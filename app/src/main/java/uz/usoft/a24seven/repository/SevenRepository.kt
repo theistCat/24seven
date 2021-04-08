@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import uz.usoft.a24seven.network.SevenApi
+import uz.usoft.a24seven.network.models.Address
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Post
 import uz.usoft.a24seven.network.models.Product
@@ -15,10 +16,12 @@ import uz.usoft.a24seven.network.utils.safeApiCall
 import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingSource
 import uz.usoft.a24seven.ui.news.NewsPagingSource
 import uz.usoft.a24seven.ui.products.CommentsPagingSource
+import uz.usoft.a24seven.ui.profile.myAddresses.AddressPagingSource
 
 class SevenRepository(private val api: SevenApi) {
     private val PRODUCT_PAGING_SIZE = 5
     private val COMMENT_PAGING_SIZE = 5
+    private val ADDRESS_PAGING_SIZE = 5
     private val NEWS_PAGING_SIZE = 5
 
 
@@ -60,6 +63,37 @@ class SevenRepository(private val api: SevenApi) {
             pagingSourceFactory = { try{ ProductPagingSource(api,getFav = true) } catch (e:NoConnectivityException) { throw  e} }
         ).flow
 
+    }
+
+    fun getAddresses(): Flow<PagingData<Address>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ADDRESS_PAGING_SIZE,
+                enablePlaceholders = true,
+                maxSize = 50
+            ),
+            pagingSourceFactory = { try{ AddressPagingSource(api) }catch (e:NoConnectivityException) { throw  e} }
+        ).flow
+    }
+
+    suspend fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.addAddress(name, address, city, region, lat, lng, phone) })
+    }
+
+    suspend fun updateAddress(id:Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.updateAddress(id,name, address, city, region, lat, lng, phone) })
+    }
+
+    suspend fun showAddress(id:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.showAddress(id) })
+    }
+
+    suspend fun deleteAddress(id:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.deleteAddress(id) })
     }
     //endregion
 

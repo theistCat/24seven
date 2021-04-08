@@ -25,12 +25,8 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.*
 import androidx.lifecycle.Observer
-import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -49,7 +45,9 @@ import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
+import uz.usoft.a24seven.network.models.Address
 import uz.usoft.a24seven.network.utils.Event
+import uz.usoft.a24seven.network.utils.Resource
 import java.text.NumberFormat
 import java.util.*
 
@@ -414,10 +412,12 @@ fun EditText.hideErrorIfFilled() {
     }
 }
 
-fun EditText.showErrorIfNotFilled() {
+fun EditText.showErrorIfNotFilled() :Boolean{
     if (this.text.toString().isEmpty()) {
         this.error = context.getString(R.string.warning_fill_the_fields)
+        return false
     }
+    return true
 }
 
 fun EditText.showError() {

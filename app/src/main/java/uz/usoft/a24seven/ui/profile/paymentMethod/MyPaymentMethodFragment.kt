@@ -37,7 +37,7 @@ class MyPaymentMethodFragment : Fragment() {
     }
 
     private fun setUpAdapter() {
-        adapter = PaymentMethodListAdapter()
+        adapter = PaymentMethodListAdapter(requireContext())
 
 
     }
