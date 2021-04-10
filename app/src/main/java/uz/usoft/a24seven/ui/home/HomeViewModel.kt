@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.home
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,8 +8,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.models.HomeResponse
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
@@ -17,6 +20,7 @@ import uz.usoft.a24seven.repository.SevenRepository
 class HomeViewModel constructor(private val repository: SevenRepository) : ViewModel() {
 
     val getHomeResponse = MutableLiveData<Event<Resource<HomeResponse>>>()
+    val addToCartResponse = MutableLiveData<Event<Resource<Any>>>()
 
     fun getHome() {
         viewModelScope.launch {
@@ -44,5 +48,20 @@ class HomeViewModel constructor(private val repository: SevenRepository) : ViewM
                 favResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
+    }
+
+
+    fun addToCart(item: CartItem) = viewModelScope.launch {
+
+        Log.d("addtocart","inviewmodel")
+        addToCartResponse.value=Event(Resource.Loading)
+        repository.addToCart(item).onCompletion {
+            Log.d("addtocart","inviewmodel completed")
+            addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
+        }.launchIn(viewModelScope)
+    }
+
+    fun delete(item: CartItem) = viewModelScope.launch {
+        repository.delete(item)
     }
 }

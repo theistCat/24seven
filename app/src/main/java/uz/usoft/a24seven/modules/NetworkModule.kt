@@ -12,6 +12,7 @@ import uz.usoft.a24seven.BuildConfig
 import uz.usoft.a24seven.network.SevenApi
 import uz.usoft.a24seven.network.utils.ConnectivityInterceptor
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.network.CartDao
 import uz.usoft.a24seven.network.utils.LogoutInterceptor
 import java.util.concurrent.TimeUnit
 
@@ -24,6 +25,7 @@ val networkModule = module {
         val retrofit = get<Retrofit>()
         retrofit.create(SevenApi::class.java)
     }
+
 
     single<Moshi> {
         Moshi.Builder()

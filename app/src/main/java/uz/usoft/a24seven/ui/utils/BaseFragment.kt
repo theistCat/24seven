@@ -120,7 +120,6 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
     open fun onRetry(){
 
         hideNoConnectionDialog()
-        showLoadingDialog()
     }
 
     open fun onGenericError(resource: Resource.GenericError){

@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         when (navController.currentDestination?.id) {
             R.id.nav_home,R.id.nav_categories,R.id.nav_subCategories,
-            R.id.nav_selectedSubCategory  -> {
+            R.id.nav_selectedSubCategory,R.id.nav_cart  -> {
                 binding.searchLay.show()
             }
             else -> bottomNavigationView.hide()

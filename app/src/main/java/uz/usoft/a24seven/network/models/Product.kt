@@ -17,3 +17,7 @@ data class Product(
     val images: List<Image>?,
     val products_related: List<Product>?
 )
+{
+    @Transient
+    var count:Int=0
+}

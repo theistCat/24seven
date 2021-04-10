@@ -4,5 +4,5 @@ import org.koin.dsl.module
 import uz.usoft.a24seven.repository.SevenRepository
 
 val appModule= module{
-    single {  SevenRepository(get())}
+    single {  SevenRepository(get(),get())}
 }

@@ -20,7 +20,7 @@ class MainApplication : Application() {
         startKoin {
             androidLogger(org.koin.core.logger.Level.ERROR)
             androidContext(this@MainApplication)
-            modules(listOf(appModule, viewModelsModule, networkModule))
+            modules(listOf(appModule, viewModelsModule, networkModule, databaseModule))
 
             //Start network callback
         }

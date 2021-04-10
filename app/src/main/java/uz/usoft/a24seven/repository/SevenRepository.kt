@@ -1,15 +1,14 @@
 package uz.usoft.a24seven.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import uz.usoft.a24seven.network.CartDao
 import uz.usoft.a24seven.network.SevenApi
-import uz.usoft.a24seven.network.models.Address
-import uz.usoft.a24seven.network.models.Comment
-import uz.usoft.a24seven.network.models.Post
-import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.safeApiCall
@@ -18,7 +17,7 @@ import uz.usoft.a24seven.ui.news.NewsPagingSource
 import uz.usoft.a24seven.ui.products.CommentsPagingSource
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressPagingSource
 
-class SevenRepository(private val api: SevenApi) {
+class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     private val PRODUCT_PAGING_SIZE = 5
     private val COMMENT_PAGING_SIZE = 5
     private val ADDRESS_PAGING_SIZE = 5
@@ -181,4 +180,40 @@ class SevenRepository(private val api: SevenApi) {
         emit(safeApiCall { api.showNews(newsId) })
     }
     //endregion
+
+    //region cart
+    suspend fun getCart(products: HashMap<String,Int>) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.getCart(products) })
+    }
+    //endregion
+
+
+    //region cart database
+    val cart: Flow<List<CartItem>> = cartDao.getAll()
+
+
+    suspend fun addToCart(cartItem: CartItem) =flow{
+        Log.d("addtocart","inrepository")
+        emit(Resource.Loading)
+        emit(cartDao.insert(cartItem))
+    }
+
+    suspend fun delete(cartItem: CartItem) = flow{
+
+        Log.d("remove","inrepository")
+        emit(Resource.Loading)
+        emit(cartDao.delete(cartItem))
+    }
+
+    suspend fun update(cartItem: CartItem) = flow{
+
+        Log.d("remove","inrepository")
+        emit(Resource.Loading)
+        emit(cartDao.updateCartItem(cartItem))
+    }
+    //endregion
+
+
+
 }

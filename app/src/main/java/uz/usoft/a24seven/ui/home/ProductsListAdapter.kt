@@ -35,6 +35,7 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
     }
 
     var onItemClick: ((Product) -> Unit)? = null
+    var addToCart: ((Product) -> Unit)? = null
     var addFav: ((Product) -> Unit)? = null
     var removeFav: ((Product) -> Unit)? = null
 
@@ -82,6 +83,9 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                             addFav?.invoke(productsList!![bindingAdapterPosition])
                         else
                             removeFav?.invoke(productsList!![bindingAdapterPosition])
+                    }
+                    binding.addToCart.setOnClickListener {
+                        addToCart?.invoke(productsList!![bindingAdapterPosition])
                     }
                 }
             }

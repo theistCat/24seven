@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -9,10 +10,12 @@ import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
+import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.models.Compilation
 import uz.usoft.a24seven.network.models.HomeResponse
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Resource
+import uz.usoft.a24seven.ui.cart.CartViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.*
@@ -53,6 +56,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun setUpObservers() {
         observeEvent(homeViewModel.getHomeResponse, ::handle)
         observeEvent(homeViewModel.favResponse,::handle)
+        observeEvent(homeViewModel.addToCartResponse,::handle)
     }
 
     override fun <T : Any> onSuccess(data: T) {
@@ -140,6 +144,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 updateId=product.id
                 updateValue=false
                 homeViewModel.removeFav(product.id)
+            }
+
+            it.addToCart={product->
+
+                Log.d("addtocart","infragment")
+                homeViewModel.addToCart(CartItem(product.id,1))
             }
         }
 
