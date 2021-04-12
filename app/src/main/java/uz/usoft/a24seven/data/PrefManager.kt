@@ -12,6 +12,7 @@ class PrefManager {
         private const val LOCALE_LANG = "localeLang"
         private const val PAYMENT_METHOD="paymentMethod"
         private const val PHONE="phone"
+        private const val NAME="name"
 
         private fun getInstance(context: Context): SharedPreferences {
             return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)
@@ -77,6 +78,14 @@ class PrefManager {
 
         fun getPhone(context: Context): String {
             return getInstance(context).getString(PHONE, "")!!
+        }
+
+        fun saveName(context: Context, name: String) {
+            getInstance(context).edit().putString(NAME, name).apply()
+        }
+
+        fun getName(context: Context): String {
+            return getInstance(context).getString(NAME, "")!!
         }
 
         fun isLoggedIn(context: Context):Boolean{

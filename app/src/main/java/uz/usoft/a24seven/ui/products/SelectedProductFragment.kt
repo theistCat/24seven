@@ -1,18 +1,23 @@
 package uz.usoft.a24seven.ui.products
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
 import uz.usoft.a24seven.databinding.FeedbackBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
+import uz.usoft.a24seven.network.models.CartItem
+import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
@@ -58,11 +63,18 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
         binding.feedbackRecycler.adapter = feedbackListAdapter
         binding.feedbackRecycler.layoutManager = LinearLayoutManager(requireContext())
+
     }
 
     override fun setUpOnClickListeners() {
         binding.leaveFeedback.setOnClickListener {
             feedbackBottomSheet.show()
+        }
+
+        binding.addProductToCart.setOnClickListener {
+
+            Log.d("addtocart","infragment")
+            productViewModel.addToCart(CartItem(safeArgs.productId,1))
         }
 
 
@@ -75,15 +87,35 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                 false
             }
         }
+
+
+        feedbackBottomSheetBinding.sendFeedback.setOnClickListener {
+            if(feedbackBottomSheetBinding.feedback.text.isNotBlank())
+            {
+                productViewModel.addComment(safeArgs.productId,PrefManager.getName(requireContext()),feedbackBottomSheetBinding.feedback.text.toString())
+            }
+        }
     }
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
         binding.isFavourite.isChecked=updateStatus
+        if(data is Comment)
+        {
+            feedbackBottomSheet.dismiss()
+            showSnackbar("your comment in review",Snackbar.LENGTH_LONG)
+        }
+        else{
+
+            showSnackbar("success")
+        }
     }
 
     override fun setUpObservers() {
         observeEvent(productViewModel.favResponse,::handle)
+        observeEvent(productViewModel.addCommentResponse,::handle)
+
+        observeEvent(productViewModel.addToCartResponse,::handle)
 
         productViewModel.getProductResponse.observe(viewLifecycleOwner,  {
             it.getContentIfNotHandled()?.let { resource ->

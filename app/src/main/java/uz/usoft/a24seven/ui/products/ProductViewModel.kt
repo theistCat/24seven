@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.products
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,8 +8,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Event
@@ -34,12 +37,34 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
             .cachedIn(viewModelScope)
     }
 
+
+    val addToCartResponse = MutableLiveData<Event<Resource<Any>>>()
+    fun addToCart(item: CartItem) = viewModelScope.launch {
+
+        Log.d("addtocart","inviewmodel")
+        addToCartResponse.value=Event(Resource.Loading)
+        repository.addToCart(item).onCompletion {
+            Log.d("addtocart","inviewmodel completed")
+            addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
+        }.launchIn(viewModelScope)
+    }
+
     val getProductResponse = MutableLiveData<Event<Resource<Product>>>()
 
     fun getProduct(productId:Int) {
         viewModelScope.launch {
             repository.getProduct(productId).onEach {
                 getProductResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    val addCommentResponse = MutableLiveData<Event<Resource<Comment>>>()
+
+    fun addComment(productId:Int,name:String,comment:String) {
+        viewModelScope.launch {
+            repository.addComment(productId,name,comment).onEach {
+                addCommentResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
