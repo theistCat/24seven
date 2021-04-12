@@ -59,6 +59,10 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
             binding.female.isChecked=true
     }
 
+    override fun onRetry() {
+        super.onRetry()
+        viewModel.getProfileResponse()
+    }
 
     override fun setUpObservers() {
 

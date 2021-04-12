@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
+import uz.usoft.a24seven.databinding.FeedbackBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
@@ -26,6 +28,8 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private val safeArgs: SelectedProductFragmentArgs by navArgs()
     private val imgList = ArrayList<String>()
     private lateinit var feedbackBottomSheet : BottomSheetDialog
+    private lateinit var _feedbackBottomSheetBinding : FeedbackBottomsheetBinding
+    private val feedbackBottomSheetBinding get() = _feedbackBottomSheetBinding!!
     private var updateStatus=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,6 +64,8 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         binding.leaveFeedback.setOnClickListener {
             feedbackBottomSheet.show()
         }
+
+
         binding.isFavourite.setOnClickListener {
             updateStatus = if(binding.isFavourite.isChecked){
                 productViewModel.addFav(safeArgs.productId)
@@ -146,5 +152,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     override fun setUpUI() {
         mainActivity.setTitle(safeArgs.selectedCategoryName)
+        _feedbackBottomSheetBinding= FeedbackBottomsheetBinding.inflate(layoutInflater)
+        feedbackBottomSheet=createBottomSheet(feedbackBottomSheetBinding.root)
     }
 }

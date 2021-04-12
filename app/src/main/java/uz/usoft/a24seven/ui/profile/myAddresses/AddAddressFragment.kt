@@ -30,6 +30,11 @@ class AddAddressFragment : BaseFragment<FragmentAddAddressBinding>(FragmentAddAd
         }
     }
 
+
+    override fun onRetry() {
+        super.onRetry()
+    }
+
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
         showSnackbar("Success")

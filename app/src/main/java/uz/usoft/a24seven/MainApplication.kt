@@ -12,7 +12,6 @@ import uz.usoft.a24seven.network.utils.Variables
 class MainApplication : Application() {
 
     //TODO: addComments
-    //TODO: make local Cart and API cart
 
     override fun onCreate() {
         super.onCreate()

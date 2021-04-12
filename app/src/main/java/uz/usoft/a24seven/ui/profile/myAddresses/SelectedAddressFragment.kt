@@ -36,6 +36,11 @@ class SelectedAddressFragment : BaseFragment<FragmentSelectedAddressBinding>(Fra
         viewModel.showAddress(safeArgs.addressId)
     }
 
+    override fun onRetry() {
+        super.onRetry()
+        viewModel.showAddress(safeArgs.addressId)
+    }
+
     override fun setUpObservers() {
         observeEvent(viewModel.showAddressResponse,::handle)
         observeEvent(viewModel.updateAddressResponse,::handle)

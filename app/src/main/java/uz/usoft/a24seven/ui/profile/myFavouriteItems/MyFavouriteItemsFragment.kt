@@ -46,6 +46,11 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
         }
     }
 
+    override fun onRetry() {
+        super.onRetry()
+        getFavProducts()
+    }
+
     override fun setUpObservers() {
         observeEvent(viewModel.favResponse,::handle)
 

@@ -88,6 +88,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     override fun onRetry() {
         hideNoConnectionDialog()
+        viewModel.getProfileResponse()
     }
 
     override fun setUpOnClickListeners()
@@ -95,15 +96,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.logout.setOnClickListener {
             viewModel.getLogoutResponse()
         }
+
         binding.myOrders.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_myOrders)
+            navigate(R.id.action_nav_profile_to_nav_myOrders)
         }
         binding.myAddress.setOnClickListener {
             val action=ProfileFragmentDirections.actionNavProfileToNavAddressList()
             navigate(action)
         }
         binding.myPaymentMethod.setOnClickListener {
-           findNavController().navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
+           navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
         }
 
         binding.profileSettings.setOnClickListener {
@@ -112,7 +114,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         }
 
         binding.myFavouriteItems.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
+            navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
         }
     }
 
