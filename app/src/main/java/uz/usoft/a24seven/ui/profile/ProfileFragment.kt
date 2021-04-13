@@ -16,8 +16,6 @@ import uz.usoft.a24seven.utils.showSnackbar
 
 
 // TODO: myOrders
-// TODO: myAddresses
-// TODO: myPaymentMethod
 // TODO: myProfileImage?
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
