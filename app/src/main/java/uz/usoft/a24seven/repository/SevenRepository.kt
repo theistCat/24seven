@@ -238,5 +238,10 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         ).flow
 
     }
+
+    suspend fun showOrder(orderId:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.showOrder(orderId) })
+    }
     //endregion
 }

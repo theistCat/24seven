@@ -8,5 +8,7 @@ data class Order(
     val status: String = "processing",
     val payment_type: String = "cash",
     val payment_status: String = "cash",
-    val created_at: String = "08:45, 13.04.2021"
+    val created_at: String = "08:45, 13.04.2021",
+    val address: Address?,
+    val products:List<OrderItem>?,
 )
