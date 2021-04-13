@@ -46,7 +46,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.addressCount.text=getString(R.string.address_count, data.addresses_count)
         binding.payMethod.text=PrefManager.getPaymentMethod(requireContext())
 
-        PrefManager.savePhone(requireContext(),data.phone.toString())
+        PrefManager.savePhone(requireContext(),data.phone)
         PrefManager.saveName(requireContext(),getString(R.string.full_name_format, data.firstName, data.lastName))
     }
 

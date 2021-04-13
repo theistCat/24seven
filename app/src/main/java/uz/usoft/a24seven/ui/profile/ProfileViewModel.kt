@@ -83,14 +83,14 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
         }
     }
 
-    fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) {
+    fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) {
         viewModelScope.launch {
             repository.addAddress(name, address, city, region, lat, lng, phone).onEach {
                 addAddressResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
-    fun updateAddress(id: Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) {
+    fun updateAddress(id: Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) {
         viewModelScope.launch {
             repository.updateAddress(id,name, address, city, region, lat, lng, phone).onEach {
                 updateAddressResponse.value = Event(it)

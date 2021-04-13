@@ -6,9 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCartBinding
-import uz.usoft.a24seven.network.models.CartItem
-import uz.usoft.a24seven.network.models.CartResponse
-import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
@@ -20,6 +18,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
     private lateinit var adapter: CartItemListAdapter
     private val viewModel: CartViewModel by viewModel()
     private val productsList=HashMap<String,Int>()
+    private lateinit var checkOutData: CheckOutData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +48,8 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
 
     override fun setUpOnClickListeners() {
         binding.checkout.setOnClickListener {
-           navigate(R.id.action_nav_cart_to_nav_checkOut)
+            val action = CartFragmentDirections.actionNavCartToNavCheckOut(checkOutData)
+           navigate(action)
         }
     }
 
@@ -59,6 +59,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         adapter.updateList(data.products as ArrayList<Product>)
         adapter.updateItems(viewModel.cart.value!!)
         binding.totalPrice.text=getString(R.string.money_format_sum,data.total)
+        checkOutData=CheckOutData(productsList,data.total,data.total)
     }
 
     override fun onRetry() {

@@ -75,12 +75,12 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         ).flow
     }
 
-    suspend fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) = flow {
+    suspend fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.addAddress(name, address, city, region, lat, lng, phone) })
     }
 
-    suspend fun updateAddress(id:Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:String) = flow {
+    suspend fun updateAddress(id:Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.updateAddress(id,name, address, city, region, lat, lng, phone) })
     }
@@ -215,5 +215,10 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     //endregion
 
 
-
+    //region Checkout
+    suspend fun checkout(paymentType: String,addressId: Int,products: HashMap<String,Int>) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.checkout(paymentType, addressId, products) })
+    }
+    //endregion
 }

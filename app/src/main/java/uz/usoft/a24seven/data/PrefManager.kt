@@ -72,12 +72,12 @@ class PrefManager {
         }
 
 
-        fun savePhone(context: Context, phone: String) {
-            getInstance(context).edit().putString(PHONE, phone).apply()
+        fun savePhone(context: Context, phone: Long) {
+            getInstance(context).edit().putLong(PHONE, phone).apply()
         }
 
-        fun getPhone(context: Context): String {
-            return getInstance(context).getString(PHONE, "")!!
+        fun getPhone(context: Context): Long {
+            return getInstance(context).getLong(PHONE, 0)
         }
 
         fun saveName(context: Context, name: String) {

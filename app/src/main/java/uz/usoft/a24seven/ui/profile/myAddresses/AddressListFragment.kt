@@ -27,6 +27,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding>(FragmentAdd
 
     private val viewModel: ProfileViewModel by viewModel()
     private lateinit var adapter: AddressListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
