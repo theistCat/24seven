@@ -1,24 +1,22 @@
 package uz.usoft.a24seven.ui.profile.myOrders
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ItemOrderBinding
 import uz.usoft.a24seven.network.models.MockData
+import uz.usoft.a24seven.network.models.Order
 
-class MyOrderListRecyclerAdapter(val orderListType: String = "") :
-    RecyclerView.Adapter<MyOrderListRecyclerAdapter.ViewHolder>() {
-
-    var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
-
-    fun updateList(productsList: List<MockData.ProductObject>) {
-        this.productsList = productsList
-        notifyDataSetChanged()
-    }
+class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String = "") :
+   PagingDataAdapter<Order,MyOrderListRecyclerAdapter.ViewHolder>(ORDER) {
 
 
-    var onItemClick: ((MockData.ProductObject) -> Unit)? = null
+    var onItemClick: ((Order) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemOrderBinding.inflate(
@@ -27,35 +25,76 @@ class MyOrderListRecyclerAdapter(val orderListType: String = "") :
         return ViewHolder(binding)
     }
 
-    override fun getItemCount() = productsList?.size ?: 0
-
     override fun onBindViewHolder(holder: MyOrderListRecyclerAdapter.ViewHolder, position: Int) {
-        holder.bindData(productsList!![position])
+        holder.bindData(getItem(position) as Order)
     }
 
     inner class ViewHolder(val binding: ItemOrderBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.orderDetails.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(getItem(bindingAdapterPosition) as Order)
             }
         }
 
-        fun bindData(product: MockData.ProductObject) {
-            when (orderListType) {
-                "active" -> {
-                    binding.orderStatus.setTextColor(Color.parseColor("#1BC06D"))
-                    binding.orderStatus.text = "Активные"
+        fun bindData(order: Order) {
+
+                binding.orderStatus.setTextColor(
+                    when (orderListType) {
+                        "active" -> {
+                            Color.parseColor("#1BC06D")
+                        }
+                        "inactive" -> {
+                            Color.parseColor("#F8B068")
+                        }
+
+                        "delivered" -> {
+                            Color.parseColor("#DB3022")
+                        }
+                        else -> {
+                            Color.parseColor("#1BC06D")
+                        }
+                    }
+                )
+
+            binding.orderStatus.text =
+                when (orderListType) {
+                    "active" -> {
+                        context.getString(R.string.active)
+                    }
+
+                    "inactive" -> {
+                        context.getString(R.string.in_wait)
+                    }
+
+                    "delivered" -> {
+                        context.getString(R.string.delivered)
+                    }
+                    else -> {
+                        context.getString(R.string.active)
+                    }
                 }
-                "inactive" -> {
-                    binding.orderStatus.setTextColor(Color.parseColor("#F8B068"))
-                    binding.orderStatus.text = "Ожидание"
-                }
-                "delivered" -> {
-                    binding.orderStatus.setTextColor(Color.parseColor("#DB3022"))
-                    binding.orderStatus.text = "Доставлен"
-                }
+
+                binding.orderDate.text=order.created_at
+                binding.orderID.text=context.getString(R.string.order_number,order.id)
+                binding.orderItemCount.text=order.products_count.toString()
+                binding.orderPrice.text=context.getString(R.string.money_format_sum,order.price_products+order.price_delivery)
             }
+        }
+
+
+    companion object {
+        private val ORDER = object :
+            DiffUtil.ItemCallback<Order>() {
+            // Concert details may have changed if reloaded from the database,
+            // but ID is fixed.
+            override fun areItemsTheSame(oldConcert: Order,
+                                         newConcert: Order
+            ) = oldConcert.id == newConcert.id
+
+            override fun areContentsTheSame(oldConcert: Order,
+                                            newConcert: Order
+            ) = oldConcert == newConcert
         }
     }
 }

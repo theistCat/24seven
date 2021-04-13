@@ -16,13 +16,18 @@ import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingSource
 import uz.usoft.a24seven.ui.news.NewsPagingSource
 import uz.usoft.a24seven.ui.products.CommentsPagingSource
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressPagingSource
+import uz.usoft.a24seven.ui.profile.myOrders.OrderPagingSource
 
 class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
-    private val PRODUCT_PAGING_SIZE = 5
-    private val COMMENT_PAGING_SIZE = 5
-    private val ADDRESS_PAGING_SIZE = 5
-    private val NEWS_PAGING_SIZE = 5
 
+
+    companion object{
+        private const val PRODUCT_PAGING_SIZE = 5
+        private const val COMMENT_PAGING_SIZE = 5
+        private const val ADDRESS_PAGING_SIZE = 5
+        private const val NEWS_PAGING_SIZE = 5
+        private const val ORDERS_PAGING_SIZE = 5
+    }
 
     //region Auth
     suspend fun verify(phone:String,code:String) = flow {
@@ -219,6 +224,19 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     suspend fun checkout(paymentType: String,addressId: Int,products: HashMap<String,Int>) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.checkout(paymentType, addressId, products) })
+    }
+    //endregion
+
+
+    //region Orders
+    fun getOrders(orderType:String): Flow<PagingData<Order>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ORDERS_PAGING_SIZE
+            ),
+            pagingSourceFactory = { OrderPagingSource(api,orderType) }
+        ).flow
+
     }
     //endregion
 }
