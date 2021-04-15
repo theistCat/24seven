@@ -54,7 +54,9 @@ import java.util.*
 fun Fragment.toDp(px: Int): Int {
     return ((requireContext().resources.displayMetrics.density * px) + 0.5f).toInt()
 }
-
+fun Activity.toDp(px: Int): Int {
+    return ((this.resources.displayMetrics.density * px) + 0.5f).toInt()
+}
 
 class SpacesItemDecoration(
     private val space: Int,

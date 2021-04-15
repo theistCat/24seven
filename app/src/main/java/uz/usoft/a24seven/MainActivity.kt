@@ -23,6 +23,8 @@ import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.*
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.ui.auth.AuthActivity
+import uz.usoft.a24seven.ui.seach.SearchActivity
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
@@ -89,6 +91,12 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         binding.favItems.setOnClickListener {
             navController.navigate(R.id.nav_myFavouriteItems)
+        }
+
+        binding.searchItems.setOnClickListener {
+
+                val search=Intent(this, SearchActivity::class.java)
+                startActivity(search)
         }
 
 
@@ -175,6 +183,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             R.id.nav_home,R.id.nav_categories,R.id.nav_subCategories,
             R.id.nav_selectedSubCategory,R.id.nav_cart  -> {
                 binding.searchLay.show()
+                bottomNavigationView.show()
             }
             else -> bottomNavigationView.hide()
 

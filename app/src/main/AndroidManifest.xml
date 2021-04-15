@@ -55,6 +55,11 @@
             android:theme="@style/Theme.24seven"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".ui.seach.SearchActivity"
+            android:label=""
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/Theme.24seven"/>
+        <activity
             android:name=".ui.auth.AuthActivity"
             android:label="@string/title_activity_auth"
             android:theme="@style/Theme.24seven"

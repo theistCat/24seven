@@ -251,4 +251,18 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(safeApiCall { api.showOrder(orderId) })
     }
     //endregion
+
+    //region Search
+
+    fun search(query:String) :Flow<PagingData<Product>>{
+        return Pager(
+            config = PagingConfig(
+                pageSize = PRODUCT_PAGING_SIZE
+            ),
+            pagingSourceFactory = { ProductPagingSource(api,isSearch = true,query = query) }
+        ).flow
+
+    }
+
+    //endregion
 }
