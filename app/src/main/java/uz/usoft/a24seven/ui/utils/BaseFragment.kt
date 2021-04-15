@@ -82,8 +82,10 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
             loadingDialog = LoaderDialogFragment()
         }
         if(!loadingDialog!!.isAdded) {
-            loadingDialog!!.show(fm, "Loading")
-            loadingDialog!!.isCancelable = false
+            if (childFragmentManager.findFragmentByTag("Loading") ==null) {
+                loadingDialog!!.show(fm, "Loading")
+                loadingDialog!!.isCancelable = false
+            }
         }
     }
 

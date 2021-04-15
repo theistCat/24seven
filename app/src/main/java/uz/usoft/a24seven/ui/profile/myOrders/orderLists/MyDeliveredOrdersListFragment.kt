@@ -20,6 +20,7 @@ import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.showSnackbar
 import uz.usoft.a24seven.utils.toDp
 

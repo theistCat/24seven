@@ -54,9 +54,11 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                     Activity.RESULT_OK -> {
                         Log.d(ACCESS_TOKEN, "access_token : ${result.data?.getStringExtra(ACCESS_TOKEN).toString()}")
                         PrefManager.saveToken(this, result.data?.getStringExtra(ACCESS_TOKEN).toString())
+                        navController.popBackStack(R.id.nav_home,false)
+                        navController.navigate(R.id.nav_profile)
                     }
                     Activity.RESULT_CANCELED->{
-                        navController.popBackStack()
+                        navController.popBackStack(R.id.nav_home,false)
                     }
                 }
             }
@@ -219,11 +221,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     }
 
     override fun onDrawerOpened(drawerView: View) {
-        Log.i("drawer", "opened")
     }
 
     override fun onDrawerClosed(drawerView: View) {
-        Log.i("drawer", "closed")
         //filterFragmentSideSheet.changePage(0)
         (supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).changePage(0)
     }

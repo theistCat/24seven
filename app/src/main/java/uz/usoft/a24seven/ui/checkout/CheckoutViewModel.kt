@@ -1,9 +1,11 @@
 package uz.usoft.a24seven.ui.checkout
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import uz.usoft.a24seven.network.utils.Event
@@ -20,5 +22,17 @@ class CheckoutViewModel constructor(val repository: SevenRepository) : ViewModel
                 checkoutResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
+    }
+
+    val updateCartResponse = MutableLiveData<Event<Resource<Any>>>()
+
+    fun emptyTheCart() = viewModelScope.launch {
+
+        Log.d("update","inviewmodel")
+        updateCartResponse.value= Event(Resource.Loading)
+        repository.emptyTheCart().onCompletion {
+            Log.d("update","inviewmodel completed")
+            updateCartResponse.value= Event(Resource.Success(object :Any() { val data="Success"}))
+        }.launchIn(viewModelScope)
     }
 }

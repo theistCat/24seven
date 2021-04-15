@@ -20,6 +20,7 @@ import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
+import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.toDp
 
 class MyInactiveOrdersListFragment : BaseFragment<FragmentMyInactiveOrdersBinding>(FragmentMyInactiveOrdersBinding::inflate) {
@@ -32,8 +33,9 @@ class MyInactiveOrdersListFragment : BaseFragment<FragmentMyInactiveOrdersBindin
         arguments?.let {
         }
         setUpAdapters()
+        getInWaitOrders()
     }
-    private fun getDeliveredOrders() {
+    private fun getInWaitOrders() {
         lifecycleScope.launch {
             viewModel.getOrders("in_wait").collect {
                 myOrderListRecyclerAdapter.submitData(it)

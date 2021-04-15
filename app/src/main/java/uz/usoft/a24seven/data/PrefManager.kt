@@ -13,6 +13,7 @@ class PrefManager {
         private const val PAYMENT_METHOD="paymentMethod"
         private const val PHONE="phone"
         private const val NAME="name"
+    
 
         private fun getInstance(context: Context): SharedPreferences {
             return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)
@@ -23,7 +24,6 @@ class PrefManager {
                 TOKEN, token
             ).apply()
         }
-
 
         fun getToken(context: Context): String {
             return getInstance(

@@ -89,6 +89,7 @@ class MyActiveOrdersListFragment : BaseFragment<FragmentMyActiveOrdersListBindin
         binding.activeOrdersRecycler.adapter = myOrderListRecyclerAdapter
         binding.activeOrdersRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true, 1))
 
+
     }
 
 }

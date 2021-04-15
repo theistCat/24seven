@@ -66,6 +66,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
+        viewModel.emptyTheCart()
         findNavController().navigate(R.id.action_nav_checkOut_to_nav_myOrders)
     }
 

@@ -217,6 +217,13 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(Resource.Loading)
         emit(cartDao.updateCartItem(cartItem))
     }
+
+    suspend fun emptyTheCart() = flow{
+
+        Log.d("remove","inrepository")
+        emit(Resource.Loading)
+        emit(cartDao.emptyTheCart())
+    }
     //endregion
 
 

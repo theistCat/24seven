@@ -42,6 +42,16 @@ class CartViewModel constructor(private val repository: SevenRepository) : ViewM
         }.launchIn(viewModelScope)
     }
 
+    fun emptyTheCart() = viewModelScope.launch {
+
+        Log.d("update","inviewmodel")
+        updateCartResponse.value= Event(Resource.Loading)
+        repository.emptyTheCart().onCompletion {
+            Log.d("update","inviewmodel completed")
+            updateCartResponse.value= Event(Resource.Success(object :Any() { val data="Success"}))
+        }.launchIn(viewModelScope)
+    }
+
     fun getCart(products: HashMap<String,Int>) {
         viewModelScope.launch {
             repository.getCart(products).onEach {

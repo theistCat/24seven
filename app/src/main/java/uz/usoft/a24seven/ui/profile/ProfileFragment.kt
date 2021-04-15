@@ -69,7 +69,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                         hideLoadingDialog()
                         hideNoConnectionDialog()
                         PrefManager.saveToken(requireContext(), "")
-                        findNavController().popBackStack(R.id.nav_home, false)
+                        findNavController().popBackStack(R.id.nav_home, true)
+                        navigate(R.id.nav_home)
                     }
                     is Resource.GenericError -> {
                         hideLoadingDialog()
