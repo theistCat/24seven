@@ -11,6 +11,7 @@ import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.ItemOrderBinding
 import uz.usoft.a24seven.network.models.MockData
 import uz.usoft.a24seven.network.models.Order
+import uz.usoft.a24seven.network.utils.Variables
 
 class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String = "") :
    PagingDataAdapter<Order,MyOrderListRecyclerAdapter.ViewHolder>(ORDER) {
@@ -41,14 +42,14 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
 
                 binding.orderStatus.setTextColor(
                     when (orderListType) {
-                        "active" -> {
+                        Variables.orderType[0]!! -> {
                             Color.parseColor("#1BC06D")
                         }
-                        "inactive" -> {
+                        Variables.orderType[1]!! -> {
                             Color.parseColor("#F8B068")
                         }
 
-                        "delivered" -> {
+                        Variables.orderType[2]!! -> {
                             Color.parseColor("#DB3022")
                         }
                         else -> {
@@ -59,15 +60,15 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
 
             binding.orderStatus.text =
                 when (orderListType) {
-                    "active" -> {
+                    Variables.orderType[0]!! -> {
                         context.getString(R.string.active)
                     }
 
-                    "inactive" -> {
+                    Variables.orderType[1]!! -> {
                         context.getString(R.string.in_wait)
                     }
 
-                    "delivered" -> {
+                    Variables.orderType[2]!! -> {
                         context.getString(R.string.delivered)
                     }
                     else -> {

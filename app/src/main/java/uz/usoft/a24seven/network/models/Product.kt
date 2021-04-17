@@ -1,5 +1,7 @@
 package uz.usoft.a24seven.network.models
 
+import java.io.Serializable
+
 data class Product(
     val id: Int,
     val name: String,
@@ -16,7 +18,7 @@ data class Product(
     val discount_percent: Int,
     val images: List<Image>?,
     val products_related: List<Product>?
-)
+):Serializable
 {
     @Transient
     var count:Int=0

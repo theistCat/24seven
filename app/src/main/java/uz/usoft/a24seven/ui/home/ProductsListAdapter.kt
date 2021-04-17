@@ -24,6 +24,15 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
         notifyDataSetChanged()
     }
 
+    fun sort()
+    {
+        this.productsList?.sortedByDescending {
+            it.price
+        }
+
+        notifyDataSetChanged()
+    }
+
     fun update(updateId:Int,updateValue:Boolean)
     {
         this.productsList?.forEach {

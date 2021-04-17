@@ -16,6 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyInactiveOrdersBinding
 import uz.usoft.a24seven.network.utils.NoConnectivityException
+import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
@@ -37,7 +38,7 @@ class MyInactiveOrdersListFragment : BaseFragment<FragmentMyInactiveOrdersBindin
     }
     private fun getInWaitOrders() {
         lifecycleScope.launch {
-            viewModel.getOrders("in_wait").collect {
+            viewModel.getOrders(Variables.orderType[0]!!).collect {
                 myOrderListRecyclerAdapter.submitData(it)
                 return@collect
             }
@@ -45,7 +46,7 @@ class MyInactiveOrdersListFragment : BaseFragment<FragmentMyInactiveOrdersBindin
     }
 
     private fun setUpAdapters() {
-        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),"inactive")
+        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),Variables.orderType[0]!!)
         myOrderListRecyclerAdapter.onItemClick = {
             findNavController().navigate(R.id.action_nav_myOrders_to_nav_selectedOrder)
         }

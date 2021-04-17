@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyActiveOrdersListBinding
 import uz.usoft.a24seven.network.utils.NoConnectivityException
+import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrdersFragmentDirections
 import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
@@ -36,7 +37,7 @@ class MyActiveOrdersListFragment : BaseFragment<FragmentMyActiveOrdersListBindin
 
     private fun getActiveOrders() {
         lifecycleScope.launch {
-            viewModel.getOrders("active").collect {
+            viewModel.getOrders(Variables.orderType[1]!!).collect {
                 myOrderListRecyclerAdapter.submitData(it)
                 return@collect
             }
@@ -77,7 +78,7 @@ class MyActiveOrdersListFragment : BaseFragment<FragmentMyActiveOrdersListBindin
     }
 
     private fun setUpAdapters() {
-        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),"active")
+        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),Variables.orderType[1]!!)
         myOrderListRecyclerAdapter.onItemClick = {
             val action=MyOrdersFragmentDirections.actionNavMyOrdersToNavSelectedOrder(it.id)
             navigate(action)

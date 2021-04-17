@@ -32,6 +32,7 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
 
     var onItemClick: ((Product) -> Unit)? = null
     var onFavClick: ((Product,position:Int) -> Unit)? = null
+    var addToCart: ((Product) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductGridBinding.inflate(
@@ -52,13 +53,16 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
     inner class ViewHolder(var binding: ItemProductGridBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            val product=
             itemView.setOnClickListener {
                 onItemClick?.invoke(getItem(bindingAdapterPosition) as Product)
             }
             binding.productIsFav.setOnClickListener {
                 onFavClick?.invoke(getItem(bindingAdapterPosition) as Product,bindingAdapterPosition)
             }
+            binding.addToCart.setOnClickListener {
+                addToCart?.invoke(getItem(bindingAdapterPosition) as Product)
+            }
+
         }
 
         fun bindData(product: Product) {

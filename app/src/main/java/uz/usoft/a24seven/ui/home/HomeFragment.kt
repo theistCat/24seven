@@ -10,10 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
-import uz.usoft.a24seven.network.models.CartItem
-import uz.usoft.a24seven.network.models.Compilation
-import uz.usoft.a24seven.network.models.HomeResponse
-import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.cart.CartViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
@@ -214,7 +211,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
            // findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
         }
         binding.newItemsAll.setOnClickListener {
-        //    findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+          //  val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))
+           // navigate(action)
         }
 
         binding.news.setOnClickListener {

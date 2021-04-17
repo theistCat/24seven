@@ -16,6 +16,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentMyDeliveredOrdersBinding
 import uz.usoft.a24seven.network.utils.NoConnectivityException
+import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
 import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
@@ -39,7 +40,7 @@ class MyDeliveredOrdersListFragment : BaseFragment<FragmentMyDeliveredOrdersBind
     }
     private fun getDeliveredOrders() {
         lifecycleScope.launch {
-            viewModel.getOrders("delivered").collect {
+            viewModel.getOrders(Variables.orderType[2]!!).collect {
                 myOrderListRecyclerAdapter.submitData(it)
                 return@collect
             }
@@ -80,7 +81,7 @@ class MyDeliveredOrdersListFragment : BaseFragment<FragmentMyDeliveredOrdersBind
     }
 
     private fun setUpAdapters() {
-        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),"delivered")
+        myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),Variables.orderType[2]!!)
         myOrderListRecyclerAdapter.onItemClick = {
             findNavController().navigate(R.id.action_nav_myOrders_to_nav_selectedOrder)
         }
