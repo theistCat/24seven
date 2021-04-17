@@ -38,7 +38,7 @@ class OrderItemListAdapter(val context:Context) : RecyclerView.Adapter<OrderItem
 
         init {
             itemView.setOnClickListener {
-                onItemClick?.invoke(productsList!![adapterPosition])
+                onItemClick?.invoke(productsList!![bindingAdapterPosition])
             }
         }
 

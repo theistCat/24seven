@@ -40,7 +40,10 @@ class SearchActivity : AppCompatActivity()  {
 
         adapter = ProductPagingListAdapter(this)
         adapter.onItemClick = {
-
+            val  returnIntent = Intent();
+            returnIntent.putExtra(MainActivity.SEARCH_RESULT,it.id);
+            setResult(Activity.RESULT_OK,returnIntent);
+            finish()
         }
         binding.searchQuery.requestFocus()
 
@@ -65,6 +68,7 @@ class SearchActivity : AppCompatActivity()  {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        setResult(Activity.RESULT_CANCELED,Intent());
         finish()
         return super.onOptionsItemSelected(item)
     }

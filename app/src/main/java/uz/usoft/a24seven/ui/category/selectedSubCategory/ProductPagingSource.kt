@@ -23,9 +23,9 @@ class ProductPagingSource(
 
         return try {
             val response = when {
-                getFav -> api.getCategoryProducts(categoryId ?: 0, position, orderBy)
+                getFav -> api.getFavProduct(position)
                 isSearch -> api.search(query,position,orderBy)
-                else -> api.getFavProduct(position)
+                else -> api.getCategoryProducts(categoryId ?: 0, position, orderBy)
             }
             val feedPost = response.items
 

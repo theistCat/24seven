@@ -61,6 +61,7 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
                 when(loadStates.refresh)
                 {
                     is LoadState.Error->{
+                        hideLoadingDialog()
                         val error = loadStates.refresh as LoadState.Error
                         if (error.error is NoConnectivityException)
                         {

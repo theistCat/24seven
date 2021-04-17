@@ -23,7 +23,13 @@ import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.*
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.network.models.OrderItem
+import uz.usoft.a24seven.network.models.SubCategoriesObject
 import uz.usoft.a24seven.ui.auth.AuthActivity
+import uz.usoft.a24seven.ui.category.CategoryFragmentDirections
+import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentDirections
+import uz.usoft.a24seven.ui.category.subCategory.SubCategoriesFragmentDirections
+import uz.usoft.a24seven.ui.home.HomeFragmentDirections
 import uz.usoft.a24seven.ui.seach.SearchActivity
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
@@ -31,14 +37,19 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     companion object{
 
         lateinit var openAuthActivityCustom:ActivityResultLauncher<Intent>
+        lateinit var openSearchActivityCustom:ActivityResultLauncher<Intent>
         const val ACCESS_TOKEN="access_token"
-     
+        const val SEARCH_RESULT="searched_product_id"
+
     }
 
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+
+
+    var onSearchResult: ((Int) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +72,18 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                     }
                     Activity.RESULT_CANCELED->{
                         navController.popBackStack(R.id.nav_home,false)
+                    }
+                }
+            }
+
+        openSearchActivityCustom =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when(result.resultCode){
+                    Activity.RESULT_OK -> {
+                        onSearchResult?.invoke(result.data?.getIntExtra(SEARCH_RESULT,0)?:0)
+                    }
+                    Activity.RESULT_CANCELED->{
+
                     }
                 }
             }
@@ -94,9 +117,17 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         }
 
         binding.searchItems.setOnClickListener {
-
-                val search=Intent(this, SearchActivity::class.java)
-                startActivity(search)
+            when(navController.currentDestination?.id)
+            {
+                R.id.nav_home->
+                    navController.navigate(HomeFragmentDirections.actionNavHomeToNavSearch())
+                R.id.nav_categories->
+                    navController.navigate(CategoryFragmentDirections.actionNavCategoriesToNavSearch())
+                R.id.nav_subCategories->
+                    navController.navigate(SubCategoriesFragmentDirections.actionNavSubCategoriesToNavSearch())
+                R.id.nav_selectedSubCategory->
+                    navController.navigate(SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSearch())
+            }
         }
 
 

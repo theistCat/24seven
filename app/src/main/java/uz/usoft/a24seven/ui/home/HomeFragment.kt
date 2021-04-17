@@ -153,6 +153,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             }
         }
 
+
+
         popularProductsAdapter.onItemClick = {
             val action =
                 HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items),it.id)
@@ -221,6 +223,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         binding.allNews.setOnClickListener {
             navigate(R.id.action_nav_home_to_newsFragment)
+        }
+
+
+        mainActivity.onSearchResult={
+            val action =
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct("",it)
+            navigate(action)
         }
 
         //        scanBarCode.setOnClickListener {
