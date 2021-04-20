@@ -204,6 +204,18 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(cartDao.insert(cartItem))
     }
 
+    suspend fun addToCartWithoutEmit(cartItem: CartItem) :Long{
+       return cartDao.insert(cartItem)
+    }
+
+    suspend fun getItem(id: Int) :CartItem {
+        return cartDao.getItem(id)
+    }
+
+    suspend fun addToCartReplace(cartItem: CartItem) :Long{
+        return cartDao.insertReplace(cartItem)
+    }
+
     suspend fun delete(cartItem: CartItem) = flow{
 
         Log.d("remove","inrepository")
@@ -211,11 +223,20 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(cartDao.delete(cartItem))
     }
 
+    suspend fun deleteW(cartItem: CartItem) :Int{
+
+        return cartDao.delete(cartItem)
+    }
+
     suspend fun update(cartItem: CartItem) = flow{
 
         Log.d("remove","inrepository")
         emit(Resource.Loading)
         emit(cartDao.updateCartItem(cartItem))
+    }
+
+    suspend fun updateWithoutEmit(cartItem: CartItem): Int{
+          return  cartDao.updateCartItem(cartItem)
     }
 
     suspend fun emptyTheCart() = flow{

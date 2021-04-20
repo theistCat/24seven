@@ -7,6 +7,6 @@ import kotlin.Unit
 @Entity(tableName = "Cart")
 data class CartItem(
     @PrimaryKey
-    val id: Int,
+    val id: Int=-1,
     val count:Int
 )

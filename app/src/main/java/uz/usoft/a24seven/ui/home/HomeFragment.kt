@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.Resource
@@ -53,7 +56,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun setUpObservers() {
         observeEvent(homeViewModel.getHomeResponse, ::handle)
         observeEvent(homeViewModel.favResponse,::handle)
-        observeEvent(homeViewModel.addToCartResponse,::handle)
+
+        homeViewModel.addToCartResponse.observe(
+            viewLifecycleOwner, Observer { result->
+                result?.let {
+                    if(it.toInt()!=-1)
+                    {
+                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
+                        newProductsAdapter.notifyDataSetChanged()
+                        popularProductsAdapter.notifyDataSetChanged()
+                        onSaleProductsAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        )
     }
 
     override fun <T : Any> onSuccess(data: T) {

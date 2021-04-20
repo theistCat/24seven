@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
@@ -100,7 +101,7 @@ class AddressListDialogFragment : DialogFragment() {
                         val error = loadStates.refresh as LoadState.Error
                         if (error.error is NoConnectivityException)
                         {
-                    //        showSnackbar("Loading Error")
+                            showSnackbar("Loading Error")
                         }
                     }
                     is LoadState.Loading->{
@@ -108,7 +109,10 @@ class AddressListDialogFragment : DialogFragment() {
 //                        showSnackbar("Loading...")
                     }
                     else->{
-          //              showSnackbar("Loading success?")
+                        if(adapter.itemCount==0) {
+                            Toast.makeText(requireContext(),"no addresses",Toast.LENGTH_SHORT).show()
+                            this@AddressListDialogFragment.dismiss()
+                        }
                     }
                 }
 

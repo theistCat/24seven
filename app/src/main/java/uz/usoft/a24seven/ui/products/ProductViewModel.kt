@@ -39,6 +39,10 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
 
 
     val addToCartResponse = MutableLiveData<Event<Resource<Any>>>()
+
+    val addToCartResponseTwo = MutableLiveData<Long>()
+    val updateCartResponse = MutableLiveData<Int>()
+
     fun addToCart(item: CartItem) = viewModelScope.launch {
 
         Log.d("addtocart","inviewmodel")
@@ -47,6 +51,47 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
             Log.d("addtocart","inviewmodel completed")
             addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
         }.launchIn(viewModelScope)
+    }
+
+    fun addToCartWithoutEmit(item: CartItem,replace:Boolean=false) = viewModelScope.launch {
+
+//        Log.d("addtocart","inviewmodel")
+//        addToCartResponse.value=Event(Resource.Loading)
+//        repository.addToCart(item).onCompletion {
+//            Log.d("addtocart","inviewmodel completed")
+//            addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
+//        }.launchIn(viewModelScope)
+//
+//
+        if (replace)
+            addToCartResponseTwo.value= repository.addToCartReplace(item)
+        else
+            addToCartResponseTwo.value= repository.addToCartWithoutEmit(item)
+
+    }
+
+    fun update(item: CartItem) = viewModelScope.launch {
+        Log.d("update","inviewmodel")
+       // updateCartResponse.value= Event(Resource.Loading)
+
+            Log.d("update","inviewmodel completed")
+            updateCartResponse.value= repository.updateWithoutEmit(item)
+    }
+
+
+    val removeFromCartResponse = MutableLiveData<Int>()
+
+    fun remove(item: CartItem) = viewModelScope.launch {
+
+            Log.d("removeFromCartResponse","inviewmodel completed")
+            removeFromCartResponse.value= repository.deleteW(item)
+
+    }
+
+    val checkItemResponse = MutableLiveData<CartItem>()
+
+    fun checkItem(id: Int) = viewModelScope.launch {
+        checkItemResponse.value= repository.getItem(id)
     }
 
     val getProductResponse = MutableLiveData<Event<Resource<Product>>>()

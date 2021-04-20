@@ -4,12 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ItemProductGridBinding
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.utils.image
@@ -72,7 +74,7 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
                     if(product.discount_percent>0)
                     {
                         binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price_discount,product.unit.name)
-                        binding.productOldPrice.text = context.getString(R.string.money_format_sum, product.price_discount)
+                        binding.productOldPrice.text = context.getString(R.string.money_format_sum, product.price)
                         binding.productTag.text=context.getString(R.string.discount,product.discount_percent)
                     }
                     else{
@@ -85,6 +87,17 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
                     binding.productIsFav.isChecked=product.is_favorite
                     binding.productName.text=product.name
                     binding.productImage.image(context,product.image!!.path_thumb)
+
+                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(),false))
+                    {
+                        binding.addToCart.isEnabled=false
+                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_check)
+                    }
+                    else
+                    {
+                        binding.addToCart.isEnabled=true
+                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
+                    }
                 }
             }
         }

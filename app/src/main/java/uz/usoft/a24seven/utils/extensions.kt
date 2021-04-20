@@ -48,6 +48,7 @@ import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
 import uz.usoft.a24seven.network.models.Address
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
+import uz.usoft.a24seven.ui.products.ImagesAdapter
 import java.text.NumberFormat
 import java.util.*
 
@@ -155,6 +156,15 @@ fun Activity.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGT
     Snackbar.make(this.getRootView(), snackbarText, timeLength)
         .setBackgroundTint(ContextCompat.getColor(this,R.color.snackbar))
         .setActionTextColor(ContextCompat.getColor(this,android.R.color.white)).show()
+}
+
+fun Fragment.showActionSnackbar(snackbarText: String,actionText: String, action: () -> Unit, timeLength: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar.make(requireView(), snackbarText, timeLength)
+        .setBackgroundTint(ContextCompat.getColor(requireContext(),R.color.snackbar))
+        .setAction(actionText) {
+            action.invoke()
+        }
+        .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white)).show()
 }
 
 
@@ -278,6 +288,18 @@ class ImageObjectFragment() : Fragment() {
 
 fun Fragment.setUpViewPager(
     adapter: ImageCollectionAdapter,
+    viewPager: ViewPager2,
+    tabLayout: TabLayout
+) {
+    viewPager.adapter = adapter
+
+    TabLayoutMediator(tabLayout, viewPager) { _, _ ->
+    }.attach()
+
+}
+
+fun Fragment.setUpViewPager(
+    adapter: ImagesAdapter,
     viewPager: ViewPager2,
     tabLayout: TabLayout
 ) {

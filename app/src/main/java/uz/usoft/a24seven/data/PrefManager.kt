@@ -15,7 +15,7 @@ class PrefManager {
         private const val NAME="name"
     
 
-        private fun getInstance(context: Context): SharedPreferences {
+        fun getInstance(context: Context): SharedPreferences {
             return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)
         }
 

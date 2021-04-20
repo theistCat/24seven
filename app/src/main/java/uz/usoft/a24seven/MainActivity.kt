@@ -3,6 +3,7 @@ package uz.usoft.a24seven
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -10,15 +11,19 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.utils.*
@@ -30,6 +35,7 @@ import uz.usoft.a24seven.ui.category.CategoryFragmentDirections
 import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentDirections
 import uz.usoft.a24seven.ui.category.subCategory.SubCategoriesFragmentDirections
 import uz.usoft.a24seven.ui.home.HomeFragmentDirections
+import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.ui.seach.SearchActivity
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
@@ -43,11 +49,14 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     }
 
+    private var _badge: BadgeDrawable?=null
+    private val badge get() = _badge!!
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
+    private val mainViewModel: MainViewModel by viewModel()
 
     var onSearchResult: ((Int) -> Unit)? = null
 
@@ -167,6 +176,32 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             else false
 
         }
+
+
+        _badge = bottomNavigationView.getOrCreateBadge(R.id.nav_cart)
+        badge.isVisible = true
+        badge.number = 0
+        badge.backgroundColor= ContextCompat.getColor(this,R.color.snackbar)
+        badge.badgeTextColor= Color.WHITE
+
+        mainViewModel.cart.observe(
+            this, Observer { products->
+                products?.let {
+                    updateBadge(it.size)
+                }
+            }
+        )
+    }
+
+    fun updateBadge(count:Int)
+    {
+        badge.number = count
+        if(badge.number < 1)
+        {
+                badge.isVisible = false
+                badge.clearNumber()
+        }
+        else badge.isVisible = true
     }
 
     fun hideBottomNavigation()

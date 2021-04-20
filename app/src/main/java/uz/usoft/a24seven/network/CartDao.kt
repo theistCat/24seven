@@ -10,14 +10,20 @@ interface CartDao {
     fun getAll(): Flow<List<CartItem>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(cartItem: CartItem)
+    suspend fun insert(cartItem: CartItem):Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertReplace(cartItem: CartItem):Long
 
     @Delete
-    suspend fun delete(cartItem: CartItem)
+    suspend fun delete(cartItem: CartItem) : Int
 
     @Update
-    suspend fun updateCartItem(cartItem: CartItem)
+    suspend fun updateCartItem(cartItem: CartItem) : Int
 
+
+    @Query("SELECT * FROM cart where id= :id")
+    suspend fun getItem(id:Int): CartItem
 
     @Query("DELETE FROM cart")
     suspend fun emptyTheCart()

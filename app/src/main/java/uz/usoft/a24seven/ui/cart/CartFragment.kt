@@ -1,15 +1,18 @@
 package uz.usoft.a24seven.ui.cart
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentCartBinding
 import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
+import uz.usoft.a24seven.utils.observe
 import uz.usoft.a24seven.utils.observeEvent
 
 
@@ -19,6 +22,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
     private val viewModel: CartViewModel by viewModel()
     private val productsList=HashMap<String,Int>()
     private lateinit var checkOutData: CheckOutData
+    private var productId=-1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         adapter = CartItemListAdapter(requireContext())
 
         adapter.remove={
+            productId=it.id
             viewModel.remove(CartItem(it.id,it.count))
         }
 
@@ -84,6 +89,14 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                 }
             }
         )
+
+        observe(viewModel.removeFromCartResponse) {
+            if(it!=0 && productId!=-1)
+            {
+                PrefManager.getInstance(requireContext()).edit().remove(productId.toString()).apply()
+            }
+        }
+
         observeEvent(viewModel.cartResponse,::handle)
     }
 

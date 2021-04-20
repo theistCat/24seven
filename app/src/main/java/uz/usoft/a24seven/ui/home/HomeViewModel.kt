@@ -20,7 +20,6 @@ import uz.usoft.a24seven.repository.SevenRepository
 class HomeViewModel constructor(private val repository: SevenRepository) : ViewModel() {
 
     val getHomeResponse = MutableLiveData<Event<Resource<HomeResponse>>>()
-    val addToCartResponse = MutableLiveData<Event<Resource<Any>>>()
 
     fun getHome() {
         viewModelScope.launch {
@@ -51,14 +50,11 @@ class HomeViewModel constructor(private val repository: SevenRepository) : ViewM
     }
 
 
+    val addToCartResponse = MutableLiveData<Long>()
     fun addToCart(item: CartItem) = viewModelScope.launch {
 
-        Log.d("addtocart","inviewmodel")
-        addToCartResponse.value=Event(Resource.Loading)
-        repository.addToCart(item).onCompletion {
-            Log.d("addtocart","inviewmodel completed")
-            addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
-        }.launchIn(viewModelScope)
+        addToCartResponse.value=repository.addToCartWithoutEmit(item)
+
     }
 
     fun delete(item: CartItem) = viewModelScope.launch {
