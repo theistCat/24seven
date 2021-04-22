@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
+import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.databinding.FragmentHomeBinding
 import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.Resource
@@ -47,7 +49,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         binding.swipeToRefresh.setOnRefreshListener {
             homeViewModel.getHome()
         }
+
     }
+
+
 
     override fun getData() {
         homeViewModel.getHome()
@@ -103,8 +108,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun onRetry() {
         homeViewModel.getHome()
-        mainActivity.showBottomNavigation()
-        mainActivity.showToolbar()
+        //mainActivity.showBottomNavigation()
+        //mainActivity.showToolbar()
     }
 
     override fun onError(resource: Resource.Error) {
@@ -240,7 +245,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
 
-        mainActivity.onSearchResult={
+        (requireActivity() as MainActivity).onSearchResult={
             val action =
                 HomeFragmentDirections.actionNavHomeToNavSelectedProduct("",it)
             navigate(action)

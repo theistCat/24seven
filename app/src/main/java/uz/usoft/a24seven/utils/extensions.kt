@@ -3,9 +3,12 @@ package uz.usoft.a24seven.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -19,6 +22,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
@@ -45,10 +49,9 @@ import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
-import uz.usoft.a24seven.network.models.Address
 import uz.usoft.a24seven.network.utils.Event
-import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.products.ImagesAdapter
+import java.io.ByteArrayOutputStream
 import java.text.NumberFormat
 import java.util.*
 
@@ -138,7 +141,7 @@ fun <T> LifecycleOwner.observeEvent(liveData: LiveData<Event<T>>, action: (t: Ev
     liveData.observe(this, Observer { it?.let { t -> action(t) } })
 }
 
-fun ImageView.image(context: Context,imageLink: String,placeholder: Int=R.drawable.img)
+fun ImageView.image(context: Context, imageLink: String, placeholder: Int = R.drawable.img)
 {
     Glide.with(context).load(imageLink).placeholder(placeholder).into(this)
 }
@@ -148,28 +151,33 @@ fun ImageView.image(context: Context,imageLink: String,placeholder: Int=R.drawab
  */
 fun Fragment.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(requireView(), snackbarText, timeLength)
-        .setBackgroundTint(ContextCompat.getColor(requireContext(),R.color.snackbar))
-        .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white)).show()
+        .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.snackbar))
+        .setActionTextColor(ContextCompat.getColor(requireContext(), android.R.color.white)).show()
 }
 
 fun Activity.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(this.getRootView(), snackbarText, timeLength)
-        .setBackgroundTint(ContextCompat.getColor(this,R.color.snackbar))
-        .setActionTextColor(ContextCompat.getColor(this,android.R.color.white)).show()
+        .setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar))
+        .setActionTextColor(ContextCompat.getColor(this, android.R.color.white)).show()
 }
 
-fun Fragment.showActionSnackbar(snackbarText: String,actionText: String, action: () -> Unit, timeLength: Int = Snackbar.LENGTH_SHORT) {
+fun Fragment.showActionSnackbar(
+    snackbarText: String,
+    actionText: String,
+    action: () -> Unit,
+    timeLength: Int = Snackbar.LENGTH_SHORT
+) {
     Snackbar.make(requireView(), snackbarText, timeLength)
-        .setBackgroundTint(ContextCompat.getColor(requireContext(),R.color.snackbar))
+        .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.snackbar))
         .setAction(actionText) {
             action.invoke()
         }
-        .setActionTextColor(ContextCompat.getColor(requireContext(),android.R.color.white)).show()
+        .setActionTextColor(ContextCompat.getColor(requireContext(), android.R.color.white)).show()
 }
 
 
 fun View.showAsProgress(){
-    val loadingAnimation= AnimationUtils.loadAnimation(this.context,R.anim.spinning)
+    val loadingAnimation= AnimationUtils.loadAnimation(this.context, R.anim.spinning)
     this.startAnimation(loadingAnimation)
     this.visibility= View.VISIBLE
 }
@@ -186,7 +194,7 @@ fun View.hideProgress()
  *
  * @return nothing
  */
-fun Fragment.navigate(resId:Int, args:Bundle?=null){
+fun Fragment.navigate(resId: Int, args: Bundle? = null){
 
     val builder = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in)
@@ -194,10 +202,10 @@ fun Fragment.navigate(resId:Int, args:Bundle?=null){
         .setPopEnterAnim(R.anim.fade_in)
         .setPopExitAnim(R.anim.slide_out)
 
-    this.findNavController().navigate(resId,args,builder.build())
+    this.findNavController().navigate(resId, args, builder.build())
 }
 
-fun Fragment.navigate(action:NavDirections,slowLoad:Boolean=false){
+fun Fragment.navigate(action: NavDirections, slowLoad: Boolean = false){
 
     val builder = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in)
@@ -262,7 +270,7 @@ class ImageObjectFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding= FragmentCollectionObjectBinding.inflate(layoutInflater,container,false)
+        _binding= FragmentCollectionObjectBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -537,6 +545,85 @@ fun Fragment.createBottomSheet(view: View): BottomSheetDialog {
         (requireContext().getDisplayMetrics().heightPixels * 0.8).toInt()
 
     return bottomSheetDialog
+}
+
+/**
+ * Intent to send a telegram message
+ * @param msg
+ */
+fun Fragment.intentShare(msg: String?, app: Int, uri: Uri?) {
+    val appName = when(app) {
+        0 -> "org.telegram.messenger"
+        1 -> "com.instagram.android"
+        2 -> "com.facebook.orca"
+        else->"org.thunderdog.challegram"
+    }
+
+    val isAppInstalled: Boolean = isAppAvailable(appName, requireContext().packageManager)
+    if (isAppInstalled) {
+        val myIntent = Intent(Intent.ACTION_SEND)
+        myIntent.type = if(uri!=null)"image/*" else "text/plain"
+        myIntent.setPackage(appName)
+        myIntent.putExtra(Intent.EXTRA_TEXT, msg) //
+        // Create the URI from the media
+
+        myIntent.putExtra(Intent.EXTRA_STREAM, uri) //
+        requireActivity().startActivity(Intent.createChooser(myIntent, "Share with"))
+    } else {
+        Toast.makeText(requireContext(), "App not Installed", Toast.LENGTH_SHORT).show()
+    }
+}
+
+/**
+ * Intent to send a telegram message
+ * @param msg
+ */
+fun Fragment.intentShareInstagram(msg: String?, app: Int) {
+    if(isAppAvailable("com.instagram.android", requireContext().packageManager)){
+    val MEDIA_TYPE_JPEG= "image/jpg"
+
+    // Define image asset URI
+    val backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here")
+    val sourceApplication = "com.my.app"
+
+
+
+    // Instantiate implicit intent with ADD_TO_STORY action and background asset
+    val intent = Intent("com.instagram.share.ADD_TO_STORY")
+
+    intent.setDataAndType(backgroundAssetUri, MEDIA_TYPE_JPEG)
+    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+
+    // Instantiate activity and verify it will resolve implicit intent
+
+    // Instantiate activity and verify it will resolve implicit intent
+    val activity: Activity? = activity
+    if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
+        activity.startActivityForResult(intent, 0)
+    }}else {
+        Toast.makeText(requireContext(), "App not Installed", Toast.LENGTH_SHORT).show()
+    }
+}
+
+private fun isAppAvailable(packageName: String, packageManager: PackageManager): Boolean {
+    return try {
+        packageManager.getPackageInfo(packageName, 0)
+        true
+    } catch (e: PackageManager.NameNotFoundException) {
+        false
+    }
+}
+
+fun Fragment.getImageUri(inImage: Bitmap): Uri? {
+    val bytes = ByteArrayOutputStream()
+    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+    val path = MediaStore.Images.Media.insertImage(
+        requireActivity().contentResolver,
+        inImage,
+        UUID.randomUUID().toString() + ".png",
+        "drawing"
+    )
+    return Uri.parse(path)
 }
 
 //fragment_collection_object xml

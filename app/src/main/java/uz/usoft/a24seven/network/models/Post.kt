@@ -7,5 +7,6 @@ data class Post(
     val name: String,
     val views: Int,
     val language:String?,
-    val content:String?
+    val content:String?,
+    val url:String?
 )

@@ -24,7 +24,7 @@ import java.util.*
 class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(FragmentProfileSettingsBinding::inflate) {
 
     private val viewModel:ProfileViewModel by viewModel()
-
+    var uiMode :Int=0
     private val c: Calendar = Calendar.getInstance()
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
@@ -85,7 +85,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
             }
         }
 
-        val uiMode=resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+        uiMode=resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
 
         binding.switch1.isChecked= uiMode == Configuration.UI_MODE_NIGHT_YES
 
@@ -97,6 +97,10 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
+        binding.switch1.setOnClickListener {
+            PrefManager.saveTheme(requireContext(),binding.switch1.isChecked)
         }
 
         bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->

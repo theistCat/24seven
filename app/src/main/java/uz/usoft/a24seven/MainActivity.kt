@@ -11,6 +11,7 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
+
     private val mainViewModel: MainViewModel by viewModel()
 
     var onSearchResult: ((Int) -> Unit)? = null
@@ -64,7 +66,11 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
 
-//        PrefManager.saveToken(this,"")
+       // PrefManager.saveToken(this,"")
+        if(PrefManager.getTheme(this)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -179,9 +185,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
 
         _badge = bottomNavigationView.getOrCreateBadge(R.id.nav_cart)
-        badge.isVisible = true
+        badge.isVisible = false
         badge.number = 0
-        badge.backgroundColor= ContextCompat.getColor(this,R.color.snackbar)
+        badge.backgroundColor= ContextCompat.getColor(this,R.color.badge_color)
         badge.badgeTextColor= Color.WHITE
 
         mainViewModel.cart.observe(
@@ -284,8 +290,10 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     fun setTitle(title: String)
     {
-        binding.mainToolbar.title=title
+        supportActionBar?.title=title
     }
+
+
 
     override fun onBackPressed() {
         super.onBackPressed()

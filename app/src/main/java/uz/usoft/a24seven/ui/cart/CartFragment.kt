@@ -64,7 +64,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         adapter.updateList(data.products as ArrayList<Product>)
         adapter.updateItems(viewModel.cart.value!!)
         binding.totalPrice.text=getString(R.string.money_format_sum,data.total)
-        checkOutData=CheckOutData(productsList,data.total,data.total)
+        checkOutData=CheckOutData(productsList,data.total,data.total+data.delivery_price,data.delivery_price)
     }
 
     override fun onRetry() {

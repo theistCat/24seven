@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.utils
 
+import android.icu.text.CaseMap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -56,16 +57,19 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainActivity=requireActivity() as MainActivity
+//        mainActivity.binding
         _binding = inflate.invoke(inflater, container, false)
         init()
         return binding.root
     }
 
-//    fun superOnCreateView(
-//        binding: ViewBinding
-//    ): View? {
-//        return binding.root
-//    }
+
+
+    fun setTitle(title: String){
+        mainActivity.setTitle(title)
+    }
+
+
 
     fun init()
     {
@@ -82,7 +86,7 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
             loadingDialog = LoaderDialogFragment()
         }
         if(!loadingDialog!!.isAdded) {
-            if (childFragmentManager.findFragmentByTag("Loading") ==null) {
+            if (fm.findFragmentByTag("Loading") == null) {
                 loadingDialog!!.show(fm, "Loading")
                 loadingDialog!!.isCancelable = false
             }
@@ -104,7 +108,9 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
         noConnectionFragment?.dismiss()
     }
     fun hideLoadingDialog() {
-        loadingDialog?.dismiss()
+        val loaderDialogFragment=requireActivity().supportFragmentManager.findFragmentByTag("Loading")
+        if(loaderDialogFragment!=null)
+        (loaderDialogFragment as LoaderDialogFragment).dismiss()
     }
 
 
@@ -154,6 +160,10 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
     }
 
 

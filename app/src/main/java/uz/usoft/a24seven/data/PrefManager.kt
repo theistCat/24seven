@@ -13,7 +13,8 @@ class PrefManager {
         private const val PAYMENT_METHOD="paymentMethod"
         private const val PHONE="phone"
         private const val NAME="name"
-    
+        private const val THEME="theme"
+
 
         fun getInstance(context: Context): SharedPreferences {
             return context.getSharedPreferences(TF_SEVEN, Context.MODE_PRIVATE)
@@ -87,6 +88,15 @@ class PrefManager {
         fun getName(context: Context): String {
             return getInstance(context).getString(NAME, "")!!
         }
+
+        fun saveTheme(context: Context, theme: Boolean) {
+            getInstance(context).edit().putBoolean(THEME, theme).apply()
+        }
+
+        fun getTheme(context: Context): Boolean {
+            return getInstance(context).getBoolean(THEME, false)!!
+        }
+
 
         fun isLoggedIn(context: Context):Boolean{
              return getToken(context).isNotBlank()
