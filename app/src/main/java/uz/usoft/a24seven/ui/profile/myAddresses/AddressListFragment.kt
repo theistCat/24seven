@@ -68,7 +68,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding>(FragmentAdd
     //TODO: make reload better
     override fun onResume() {
         super.onResume()
-        getAddresses()
+       // getAddresses()
     }
 
     private fun getAddresses() {
@@ -96,7 +96,8 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding>(FragmentAdd
 
     override fun setUpOnClickListeners() {
         binding.addAddress.setOnClickListener {
-            findNavController().navigate(R.id.action_nav_addressList_to_nav_addAddress)
+            val action=AddressListFragmentDirections.actionNavAddressListToNavAddAddress(null,null,null,null)
+            navigate(action)
         }
     }
 }

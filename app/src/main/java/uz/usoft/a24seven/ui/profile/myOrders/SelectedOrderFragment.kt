@@ -2,17 +2,14 @@ package uz.usoft.a24seven.ui.profile.myOrders
 
 import android.os.Bundle
 import uz.usoft.a24seven.R
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.databinding.FragmentSelectedOrderBinding
 import uz.usoft.a24seven.network.models.Order
 import uz.usoft.a24seven.network.models.OrderItem
-import uz.usoft.a24seven.ui.news.SelectedNewsFragmentArgs
+import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.observeEvent
@@ -49,11 +46,27 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
         binding.orderItemCount.text=data.products_count.toString()
         binding.orderAddress.text=data.address?.address
         binding.orderID.text=getString(R.string.order_number,data.id)
-        binding.orderStatus.text=data.status
+        binding.orderStatus.text=when (data.status) {
+            Variables.orderType[1]!! -> {
+                requireContext().getString(R.string.active)
+            }
+
+            Variables.orderType[0]!! -> {
+                requireContext().getString(R.string.in_wait)
+            }
+
+            Variables.orderType[2]!! -> {
+                requireContext().getString(R.string.delivered)
+            }
+            else -> {
+                requireContext().getString(R.string.in_wait)
+            }
+        }
         binding.orderPaymentMethod.text=data.payment_type
         binding.orderTotalPrice.text=getString(R.string.money_format_sum,data.price_products+data.price_delivery)
 
 
+        binding.cencelOrder.isVisible=data.status!=Variables.orderType[2]
 
     }
 

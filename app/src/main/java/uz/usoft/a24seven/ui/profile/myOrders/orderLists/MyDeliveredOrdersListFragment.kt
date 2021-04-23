@@ -18,6 +18,7 @@ import uz.usoft.a24seven.databinding.FragmentMyDeliveredOrdersBinding
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.profile.myOrders.MyOrderListRecyclerAdapter
+import uz.usoft.a24seven.ui.profile.myOrders.MyOrdersFragmentDirections
 import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
@@ -83,7 +84,8 @@ class MyDeliveredOrdersListFragment : BaseFragment<FragmentMyDeliveredOrdersBind
     private fun setUpAdapters() {
         myOrderListRecyclerAdapter = MyOrderListRecyclerAdapter(requireContext(),Variables.orderType[2]!!)
         myOrderListRecyclerAdapter.onItemClick = {
-            findNavController().navigate(R.id.action_nav_myOrders_to_nav_selectedOrder)
+            val action= MyOrdersFragmentDirections.actionNavMyOrdersToNavSelectedOrder(it.id)
+            navigate(action)
         }
     }
 

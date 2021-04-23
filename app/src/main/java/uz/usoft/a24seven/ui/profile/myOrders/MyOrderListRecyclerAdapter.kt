@@ -42,10 +42,10 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
 
                 binding.orderStatus.setTextColor(
                     when (orderListType) {
-                        Variables.orderType[0]!! -> {
+                        Variables.orderType[1]!! -> {
                             Color.parseColor("#1BC06D")
                         }
-                        Variables.orderType[1]!! -> {
+                        Variables.orderType[0]!! -> {
                             Color.parseColor("#F8B068")
                         }
 
@@ -60,11 +60,11 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
 
             binding.orderStatus.text =
                 when (orderListType) {
-                    Variables.orderType[0]!! -> {
+                    Variables.orderType[1]!! -> {
                         context.getString(R.string.active)
                     }
 
-                    Variables.orderType[1]!! -> {
+                    Variables.orderType[0]!! -> {
                         context.getString(R.string.in_wait)
                     }
 

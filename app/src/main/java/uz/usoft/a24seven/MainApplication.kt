@@ -2,6 +2,7 @@ package uz.usoft.a24seven
 
 import android.app.Application
 import android.content.Context
+import com.yandex.mapkit.MapKitFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -23,6 +24,8 @@ class MainApplication : Application() {
 
             //Start network callback
         }
+
+        MapKitFactory.setApiKey(Variables.yandexKey)
         ConnectivityMonitor(this).startNetworkCallback()
 
     }

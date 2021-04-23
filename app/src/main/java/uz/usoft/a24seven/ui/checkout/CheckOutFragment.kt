@@ -10,6 +10,7 @@ import uz.usoft.a24seven.databinding.FragmentCheckOutBinding
 import uz.usoft.a24seven.network.models.Address
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressListDialogFragment
 import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.observeEvent
 import uz.usoft.a24seven.utils.showErrorIfNotFilled
 
@@ -26,7 +27,14 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
 //        setUpSpinnerAdapter()
 
-        (requireActivity() as MainActivity).hideBottomNavigation()
+
+        if(safeArgs.address!=null)
+            binding.checkoutAddress.setText(safeArgs.address)
+        if(safeArgs.region!=null)
+            binding.checkoutDistrict.setText(safeArgs.region)
+        if(safeArgs.city!=null)
+            binding.checkoutCity.setText(safeArgs.city)
+
 
         binding.totalPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.total)
         binding.deliveryPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.delivery_fee)
@@ -96,6 +104,11 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             addressListDialogFragment.show(fm, "AddressList")
             addressListDialogFragment.isCancelable = false
         }
+
+        binding.fromMap.setOnClickListener {
+            val action=CheckOutFragmentDirections.actionNavCheckOutToNavMap(safeArgs.checkOutData,isCheckout = true)
+            navigate(action)
+        }
     }
 
     private fun isAddressValid(): Boolean {
@@ -109,5 +122,11 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                     binding.checkoutAddress.setText(address.address)
                     binding.checkoutCity.setText(address.city)
                     binding.checkoutDistrict.setText(address.region)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        (requireActivity() as MainActivity).hideBottomNavigation()
     }
 }

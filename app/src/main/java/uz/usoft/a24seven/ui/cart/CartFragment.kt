@@ -20,9 +20,9 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
 
     private lateinit var adapter: CartItemListAdapter
     private val viewModel: CartViewModel by viewModel()
-    private val productsList=HashMap<String,Int>()
+    private val productsList = HashMap<String, Int>()
     private lateinit var checkOutData: CheckOutData
-    private var productId=-1
+    private var productId = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,27 +34,39 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
     private fun setUpAdapter() {
         adapter = CartItemListAdapter(requireContext())
 
-        adapter.remove={
-            productId=it.id
-            viewModel.remove(CartItem(it.id,it.count))
+        adapter.remove = {
+            productId = it.id
+            viewModel.remove(CartItem(it.id, it.count))
         }
 
-        adapter.updateCart={ it, inc->
-            if (it.count>1||inc)
-                viewModel.update(CartItem(it.id,if(inc)it.count+1 else it.count-1))
+        adapter.updateCart = { it, inc ->
+            if (it.count > 1 || inc)
+                viewModel.update(CartItem(it.id, if (inc) it.count + 1 else it.count - 1))
         }
     }
 
     override fun setUpRecyclers() {
         binding.cartRecycler.adapter = adapter
         binding.cartRecycler.layoutManager = LinearLayoutManager(requireContext())
-        binding.cartRecycler.addItemDecoration(SpacesItemDecoration((requireContext().resources.displayMetrics.density * 16 + 0.5f).toInt(), true, 1))
+        binding.cartRecycler.addItemDecoration(
+            SpacesItemDecoration(
+                (requireContext().resources.displayMetrics.density * 16 + 0.5f).toInt(),
+                true,
+                1
+            )
+        )
     }
 
     override fun setUpOnClickListeners() {
         binding.checkout.setOnClickListener {
-            val action = CartFragmentDirections.actionNavCartToNavCheckOut(checkOutData)
-           navigate(action)
+            val action = CartFragmentDirections.actionNavCartToNavCheckOut(
+                checkOutData,
+                null,
+                null,
+                null,
+                null
+            )
+            navigate(action)
         }
     }
 
@@ -63,8 +75,15 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         data as CartResponse
         adapter.updateList(data.products as ArrayList<Product>)
         adapter.updateItems(viewModel.cart.value!!)
-        binding.totalPrice.text=getString(R.string.money_format_sum,data.total)
-        checkOutData=CheckOutData(productsList,data.total,data.total+data.delivery_price,data.delivery_price)
+        binding.totalPrice.text = getString(R.string.money_format_sum, data.total)
+        checkOutData = CheckOutData(
+            productsList,
+            data.total,
+            data.total + data.delivery_price,
+            data.delivery_price
+        )
+
+        binding.checkout.isEnabled = adapter.itemCount != 0
     }
 
     override fun onRetry() {
@@ -74,16 +93,16 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         mainActivity.showToolbar()
         viewModel.getCart(productsList)
     }
+
     override fun setUpObservers() {
 
         viewModel.cart.observe(
-            viewLifecycleOwner, Observer { products->
+            viewLifecycleOwner, Observer { products ->
                 products?.let {
                     productsList.clear()
-                    for ( i in it.indices)
-                    {
-                        productsList["products[$i][id]"]=it[i].id
-                        productsList["products[$i][count]"]=it[i].count
+                    for (i in it.indices) {
+                        productsList["products[$i][id]"] = it[i].id
+                        productsList["products[$i][count]"] = it[i].count
                     }
                     viewModel.getCart(productsList)
                 }
@@ -91,13 +110,13 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         )
 
         observe(viewModel.removeFromCartResponse) {
-            if(it!=0 && productId!=-1)
-            {
-                PrefManager.getInstance(requireContext()).edit().remove(productId.toString()).apply()
+            if (it != 0 && productId != -1) {
+                PrefManager.getInstance(requireContext()).edit().remove(productId.toString())
+                    .apply()
             }
         }
 
-        observeEvent(viewModel.cartResponse,::handle)
+        observeEvent(viewModel.cartResponse, ::handle)
     }
 
 }
