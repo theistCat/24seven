@@ -24,7 +24,7 @@ import uz.usoft.a24seven.utils.*
 
 class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate){
 
-    private var imgList = ArrayList<String>()
+    private var imgList = ArrayList<Banner>()
     private lateinit var pagerAdapter: ImageCollectionAdapter
 
     private val homeViewModel: HomeViewModel by viewModel()
@@ -85,6 +85,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 unhideRecyclers()
                 newsAdapter.updateList(data.posts)
                 binding.swipeToRefresh.isRefreshing = false
+
+                if (data.sliders.isNotEmpty()) {
+                    imgList.clear()
+                    data.sliders.forEach {
+                        imgList.add(it)
+                    }
+                    pagerAdapter.updateImageList(imgList)
+                }
             }
             else ->{
                     updateProductList()
@@ -132,12 +140,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setUpPagers(){
 
-        imgList.clear()
-        imgList.add("https://i.imgur.com/0Q.png")
-        imgList.add("https://i.imgur.com/0Q.png")
-        imgList.add("https://i.imgur.com/0Q.png")
+        //imgList.clear()
         pagerAdapter = ImageCollectionAdapter(this)
-        pagerAdapter.updateImageList(imgList)
+        //pagerAdapter.updateImageList(imgList)
         setUpViewPager(pagerAdapter, binding.homePager, binding.homeTabLayout)
     }
 

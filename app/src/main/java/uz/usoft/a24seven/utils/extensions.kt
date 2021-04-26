@@ -49,6 +49,7 @@ import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
+import uz.usoft.a24seven.network.models.Banner
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.ui.products.ImagesAdapter
 import java.io.ByteArrayOutputStream
@@ -240,7 +241,7 @@ class ImageCollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment
 
     var fragmentImageList = ArrayList<Fragment>()
 
-    fun updateImageList(imageList: ArrayList<String>) {
+    fun updateImageList(imageList: ArrayList<Banner>) {
         fragmentImageList.clear()
         imageList.forEach {
             fragmentImageList.add(ImageObjectFragment.newInstance(it))
@@ -258,6 +259,7 @@ class ImageCollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment
 }
 
 private const val ARG_IMG_LINK = "imageLink"
+private const val ARG_IMG = "image"
 
 
 class ImageObjectFragment() : Fragment() {
@@ -274,20 +276,34 @@ class ImageObjectFragment() : Fragment() {
         return binding.root
     }
 
+
+    var onBannerClick: (() -> Unit)? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.let {
+            val image = it.getString(ARG_IMG)
             val imageLink = it.getString(ARG_IMG_LINK)
-            Glide.with(requireContext()).load(imageLink).placeholder(R.drawable.banner)
+            Glide.with(requireContext()).load(image).placeholder(R.drawable.banner)
                 .into(binding.imageView)
+            binding.imageView.setOnClickListener {
+                Log.d("banner",imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")).toString())
+                if(imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")) == true)
+                {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(imageLink)
+                    startActivity(intent)
+                }
+            }
         }
     }
 
     companion object {
-        fun newInstance(imageLink: String): ImageObjectFragment {
+        fun newInstance(banner: Banner): ImageObjectFragment {
             val fragment = ImageObjectFragment()
             fragment.arguments = Bundle().apply {
                 // Our object is just an integer :-P
-                putString(ARG_IMG_LINK, imageLink)
+                putString(ARG_IMG, banner.image)
+                putString(ARG_IMG_LINK, banner.link)
             }
             return fragment
         }

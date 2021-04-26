@@ -116,7 +116,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
             }
             bottomSheetBinding.sortByCheap.id->{
                 binding.sortBy.text=getString(R.string.sort_by_cheap)
-                orderBy=Variables.sortBy[2]!!
+                orderBy=Variables.sortBy[2]!!.trim()
             }
             bottomSheetBinding.sortByExpensive.id->{
                 binding.sortBy.text=getString(R.string.sort_by_expensive)

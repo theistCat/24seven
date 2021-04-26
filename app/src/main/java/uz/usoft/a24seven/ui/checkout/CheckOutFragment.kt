@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.checkout
 
+import android.util.Log
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -51,6 +52,14 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                 binding.cash.isChecked=true
             }
         }
+
+        var i=0
+        safeArgs.checkOutData.productList.forEach{
+            Log.d("cart",it.key)
+            if(it.key.matches(Regex("(products\\[[0-9]\\]+\\[id\\])")))
+                Log.d("cart",it.value.toString())
+            i++
+        }
     }
 
 
@@ -75,6 +84,13 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
         viewModel.emptyTheCart()
+        var i=0
+        safeArgs.checkOutData.productList.forEach{
+            Log.d("cart",it.key)
+            if(it.key.matches(Regex("(products\\[[0-9]\\]+\\[id\\])")))
+                PrefManager.getInstance(requireContext()).edit().remove(it.value.toString()).apply()
+            i++
+        }
         findNavController().navigate(R.id.action_nav_checkOut_to_nav_myOrders)
     }
 
