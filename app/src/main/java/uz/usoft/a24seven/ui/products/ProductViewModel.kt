@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import uz.usoft.a24seven.network.models.CartItem
+import uz.usoft.a24seven.network.models.Characteristics
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.Event
@@ -21,10 +22,13 @@ import uz.usoft.a24seven.repository.SevenRepository
 
 class ProductViewModel constructor(private val repository: SevenRepository) : ViewModel(){
 
+
+    val characteristics= MutableLiveData<List<Characteristics>>()
+
     fun getProductsResponse(categoryId: Int,
                             orderBy: String): Flow<PagingData<Product>> {
         return try {
-         repository.getCategoryProducts(categoryId, orderBy)
+         repository.getCategoryProducts(categoryId, orderBy,characteristics)
             .cachedIn(viewModelScope) }
         catch (e:NoConnectivityException) {
             throw e

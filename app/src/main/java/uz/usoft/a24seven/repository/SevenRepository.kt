@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.repository
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -117,7 +118,8 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
     fun getCategoryProducts(
         categoryId: Int,
-        orderBy: String
+        orderBy: String,
+        characteristics: MutableLiveData<List<Characteristics>>
     ): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
@@ -125,7 +127,7 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy)}catch (e:NoConnectivityException) { throw  e} }
+            pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy,characteristics=characteristics)}catch (e:NoConnectivityException) { throw  e} }
         ).flow
     }
     //endregion

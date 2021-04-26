@@ -2,6 +2,7 @@ package uz.usoft.a24seven.ui.category.selectedSubCategory
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
@@ -18,6 +19,7 @@ import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Variables
+import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.utils.*
 
@@ -116,7 +118,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
             }
             bottomSheetBinding.sortByCheap.id->{
                 binding.sortBy.text=getString(R.string.sort_by_cheap)
-                orderBy=Variables.sortBy[2]!!.trim()
+                orderBy=Variables.sortBy[2]!!
             }
             bottomSheetBinding.sortByExpensive.id->{
                 binding.sortBy.text=getString(R.string.sort_by_expensive)
@@ -158,6 +160,14 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     override fun setUpObservers() {
 
         observeEvent(productViewModel.favResponse,::handle)
+
+        productViewModel.characteristics.observe(
+            viewLifecycleOwner, Observer { characteristics ->
+                characteristics?.let {
+                    (requireActivity().supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).characteristics.value=it
+                }
+            }
+        )
 
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->

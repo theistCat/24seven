@@ -1,9 +1,11 @@
 package uz.usoft.a24seven.ui.category.selectedSubCategory
 
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import retrofit2.HttpException
 import uz.usoft.a24seven.network.SevenApi
+import uz.usoft.a24seven.network.models.Characteristics
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import java.io.IOException
@@ -17,6 +19,7 @@ class ProductPagingSource(
     private val getFav:Boolean=false,
     private val isSearch:Boolean=false,
     private val query:String="",
+    private val characteristics :MutableLiveData<List<Characteristics>>?=null
 ) : PagingSource<Int, Product>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         val position = params.key ?: STARTING_PAGE_INDEX
@@ -28,6 +31,8 @@ class ProductPagingSource(
                 else -> api.getCategoryProducts(categoryId ?: 0, position, orderBy)
             }
             val feedPost = response.items
+            characteristics?.value=response.characteristics
+
 
             LoadResult.Page(
                 data = feedPost,

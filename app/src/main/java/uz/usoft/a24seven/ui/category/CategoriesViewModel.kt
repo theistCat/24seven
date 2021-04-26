@@ -26,11 +26,11 @@ class CategoriesViewModel constructor(private val repository: SevenRepository) :
         }
     }
 
-    fun getCategoryProducts(
-        categoryId: Int,
-        orderBy: String
-    ): Flow<PagingData<Product>> {
-        return repository.getCategoryProducts(categoryId, orderBy)
-            .cachedIn(viewModelScope)
-    }
+//    fun getCategoryProducts(
+//        categoryId: Int,
+//        orderBy: String
+//    ): Flow<PagingData<Product>> {
+//        return repository.getCategoryProducts(categoryId, orderBy)
+//            .cachedIn(viewModelScope)
+//    }
 }
