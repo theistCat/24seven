@@ -135,7 +135,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         adapter.updateList(list)
         title.isVisible=true
         recycler.isVisible=true
-        showAll.isVisible=true
+        //showAll.isVisible=true
     }
 
     override fun setUpPagers(){

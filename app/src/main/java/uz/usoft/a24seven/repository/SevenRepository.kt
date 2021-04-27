@@ -268,9 +268,9 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
 
     //region Checkout
-    suspend fun checkout(paymentType: String,addressId: Int,products: HashMap<String,Int>) = flow {
+    suspend fun checkout(paymentType: String,addressId: Int?=null,products: HashMap<String,Int>,address: HashMap<String,String>?=null) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.checkout(paymentType, addressId, products) })
+        emit(safeApiCall { api.checkout(paymentType, addressId, products = products,address = address) })
     }
     //endregion
 

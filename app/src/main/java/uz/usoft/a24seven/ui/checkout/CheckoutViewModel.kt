@@ -16,9 +16,9 @@ class CheckoutViewModel constructor(val repository: SevenRepository) : ViewModel
 {
     val checkoutResponse = MutableLiveData<Event<Resource<Any>>>()
 
-    fun checkout(paymentType: String,addressId: Int,products: HashMap<String,Int>) {
+    fun checkout(paymentType: String,addressId: Int?=null,products: HashMap<String,Int>,address: HashMap<String,String>?=null) {
         viewModelScope.launch {
-            repository.checkout(paymentType, addressId, products).onEach {
+            repository.checkout(paymentType, addressId, products, address).onEach {
                 checkoutResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }

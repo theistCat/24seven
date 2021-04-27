@@ -21,6 +21,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
     private lateinit var adapter: CartItemListAdapter
     private val viewModel: CartViewModel by viewModel()
     private val productsList = HashMap<String, Int>()
+    private val products = HashMap<String, Int>()
     private lateinit var checkOutData: CheckOutData
     private var productId = -1
 
@@ -76,8 +77,12 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         adapter.updateList(data.products as ArrayList<Product>)
         adapter.updateItems(viewModel.cart.value!!)
         binding.totalPrice.text = getString(R.string.money_format_sum, data.total)
+        for (i in adapter.productsList!!.indices) {
+            products["products[$i][id]"] = adapter.productsList!![i].id
+            products["products[$i][count]"] = adapter.productsList!![i].count
+        }
         checkOutData = CheckOutData(
-            productsList,
+            products,
             data.total,
             data.total + data.delivery_price,
             data.delivery_price

@@ -22,6 +22,9 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
     private val safeArgs: CheckOutFragmentArgs by navArgs()
     private val viewModel: CheckoutViewModel by viewModel()
     private var addressId: Int =-1
+    private var lat="0.0"
+    private var lng="0.0"
+    private val address=HashMap<String,String>()
 
     override fun setUpUI() {
         super.setUpUI()
@@ -36,6 +39,11 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
         if(safeArgs.city!=null)
             binding.checkoutCity.setText(safeArgs.city)
 
+        if(safeArgs.point!=null)
+        {
+            lat=safeArgs.point!!.lat
+            lng=safeArgs.point!!.lng
+        }
 
         binding.totalPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.total)
         binding.deliveryPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.delivery_fee)
@@ -51,14 +59,6 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             else-> {
                 binding.cash.isChecked=true
             }
-        }
-
-        var i=0
-        safeArgs.checkOutData.productList.forEach{
-            Log.d("cart",it.key)
-            if(it.key.matches(Regex("(products\\[[0-9]\\]+\\[id\\])")))
-                Log.d("cart",it.value.toString())
-            i++
         }
     }
 
@@ -105,7 +105,23 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                     else->"cash"
                 }
                 if(isAddressValid())
-                    viewModel.checkout(paymentMethod,addressId,safeArgs.checkOutData.productList)
+                    if(addressId!=-1)
+                        viewModel.checkout(paymentMethod,addressId,safeArgs.checkOutData.productList)
+                    else {
+                        address["address[name]"]="Manual"
+                        address["address[phone]"]= binding.checkoutPhone.text.toString()
+                        address["address[region]"]=binding.checkoutDistrict.text.toString()
+                        address["address[city]"]=binding.checkoutCity.text.toString()
+                        address["address[location][lat]"]=lat
+                        address["address[location][lng]"]=lng
+                        address["address[address]"]=binding.checkoutAddress.text.toString()
+                        viewModel.checkout(
+                            paymentMethod,
+                            null,
+                            safeArgs.checkOutData.productList,
+                            address
+                        )
+                    }
             }
         }
 
@@ -128,9 +144,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
     }
 
     private fun isAddressValid(): Boolean {
-        return if (addressId!=-1){
-            true
-        } else (binding.checkoutAddress.showErrorIfNotFilled() && binding.checkoutCity.showErrorIfNotFilled() && binding.checkoutDistrict.showErrorIfNotFilled())
+        return (binding.checkoutAddress.showErrorIfNotFilled() && binding.checkoutCity.showErrorIfNotFilled() && binding.checkoutDistrict.showErrorIfNotFilled())
 
     }
 

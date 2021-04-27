@@ -2,6 +2,7 @@ package uz.usoft.a24seven.ui.category.subCategory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import uz.usoft.a24seven.databinding.ItemSubCategoryBinding
@@ -44,8 +45,9 @@ class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.V
         fun bindData(product:CategoryObject) {
             val binding = binding as ItemSubCategoryBinding
             binding.subCategoryName.text = product.name
-            binding.productCount.text = product.products_count.toString()
 
+             binding.productCount.isVisible= product.parents.isEmpty()
+             binding.productCount.text = product.products_count.toString()
         }
     }
 }
