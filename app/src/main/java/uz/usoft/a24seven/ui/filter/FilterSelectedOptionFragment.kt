@@ -46,17 +46,22 @@ class FilterSelectedOptionFragment : Fragment() {
                         parent.filter[key]=ArrayList()
                     adapter.filter= parent.filter[key]
                     adapter.updateList(it)
-                    binding.optionTitle.text=(parentFragment as FilterFragment).selectedOptionTitle
+                    binding.optionTitle.text=parent.selectedOptionTitle
 
                     adapter.onItemClick={ add, attribute->
                         if(add) {
                             (parent.filter[key])!!.add( attribute)
-                            Log.i("filter",(parentFragment as FilterFragment).filter.toString())
                         }
                         else
                         {
                             (parent.filter[key])!!.remove(attribute)
-                            Log.i("filter",(parentFragment as FilterFragment).filter.toString())
+                            if(parent.filter[key]!!.isEmpty())
+                                (parent.filter).remove(key)
+                            Log.d("filterT"," remove ${parent.filter}")
+                            if(parent.filter.isEmpty())
+                            {
+                                parent.resetFilter=true
+                            }
                         }
                     }
                 }

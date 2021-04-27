@@ -39,7 +39,22 @@ class FilterOptionsFragment : Fragment() {
                 }
             }
         )
+        setUpClickListeners()
         return binding.root
+    }
+
+
+    fun setUpClickListeners(){
+
+        binding.resetFilter.setOnClickListener {
+            (parentFragment as FilterFragment).filter.clear()
+            (parentFragment as FilterFragment).resetFilter=true
+            adapter.notifyDataSetChanged()
+        }
+
+        binding.apply.setOnClickListener {
+
+        }
     }
 
     private fun setUpAdapter() {
@@ -60,7 +75,6 @@ class FilterOptionsFragment : Fragment() {
         {
             adapter.filter=(parentFragment as FilterFragment).filter
             adapter.notifyDataSetChanged()
-            Log.d("filterT" , adapter.filter.toString())
         }
     }
     private fun setUpRecycler() {

@@ -20,6 +20,7 @@ class FilterFragment() : Fragment() {
     var selectedOptionId:Int=0
 
     val filter=HashMap<String,ArrayList<String>>()
+    var resetFilter:Boolean=false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

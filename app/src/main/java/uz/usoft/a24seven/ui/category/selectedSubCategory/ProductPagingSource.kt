@@ -18,8 +18,10 @@ class ProductPagingSource(
     private val orderBy: String="popular",
     private val getFav:Boolean=false,
     private val isSearch:Boolean=false,
+    private val isFilter:Boolean=false,
     private val query:String="",
-    private val characteristics :MutableLiveData<List<Characteristics>>?=null
+    private val characteristics :MutableLiveData<List<Characteristics>>?=null,
+    private val filterOptions :HashMap<String,String>?=null
 ) : PagingSource<Int, Product>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Product> {
         val position = params.key ?: STARTING_PAGE_INDEX
@@ -28,6 +30,7 @@ class ProductPagingSource(
             val response = when {
                 getFav -> api.getFavProduct(position)
                 isSearch -> api.search(query,position,orderBy)
+                isFilter -> api.getFilteredCategoryProducts(categoryId ?: 0, position, orderBy,filterOptions!!)
                 else -> api.getCategoryProducts(categoryId ?: 0, position, orderBy)
             }
             val feedPost = response.items

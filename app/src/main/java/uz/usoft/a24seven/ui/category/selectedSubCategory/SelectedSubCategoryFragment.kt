@@ -1,7 +1,9 @@
 package uz.usoft.a24seven.ui.category.selectedSubCategory
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
 import uz.usoft.a24seven.databinding.SortBottomsheetBinding
@@ -24,7 +27,8 @@ import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.utils.*
 
 
-class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBinding>(FragmentSelectedSubCategoryBinding::inflate) {
+class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBinding>(FragmentSelectedSubCategoryBinding::inflate),
+    DrawerLayout.DrawerListener {
 
     private lateinit var adapter: ProductPagingListAdapter
     private val safeArgs: SelectedSubCategoryFragmentArgs by navArgs()
@@ -53,6 +57,38 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
                 adapter.submitData(it)
                 return@collect
             }
+        }
+    }
+
+
+    private fun applyFilter() {
+        val filterFragment=(requireActivity().supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment)
+        val filter=filterFragment.filter
+        val filterOptions=HashMap<String,String>()
+        filter.forEach{
+            if(filter[it.key]?.isNotEmpty()==true)
+            {
+                it.value.forEach {attribute->
+                    val keyId="filter[${filterOptions.size}][id]"
+                    val keyAttribute="filter[${filterOptions.size}][attribute]"
+                    filterOptions[keyId]=it.key
+                    filterOptions[keyAttribute]=attribute
+                }
+            }
+        }
+
+        Log.d("filterT","$filterOptions")
+
+        if(filterOptions.isNotEmpty())
+            lifecycleScope.launch {
+                productViewModel.getFilteredProductsResponse(safeArgs.subCategoryId,orderBy,filterOptions = filterOptions).collect {
+                    adapter.submitData(it)
+                    return@collect
+                }
+            }
+        else if(filterFragment.resetFilter) {
+            getProducts()
+            filterFragment.resetFilter=false
         }
     }
 
@@ -148,8 +184,10 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
     override fun setUpUI() {
         mainActivity.setTitle(safeArgs.subCategoryName)
+        mainActivity.drawerLayout.addDrawerListener(this)
         _bottomSheetBinding= SortBottomsheetBinding.inflate(layoutInflater)
         sortBottomSheet = createBottomSheet(bottomSheetBinding.root)
+
     }
 
     override fun <T : Any> onSuccess(data: T) {
@@ -194,5 +232,27 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
             }
         }
+    }
+
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+        //not needed
+    }
+
+    override fun onDrawerOpened(drawerView: View) {
+        //not needed
+    }
+
+    override fun onDrawerClosed(drawerView: View) {
+        applyFilter()
+    }
+
+
+    override fun onDrawerStateChanged(newState: Int) {
+        //not needed
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (requireActivity() as MainActivity).drawerLayout.removeDrawerListener(this)
     }
 }

@@ -35,6 +35,17 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
         }
     }
 
+    fun getFilteredProductsResponse(categoryId: Int,
+                                    orderBy: String,
+                                    filterOptions :HashMap<String,String>): Flow<PagingData<Product>> {
+        return try {
+            repository.getFilteredCategoryProducts(categoryId, orderBy,characteristics,filterOptions)
+                .cachedIn(viewModelScope) }
+        catch (e:NoConnectivityException) {
+            throw e
+        }
+    }
+
 
     fun getProductCommentsResponse(productId: Int): Flow<PagingData<Comment>> {
         return repository.getProductComments(productId)

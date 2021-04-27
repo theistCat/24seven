@@ -130,6 +130,23 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
             pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy,characteristics=characteristics)}catch (e:NoConnectivityException) { throw  e} }
         ).flow
     }
+
+    fun getFilteredCategoryProducts(
+        categoryId: Int,
+        orderBy: String,
+        characteristics: MutableLiveData<List<Characteristics>>,
+        filterOptions :HashMap<String,String>
+    ): Flow<PagingData<Product>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = PRODUCT_PAGING_SIZE,
+                enablePlaceholders = true,
+                maxSize = 50
+            ),
+            pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy,characteristics=characteristics,isFilter = true,filterOptions= filterOptions)}catch (e:NoConnectivityException) { throw  e} }
+        ).flow
+
+    }
     //endregion
 
     //region Product
