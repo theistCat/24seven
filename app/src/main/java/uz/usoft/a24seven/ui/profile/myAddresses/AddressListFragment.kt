@@ -68,7 +68,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding>(FragmentAdd
     //TODO: make reload better
     override fun onResume() {
         super.onResume()
-       // getAddresses()
+        getAddresses()
     }
 
     private fun getAddresses() {

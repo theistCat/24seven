@@ -19,12 +19,6 @@ import uz.usoft.a24seven.utils.image
 class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Product,ProductPagingListAdapter.ViewHolder>(PRODUCT)
 {
 
-    var productsList: List<Product>? = null
-
-    fun updateList(productsList: List<Product>) {
-        this.productsList = productsList
-        notifyDataSetChanged()
-    }
 
     fun update(position:Int,updateValue:Boolean)
     {
@@ -69,34 +63,42 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
 
         fun bindData(product: Product) {
             when (binding) {
-                is ItemProductGridBinding -> {
+                else -> {
                     val binding = binding as ItemProductGridBinding
-                    if(product.discount_percent>0)
-                    {
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price_discount,product.unit.name)
-                        binding.productOldPrice.text = context.getString(R.string.money_format_sum, product.price)
-                        binding.productTag.text=context.getString(R.string.discount,product.discount_percent)
+                    if (product.discount_percent > 0) {
+                        binding.productPrice.text = context.getString(
+                            R.string.money_format_sum_unit,
+                            product.price_discount,
+                            product.unit.name
+                        )
+                        binding.productOldPrice.text =
+                            context.getString(R.string.money_format_sum, product.price)
+                        binding.productTag.text =
+                            context.getString(R.string.discount, product.discount_percent)
+                    } else {
+                        binding.productPrice.text = context.getString(
+                            R.string.money_format_sum_unit,
+                            product.price,
+                            product.unit.name
+                        )
+                        binding.productOldPrice.visibility = View.INVISIBLE
+                        binding.productTag.isVisible = false
                     }
-                    else{
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price,product.unit.name)
-                        binding.productOldPrice.visibility= View.INVISIBLE
-                        binding.productTag.isVisible=false
-                    }
-                    binding.productCategory.text=product.category.name
-                    binding.productComments.text=context.getString(R.string.comments_count,product.comments_count)
-                    binding.productIsFav.isChecked=product.is_favorite
-                    binding.productName.text=product.name
-                    binding.productImage.image(context,product.image!!.path_thumb)
+                    binding.productCategory.text = product.category.name
+                    binding.productComments.text =
+                        context.getString(R.string.comments_count, product.comments_count)
+                    binding.productIsFav.isChecked = product.is_favorite
+                    binding.productName.text = product.name
+                    binding.productImage.image(context, product.image!!.path_thumb)
 
-                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(),false))
-                    {
-                        binding.addToCart.isEnabled=false
-                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_check)
-                    }
-                    else
-                    {
-                        binding.addToCart.isEnabled=true
-                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
+                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(), false)) {
+                        binding.addToCart.isEnabled = false
+                        binding.addToCart.icon =
+                            ContextCompat.getDrawable(context, R.drawable.ic_check)
+                    } else {
+                        binding.addToCart.isEnabled = true
+                        binding.addToCart.icon =
+                            ContextCompat.getDrawable(context, R.drawable.ic_add_cart)
                     }
                 }
             }
@@ -107,11 +109,11 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
             DiffUtil.ItemCallback<Product>() {
             // Concert details may have changed if reloaded from the database,
             // but ID is fixed.
-            override fun areItemsTheSame(oldConcert: Product,
-                                         newConcert: Product) = oldConcert.id == newConcert.id
+            override fun areItemsTheSame(oldProduct: Product,
+                                         newProduct: Product) = oldProduct.id == newProduct.id
 
-            override fun areContentsTheSame(oldConcert: Product,
-                                            newConcert: Product) = oldConcert == newConcert
+            override fun areContentsTheSame(oldProduct: Product,
+                                            newProduct: Product) = oldProduct == newProduct
         }
     }
 }

@@ -38,18 +38,6 @@ class MyDeliveredOrdersListFragment : BaseFragment<FragmentMyDeliveredOrdersBind
         }
         setUpAdapters()
         getDeliveredOrders()
-    }
-    private fun getDeliveredOrders() {
-        lifecycleScope.launch {
-            viewModel.getOrders(Variables.orderType[2]!!).collect {
-                myOrderListRecyclerAdapter.submitData(it)
-                return@collect
-            }
-        }
-    }
-
-    override fun setUpObservers() {
-
         lifecycleScope.launch {
             myOrderListRecyclerAdapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading
@@ -79,6 +67,19 @@ class MyDeliveredOrdersListFragment : BaseFragment<FragmentMyDeliveredOrdersBind
 
             }
         }
+    }
+    private fun getDeliveredOrders() {
+        lifecycleScope.launch {
+            viewModel.getOrders(Variables.orderType[2]!!).collect {
+                myOrderListRecyclerAdapter.submitData(it)
+                return@collect
+            }
+        }
+    }
+
+    override fun setUpObservers() {
+
+
     }
 
     private fun setUpAdapters() {

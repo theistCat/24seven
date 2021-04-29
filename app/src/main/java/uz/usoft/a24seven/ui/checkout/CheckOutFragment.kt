@@ -53,9 +53,8 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
         binding.checkoutPhone.setText(getString(R.string.phone_format,PrefManager.getPhone(requireContext())))
 
         when(PrefManager.getPaymentMethod(requireContext())) {
-            "PayMe"->{binding.payme.isChecked=true}
-            "Click"->{binding.click.isChecked=true}
-            "Cash"->{binding.cash.isChecked=true}
+            getString(R.string.cash)->{binding.cash.isChecked=true}
+            getString(R.string.transfer)->{binding.transfer.isChecked=true}
             else-> {
                 binding.cash.isChecked=true
             }
@@ -99,8 +98,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
         binding.checkout.setOnClickListener {
             if(binding.radioGroup.checkedRadioButtonId!=-1) {
                 val paymentMethod=when(binding.radioGroup.checkedRadioButtonId) {
-                    R.id.payme->"payme"
-                    R.id.click->"click"
+                    R.id.transfer->"transfer"
                     R.id.cash->"cash"
                     else->"cash"
                 }
@@ -134,7 +132,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                 addressListDialogFragment.dismiss()
             }
             addressListDialogFragment.show(fm, "AddressList")
-            addressListDialogFragment.isCancelable = false
+            addressListDialogFragment.isCancelable = true
         }
 
         binding.fromMap.setOnClickListener {

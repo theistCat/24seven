@@ -60,7 +60,7 @@ class PrefManager {
         fun getPaymentMethod(context: Context): String {
             return getInstance(
                 context
-            ).getString(PAYMENT_METHOD, "PayMe")!!
+            ).getString(PAYMENT_METHOD, "cash")!!
         }
 
 

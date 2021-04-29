@@ -12,15 +12,6 @@ import uz.usoft.a24seven.network.models.MockData
 import uz.usoft.a24seven.network.models.Product
 
 class FeedbackListAdapter() : PagingDataAdapter<Comment,FeedbackListAdapter.ViewHolder>(COMMENT) {
-
-   // var productsList: List<MockData.ProductObject>? = MockData.getFeedbackList()
-
-//    fun updateList(productsList: List<MockData.ProductObject>) {
-//        this.productsList = productsList
-//        notifyDataSetChanged()
-//    }
-
-
     var onItemClick: ((Comment) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

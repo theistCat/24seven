@@ -33,9 +33,9 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
 
     val favResponse = MutableLiveData<Event<Resource<Any>>>()
 
-    fun getFavProductsResponse(): Flow<PagingData<Product>> {
+    fun getFavProductsResponse(orderBy:String): Flow<PagingData<Product>> {
         return try {
-            repository.getFavProducts()
+            repository.getFavProducts(orderBy)
                 .cachedIn(viewModelScope) }
         catch (e: NoConnectivityException) {
             throw e

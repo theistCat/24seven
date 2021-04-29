@@ -10,7 +10,7 @@ import uz.usoft.a24seven.databinding.ItemPaymentMethodBinding
 import uz.usoft.a24seven.network.models.MockData
 
 class PaymentMethodListAdapter(val context:Context) : RecyclerView.Adapter<PaymentMethodListAdapter.ViewHolder>() {
-    var paymentMethodList: List<MockData.PaymentMethodObject>? = MockData.getPaymentMethodList()
+    var paymentMethodList: List<MockData.PaymentMethodObject>? = MockData.getPaymentMethodList(context)
     var selected = ""
     fun updateList(productsList: List<MockData.PaymentMethodObject>) {
         this.paymentMethodList = productsList

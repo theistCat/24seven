@@ -33,19 +33,6 @@ class MyActiveOrdersListFragment : BaseFragment<FragmentMyActiveOrdersListBindin
 
         setUpAdapters()
         getActiveOrders()
-    }
-
-    private fun getActiveOrders() {
-        lifecycleScope.launch {
-            viewModel.getOrders(Variables.orderType[1]!!).collect {
-                myOrderListRecyclerAdapter.submitData(it)
-                return@collect
-            }
-        }
-    }
-
-    override fun setUpObservers() {
-
         lifecycleScope.launch {
             myOrderListRecyclerAdapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading
@@ -75,6 +62,47 @@ class MyActiveOrdersListFragment : BaseFragment<FragmentMyActiveOrdersListBindin
 
             }
         }
+    }
+
+    private fun getActiveOrders() {
+        lifecycleScope.launch {
+            viewModel.getOrders(Variables.orderType[1]!!).collect {
+                myOrderListRecyclerAdapter.submitData(it)
+                return@collect
+            }
+        }
+    }
+
+    override fun setUpObservers() {
+//        lifecycleScope.launch {
+//            myOrderListRecyclerAdapter.loadStateFlow.collectLatest { loadStates ->
+//                //progressBar.isVisible = loadStates.refresh is LoadState.Loading
+//                //retry.isVisible = loadState.refresh !is LoadState.Loading
+//                when(loadStates.refresh)
+//                {
+//                    is LoadState.Error->{
+//                        val error = loadStates.refresh as LoadState.Error
+//                        if (error.error is NoConnectivityException)
+//                        {
+//                            showNoConnectionDialog(this@MyActiveOrdersListFragment::onRetry)
+//                        }
+//                    }
+//                    is LoadState.Loading->{
+//                        hideNoConnectionDialog()
+//                        showLoadingDialog()
+//                    }
+//                    else->{
+//                        hideNoConnectionDialog()
+//                        hideLoadingDialog()
+//                        if(myOrderListRecyclerAdapter.itemCount<1)
+//                        {
+//                            binding.noOrders.visibility= View.VISIBLE
+//                        }
+//                    }
+//                }
+//
+//            }
+//        }
     }
 
     private fun setUpAdapters() {

@@ -38,7 +38,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     private var _bottomSheetBinding:SortBottomsheetBinding?=null
     private val bottomSheetBinding get() = _bottomSheetBinding!!
 
-    private var orderBy=Variables.sortBy[1]?:""
+    private var orderBy=Variables.sortBy[2]?:""
 
     private var updatePosition:Int=-1
     private var updateValue:Boolean=false
@@ -53,7 +53,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
     private fun getProducts() {
         lifecycleScope.launch {
-            productViewModel.getProductsResponse(safeArgs.subCategoryId,orderBy).collect {
+            productViewModel.getProductsResponse(safeArgs.subCategoryId,orderBy.trim()).collect {
                 adapter.submitData(it)
                 return@collect
             }

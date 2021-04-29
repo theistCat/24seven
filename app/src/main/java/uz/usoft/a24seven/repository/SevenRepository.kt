@@ -58,14 +58,14 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender) })
     }
 
-    fun getFavProducts(): Flow<PagingData<Product>> {
+    fun getFavProducts(orderBy:String): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PRODUCT_PAGING_SIZE,
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { try{ ProductPagingSource(api,getFav = true) } catch (e:NoConnectivityException) { throw  e} }
+            pagingSourceFactory = { try{ ProductPagingSource(api,orderBy = orderBy,getFav = true) } catch (e:NoConnectivityException) { throw  e} }
         ).flow
 
     }
@@ -299,6 +299,7 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
             config = PagingConfig(
                 pageSize = PRODUCT_PAGING_SIZE
             ),
+            initialKey = 1,
             pagingSourceFactory = { ProductPagingSource(api,isSearch = true,query = query) }
         ).flow
 

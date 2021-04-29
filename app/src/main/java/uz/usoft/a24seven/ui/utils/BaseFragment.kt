@@ -55,6 +55,14 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
     open fun setUpPagers(){}
     open fun setUpUI(){}
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (loadingDialog == null) {
+            loadingDialog = LoaderDialogFragment()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mainActivity=requireActivity() as MainActivity
 //        mainActivity.binding
@@ -80,17 +88,23 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
         setUpObservers()
     }
 
+
+    //TODO: Move this to main activity
     fun showLoadingDialog(){
-        val fm = requireActivity().supportFragmentManager
-        if (loadingDialog == null) {
-            loadingDialog = LoaderDialogFragment()
-        }
-        if(!loadingDialog!!.isAdded) {
-            if (fm.findFragmentByTag("Loading") == null) {
-                loadingDialog!!.show(fm, "Loading")
-                loadingDialog!!.isCancelable = false
-            }
-        }
+//        val fm = childFragmentManager
+//        if(!(loadingDialog!!.isAdded)) {
+//            if (fm.findFragmentByTag("Loading") == null) {
+//                loadingDialog!!.show(fm, "Loading")
+//                loadingDialog!!.isCancelable = false
+//            }
+//        }
+        (requireActivity() as MainActivity).showLoadingDialog()
+    }
+    fun hideLoadingDialog() {
+//        val loaderDialogFragment=childFragmentManager.findFragmentByTag("Loading")
+//        if(loaderDialogFragment!=null)
+//            (loaderDialogFragment as LoaderDialogFragment).dismiss()
+        (requireActivity() as MainActivity).hideLoadingDialog()
     }
 
     fun showNoConnectionDialog(retryCall:()->Unit){
@@ -107,11 +121,7 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
     fun hideNoConnectionDialog() {
         noConnectionFragment?.dismiss()
     }
-    fun hideLoadingDialog() {
-        val loaderDialogFragment=requireActivity().supportFragmentManager.findFragmentByTag("Loading")
-        if(loaderDialogFragment!=null)
-        (loaderDialogFragment as LoaderDialogFragment).dismiss()
-    }
+
 
 
     open fun <T : Any>onSuccess(data: T){

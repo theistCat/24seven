@@ -15,7 +15,7 @@ private const val STARTING_PAGE_INDEX = 1
 class ProductPagingSource(
     private val api: SevenApi,
     private val categoryId: Int?=null,
-    private val orderBy: String="popular",
+    private val orderBy: String="cheap",
     private val getFav:Boolean=false,
     private val isSearch:Boolean=false,
     private val isFilter:Boolean=false,
@@ -28,8 +28,8 @@ class ProductPagingSource(
 
         return try {
             val response = when {
-                getFav -> api.getFavProduct(position)
-                isSearch -> api.search(query,position,orderBy)
+                getFav -> api.getFavProduct(position,orderBy)
+                isSearch -> api.search(query, page = position,orderBy = orderBy)
                 isFilter -> api.getFilteredCategoryProducts(categoryId ?: 0, position, orderBy,filterOptions!!)
                 else -> api.getCategoryProducts(categoryId ?: 0, position, orderBy)
             }

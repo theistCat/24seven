@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -18,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.onNavDestinationSelected
@@ -25,19 +28,18 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import uz.usoft.a24seven.databinding.ActivityMainBinding
-import uz.usoft.a24seven.ui.filter.FilterFragment
-import uz.usoft.a24seven.utils.*
 import uz.usoft.a24seven.data.PrefManager
-import uz.usoft.a24seven.network.models.OrderItem
-import uz.usoft.a24seven.network.models.SubCategoriesObject
-import uz.usoft.a24seven.ui.auth.AuthActivity
+import uz.usoft.a24seven.databinding.ActivityMainBinding
 import uz.usoft.a24seven.ui.category.CategoryFragmentDirections
 import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentDirections
 import uz.usoft.a24seven.ui.category.subCategory.SubCategoriesFragmentDirections
+import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.ui.home.HomeFragmentDirections
-import uz.usoft.a24seven.ui.products.ProductViewModel
-import uz.usoft.a24seven.ui.seach.SearchActivity
+import uz.usoft.a24seven.ui.loader.LoaderDialogFragment
+import uz.usoft.a24seven.ui.seach.SearchFragment
+import uz.usoft.a24seven.utils.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
@@ -45,17 +47,23 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         lateinit var openAuthActivityCustom:ActivityResultLauncher<Intent>
         lateinit var openSearchActivityCustom:ActivityResultLauncher<Intent>
+        lateinit var openSpeechToText:ActivityResultLauncher<Intent>
+        lateinit var requestPermissionLauncher:ActivityResultLauncher<String>
         const val ACCESS_TOKEN="access_token"
         const val SEARCH_RESULT="searched_product_id"
+        val RecordAudioRequestCode=120
 
+        private var speechRecognizer: SpeechRecognizer? = null
     }
 
+    var loadingDialog= LoaderDialogFragment()
     private var _badge: BadgeDrawable?=null
     private val badge get() = _badge!!
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+
 
 
     private val mainViewModel: MainViewModel by viewModel()
@@ -65,6 +73,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.Theme_24seven)
+
+
+        Log.d("loaderTag","$loadingDialog")
 
        // PrefManager.saveToken(this,"")
         if(PrefManager.getTheme(this)){
@@ -80,14 +91,62 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 when(result.resultCode){
                     Activity.RESULT_OK -> {
-                        Log.d(ACCESS_TOKEN, "access_token : ${result.data?.getStringExtra(ACCESS_TOKEN).toString()}")
-                        PrefManager.saveToken(this, result.data?.getStringExtra(ACCESS_TOKEN).toString())
-                        navController.popBackStack(R.id.nav_home,false)
+                        Log.d(
+                            ACCESS_TOKEN, "access_token : ${
+                                result.data?.getStringExtra(
+                                    ACCESS_TOKEN
+                                ).toString()
+                            }"
+                        )
+                        PrefManager.saveToken(
+                            this,
+                            result.data?.getStringExtra(ACCESS_TOKEN).toString()
+                        )
+                        navController.popBackStack(R.id.nav_home, false)
                         navController.navigate(R.id.nav_profile)
                     }
-                    Activity.RESULT_CANCELED->{
-                        navController.popBackStack(R.id.nav_home,false)
+                    Activity.RESULT_CANCELED -> {
+                        navController.popBackStack(R.id.nav_home, false)
                     }
+                }
+            }
+
+
+        openSpeechToText =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when(result.resultCode){
+                    Activity.RESULT_OK -> {
+                        val results: ArrayList<String> =
+                            result?.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                                ?: ArrayList()
+                        if (navController.currentDestination?.id == R.id.nav_search) {
+                            val navHost=
+                                (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment)
+                            val searchFragment= navHost.childFragmentManager.fragments[0] as SearchFragment
+                                searchFragment.binding.searchQuery.setText(results.joinToString())
+                        }
+                    }
+                    Activity.RESULT_CANCELED -> {
+
+                    }
+                }
+            }
+
+
+        requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    // Permission is granted. Continue the action or workflow in your
+                    // app.
+
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // features requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
                 }
             }
 
@@ -95,13 +154,15 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 when(result.resultCode){
                     Activity.RESULT_OK -> {
-                        onSearchResult?.invoke(result.data?.getIntExtra(SEARCH_RESULT,0)?:0)
+                        onSearchResult?.invoke(result.data?.getIntExtra(SEARCH_RESULT, 0) ?: 0)
                     }
-                    Activity.RESULT_CANCELED->{
+                    Activity.RESULT_CANCELED -> {
 
                     }
                 }
             }
+
+
 
         bottomNavigationView = binding.navView
         drawerLayout = binding.drawerFragment
@@ -134,13 +195,13 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         binding.searchItems.setOnClickListener {
             when(navController.currentDestination?.id)
             {
-                R.id.nav_home->
+                R.id.nav_home ->
                     navController.navigate(HomeFragmentDirections.actionNavHomeToNavSearch())
-                R.id.nav_categories->
+                R.id.nav_categories ->
                     navController.navigate(CategoryFragmentDirections.actionNavCategoriesToNavSearch())
-                R.id.nav_subCategories->
+                R.id.nav_subCategories ->
                     navController.navigate(SubCategoriesFragmentDirections.actionNavSubCategoriesToNavSearch())
-                R.id.nav_selectedSubCategory->
+                R.id.nav_selectedSubCategory ->
                     navController.navigate(SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSearch())
             }
         }
@@ -154,7 +215,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             supportActionBar?.show()
             when (destination.id) {
                 R.id.nav_home,
-                R.id.nav_categories  -> {
+                R.id.nav_categories -> {
                     binding.searchLay.show()
                     binding.imageView2.visibility = View.VISIBLE
                 }
@@ -163,19 +224,19 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                     binding.imageView2.visibility = View.VISIBLE
                 }
 
-                R.id.nav_checkOut,R.id.nav_addressList ,R.id.nav_selectedAddress,
-                R.id.nav_myPaymentMethod ,R.id.nav_addAddress, R.id.nav_profileSettings,
-                R.id.nav_myFavouriteItems, R.id.nav_barcodeScanner-> {
+                R.id.nav_checkOut, R.id.nav_addressList, R.id.nav_selectedAddress,
+                R.id.nav_myPaymentMethod, R.id.nav_addAddress, R.id.nav_profileSettings,
+                R.id.nav_myFavouriteItems, R.id.nav_barcodeScanner -> {
                     bottomNavigationView.hide()
                 }
 
-                R.id.nav_subCategories,R.id.nav_selectedSubCategory -> {
+                R.id.nav_subCategories, R.id.nav_selectedSubCategory -> {
                     binding.searchLay.show()
                 }
             }
         }
 
-        bottomNavigationView.setOnNavigationItemSelectedListener {item ->
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             if(navController.currentDestination?.id != item.itemId) {
                 onNavDestinationSelected(item, navController)
             }
@@ -187,19 +248,47 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         _badge = bottomNavigationView.getOrCreateBadge(R.id.nav_cart)
         badge.isVisible = false
         badge.number = 0
-        badge.backgroundColor= ContextCompat.getColor(this,R.color.badge_color)
+        badge.backgroundColor= ContextCompat.getColor(this, R.color.badge_color)
         badge.badgeTextColor= Color.WHITE
 
         mainViewModel.cart.observe(
-            this, Observer { products->
+            this, Observer { products ->
                 products?.let {
                     updateBadge(it.size)
                 }
             }
         )
+
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        val speechRecognizerIntent =  Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        );
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("ru"));
+
+
     }
 
-    fun updateBadge(count:Int)
+    fun showLoadingDialog(){
+
+        val fm = supportFragmentManager
+        try{
+        fm.executePendingTransactions()}
+        catch (e:IllegalStateException){}
+        Log.d("loaderTag","${fm.findFragmentByTag("Loading")?.isAdded}")
+        if(!(loadingDialog.isAdded)) {
+                loadingDialog!!.show(fm, "Loading")
+                loadingDialog!!.isCancelable = false
+            }
+    }
+
+    fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+    }
+
+
+    fun updateBadge(count: Int)
     {
         badge.number = count
         if(badge.number < 1)
@@ -238,8 +327,6 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         drawerLayout.closeDrawer(GravityCompat.END)
     }
 
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         hideSoftKeyboard()
         return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
@@ -252,8 +339,8 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         }
 
         when (navController.currentDestination?.id) {
-            R.id.nav_home,R.id.nav_categories,R.id.nav_subCategories,
-            R.id.nav_selectedSubCategory,R.id.nav_cart  -> {
+            R.id.nav_home, R.id.nav_categories, R.id.nav_subCategories,
+            R.id.nav_selectedSubCategory, R.id.nav_cart -> {
                 binding.searchLay.show()
                 bottomNavigationView.show()
             }
@@ -308,15 +395,17 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     override fun onDrawerClosed(drawerView: View) {
         //filterFragmentSideSheet.changePage(0)
-        (supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).changePage(0)
+        (supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).changePage(
+            0
+        )
     }
 
     override fun onDrawerStateChanged(newState: Int) {
     }
 
     override fun attachBaseContext(newContext: Context?) {
-        val context= newContext?.let {  changeAppLocale( PrefManager.getLocale(it) , it) }
-        Log.d("locale",PrefManager.getLocale(context!!))
+        val context= newContext?.let {  changeAppLocale(PrefManager.getLocale(it), it) }
+        Log.d("locale", PrefManager.getLocale(context!!))
         super.attachBaseContext(context)
     }
 

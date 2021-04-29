@@ -3,6 +3,7 @@ package uz.usoft.a24seven.ui.products
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -18,6 +19,7 @@ import uz.usoft.a24seven.databinding.ChangeLanguageBottomsheetBinding
 import uz.usoft.a24seven.databinding.FeedbackBottomsheetBinding
 import uz.usoft.a24seven.databinding.FragmentSelectedProductBinding
 import uz.usoft.a24seven.network.models.CartItem
+import uz.usoft.a24seven.network.models.Characteristics
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
@@ -30,6 +32,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private lateinit var pagerAdapter: ImagesAdapter
     private lateinit var similarItemAdapter: ProductsListAdapter
     private lateinit var feedbackListAdapter: FeedbackListAdapter
+    private lateinit var characteristicsListAdapter: CharacteristicsListAdapter
     private val productViewModel:ProductViewModel by viewModel()
     private val safeArgs: SelectedProductFragmentArgs by navArgs()
     private val imgList = ArrayList<String>()
@@ -85,6 +88,11 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         binding.similarItemsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.similarItemsRecycler.adapter = similarItemAdapter
         binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
+
+
+        binding.characteristicsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.characteristicsRecycler.adapter = characteristicsListAdapter
+        binding.characteristicsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true,span = 1))
 
         binding.feedbackRecycler.adapter = feedbackListAdapter
         binding.feedbackRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -257,6 +265,9 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                         unit=product.unit.name
                         binding.count.text=getString(R.string.count_with_unit,count,unit)
 
+                        binding.characteristics.isVisible=product.characteristics?.isNotEmpty()==true
+                        characteristicsListAdapter.updateList(product.characteristics as ArrayList<Characteristics>)
+
                         if (product.discount_percent > 0) {
                             binding.discountTag.text=getString(R.string.discount,product.discount_percent)
                             binding.productOldPrice.text =
@@ -325,6 +336,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private fun setUpAdapters() {
         similarItemAdapter = ProductsListAdapter(requireContext())
         feedbackListAdapter = FeedbackListAdapter()
+        characteristicsListAdapter= CharacteristicsListAdapter()
     }
 
 
@@ -333,6 +345,11 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         _feedbackBottomSheetBinding= FeedbackBottomsheetBinding.inflate(layoutInflater)
         feedbackBottomSheet=createBottomSheet(feedbackBottomSheetBinding.root)
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        feedbackBottomSheet.dismiss()
     }
 
     override fun onDestroy() {

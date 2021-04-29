@@ -142,7 +142,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         //imgList.clear()
         pagerAdapter = ImageCollectionAdapter(this)
-        //pagerAdapter.updateImageList(imgList)
+        pagerAdapter.updateImageList(imgList)
         setUpViewPager(pagerAdapter, binding.homePager, binding.homeTabLayout)
     }
 
