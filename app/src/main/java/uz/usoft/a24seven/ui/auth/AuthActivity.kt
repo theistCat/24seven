@@ -8,6 +8,9 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,11 +34,20 @@ class AuthActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_backicon)
+        binding.plus.visibility=View.INVISIBLE
 
         binding.getCode.setOnClickListener {
-            binding.userPhone.showErrorIfNotFilled()
-            if(binding.userPhone.text.isNotBlank())
+
+            if(binding.userPhone.showErrorIfNotFilled()&&binding.userPhone.text.length==12)
                 viewModel.getFirstStepResponse(binding.userPhone.text.toString())
+            else binding.userPhone.error = this.getString(R.string.warning_fill_the_fields)
+        }
+
+        binding.userPhone.doAfterTextChanged {
+            if(binding.userPhone.text.isNotEmpty())
+                binding.plus.visibility=View.VISIBLE
+                    else
+                binding.plus.visibility=View.INVISIBLE
         }
 
         binding.auth.setOnClickListener {

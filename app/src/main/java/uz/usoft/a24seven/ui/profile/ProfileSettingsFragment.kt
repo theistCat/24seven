@@ -15,6 +15,7 @@ import uz.usoft.a24seven.utils.createBottomSheet
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.network.models.MockData
 import uz.usoft.a24seven.network.models.ProfileResponse
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.observeEvent
 import java.util.*
@@ -47,7 +48,8 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
         val monthName = resources.getStringArray(R.array.month)
 
-        binding.profileFullName.setText(getString(R.string.full_name_format, data.firstName, data.lastName))
+        if(data.first_name!=null&&data.last_name!=null)
+            binding.profileFullName.setText(getString(R.string.full_name_format, data.firstName, data.lastName))
         if (data.dob.isNotEmpty()) {
             val dob= data.dob.split("-")
             binding.profileDOB.text =
@@ -69,6 +71,8 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         observeEvent(viewModel.profileResponse,::handle)
         observeEvent(viewModel.updateResponse,::handle)
     }
+
+
 
     override fun setUpUI() {
         _bottomSheetBinding=ChangeLanguageBottomsheetBinding.inflate(layoutInflater)
@@ -111,16 +115,52 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         }
 
         binding.updateProfile.setOnClickListener {
-
+            var firstName=""
+            var lastName=""
             val fio=(binding.profileFullName.text).split(" ")
-            val firstName=fio[0]
-            val lastName=fio[1]
+            firstName = fio[0]
+            Log.d("fio","$fio")
+            if(fio.size>1) {
+                lastName = fio[1]
+            }
+
+
+            var year =""
+            var month=0
+            var day=""
 
             val birthday=(binding.profileDOB.text).split(" ")
-            val year = birthday[2]
-            val monthName = resources.getStringArray(R.array.month)
-            val month = monthName.indexOf(birthday[1])+1
-            val day = birthday[0]
+
+
+            if(birthday.size>2) {
+                year = birthday[2]
+                val monthName = resources.getStringArray(R.array.month)
+                month = monthName.indexOf(birthday[1]) + 1
+                day = birthday[0]
+            }
+
+
+            when{
+                firstName.isBlank()->{
+                    binding.profileFullName.error = "name"}
+                    lastName.isBlank()->{
+                        binding.profileFullName.error = "lastname"
+                    }
+                    year.isBlank()->{
+                        binding.profileDOB.error = "year"
+                    }
+                    month==0->{
+                        binding.profileDOB.error = "month"}
+                    day.isBlank()-> {
+
+                        binding.profileDOB.error = "day"
+                    }
+            else->{
+
+
+
+
+
 
             val gender=binding.male.isChecked
 
@@ -130,6 +170,8 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
                 "$year-${if(month<10) "0$month" else month}-$day",
                 if (gender) 1 else 0
             )
+            }
+            }
         }
 
 
@@ -149,6 +191,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
                 }, year, month, day
             ).show()
         }
+
     }
 
     private fun changeLocale(locale:String){

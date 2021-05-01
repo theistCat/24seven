@@ -1,8 +1,10 @@
 package uz.usoft.a24seven
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -78,10 +80,10 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         Log.d("loaderTag","$loadingDialog")
 
        // PrefManager.saveToken(this,"")
-        if(PrefManager.getTheme(this)){
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        }
-        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//        if(PrefManager.getTheme(this)){
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//        }
+//        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -149,6 +151,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                     // decision.
                 }
             }
+
+        MainActivity.requestPermissionLauncher.launch(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         openSearchActivityCustom =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -246,9 +251,15 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
 
         _badge = bottomNavigationView.getOrCreateBadge(R.id.nav_cart)
+
         badge.isVisible = false
         badge.number = 0
-        badge.backgroundColor= ContextCompat.getColor(this, R.color.badge_color)
+        val uiMode=resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+        if(uiMode == Configuration.UI_MODE_NIGHT_YES)
+            badge.backgroundColor= ContextCompat.getColor(applicationContext, R.color.color_secondary)
+        else
+            badge.backgroundColor= ContextCompat.getColor(applicationContext, R.color.snackbar)
+
         badge.badgeTextColor= Color.WHITE
 
         mainViewModel.cart.observe(
@@ -380,7 +391,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         supportActionBar?.title=title
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+    }
 
     override fun onBackPressed() {
         super.onBackPressed()
