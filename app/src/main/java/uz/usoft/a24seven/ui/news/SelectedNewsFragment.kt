@@ -116,7 +116,7 @@ class SelectedNewsFragment : BaseFragment<FragmentSelectedNewsBinding>(FragmentS
 
                                 override fun onLoadFailed(errorDrawable: Drawable?) {
                                     super.onLoadFailed(errorDrawable)
-                                    Toast.makeText(requireContext(),"Что-то пошло не так.",Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(requireContext(),getString(R.string.somethign_went_wrong),Toast.LENGTH_SHORT).show()
 
                                 }
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -95,7 +96,34 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
     override fun setUpRecyclers() {
         binding.selectedSubCategoryRecycler.adapter = adapter
-        binding.selectedSubCategoryRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.selectedSubCategoryRecycler.layoutManager = object:GridLayoutManager(requireContext(), 2){
+            override fun onLayoutCompleted(state: RecyclerView.State?) {
+                super.onLayoutCompleted(state)
+                Log.d("Recycler","change decoreator")
+//                if(binding.selectedSubCategoryRecycler.itemDecorationCount>0) {
+//                    binding.selectedSubCategoryRecycler.removeItemDecorationAt(0)
+//                    Log.d("Recycler","change decoreator")
+//                    binding.selectedSubCategoryRecycler.addItemDecoration(
+//                        SpacesItemDecoration(
+//                            toDp(
+//                                16
+//                            )
+//                        )
+//                    )
+//                }
+            }
+
+            override fun onItemsMoved(
+                recyclerView: RecyclerView,
+                from: Int,
+                to: Int,
+                itemCount: Int
+            ) {
+                super.onItemsMoved(recyclerView, from, to, itemCount)
+
+                Log.d("Recycler","items moved change decorator")
+            }
+        }
         binding.selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
     }
 

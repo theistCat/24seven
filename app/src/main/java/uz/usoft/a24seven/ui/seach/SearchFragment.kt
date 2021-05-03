@@ -92,7 +92,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                         RecognizerIntent.EXTRA_LANGUAGE,
                         Locale.getDefault()
                     )
-                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak to text")
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speak_to_text))
                     try {
                         MainActivity.openSpeechToText.launch(intent)
                     } catch (e: Exception) {

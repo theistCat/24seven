@@ -79,7 +79,7 @@ class CartItemListAdapter(val context: Context) : RecyclerView.Adapter<CartItemL
             else{
                 binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price,product.unit.name)
             }
-            binding.count.text=context.getString(R.string.count_with_unit, product.count,product.unit.name)
+            binding.count.text=context.getString(R.string.count_with_unit, product.count*product.unit.count,product.unit.name)
 
         }
     }

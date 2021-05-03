@@ -22,6 +22,7 @@ import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.models.Characteristics
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.network.models.Unit
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
@@ -41,7 +42,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private val feedbackBottomSheetBinding get() = _feedbackBottomSheetBinding!!
     private var updateStatus=false
     private var count=1
-    private var unit=""
+    private var unit:Unit?=null
     private var inCart=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,7 +135,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
             if(inCart)
                 update()
             else
-                binding.count.text = getString(R.string.count_with_unit, count, unit)
+                binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
         }
 
         binding.dec.setOnClickListener {
@@ -143,7 +144,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                 if(inCart)
                     update()
                 else
-                    binding.count.text = getString(R.string.count_with_unit, count, unit)
+                    binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
             }
         }
 
@@ -159,11 +160,11 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         if(data is Comment)
         {
             feedbackBottomSheet.dismiss()
-            showSnackbar("your comment in review",Snackbar.LENGTH_LONG)
+            showSnackbar(getString(R.string.tour_comment_in_review),Snackbar.LENGTH_LONG)
         }
         else{
 
-            showSnackbar("success")
+            showSnackbar(getString(R.string.success))
         }
     }
 
@@ -175,7 +176,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                     if (it == 0) {
                         Log.i("cart", "something went wrong")
                     } else {
-                        binding.count.text = getString(R.string.count_with_unit, count, unit)
+                        binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
                         if (count > 1) {
                             binding.dec.visibility = View.VISIBLE
                             binding.remove.visibility = View.GONE
@@ -262,8 +263,8 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                         binding.productName.text = product.name
                         binding.isFavourite.isChecked = product.is_favorite
 
-                        unit=product.unit.name
-                        binding.count.text=getString(R.string.count_with_unit,count,unit)
+                        unit=product.unit
+                        binding.count.text=getString(R.string.count_with_unit,(count*product.unit.count),unit?.name)
 
                         binding.characteristics.isVisible=product.characteristics?.isNotEmpty()==true
                         characteristicsListAdapter.updateList(product.characteristics as ArrayList<Characteristics>)
@@ -319,8 +320,6 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     override fun setUpPagers() {
         pagerAdapter = ImagesAdapter(requireContext())
-        imgList.add("https://i.imgur.com/0Qy.png")
-        imgList.add("https://i.imgur.com/0Qy.png")
         imgList.add("https://i.imgur.com/0Qy.png")
         pagerAdapter.updateList(imgList)
         setUpViewPager(pagerAdapter, binding.productPager, binding.productTabLayout)

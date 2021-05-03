@@ -61,7 +61,7 @@ class AddAddressFragment : BaseFragment<FragmentAddAddressBinding>(FragmentAddAd
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-        showSnackbar("Success")
+        showSnackbar(getString(R.string.success))
         findNavController().popBackStack(R.id.nav_addressList,false)
     }
 

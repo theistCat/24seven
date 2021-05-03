@@ -101,7 +101,7 @@ class AddressListDialogFragment : DialogFragment() {
                         val error = loadStates.refresh as LoadState.Error
                         if (error.error is NoConnectivityException)
                         {
-                            showSnackbar("Loading Error")
+                            showSnackbar(getString(R.string.loading_error))
                         }
                     }
                     is LoadState.Loading->{
@@ -110,7 +110,7 @@ class AddressListDialogFragment : DialogFragment() {
                     }
                     else->{
                         if(adapter.itemCount==0) {
-                            Toast.makeText(requireContext(),"no addresses",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(requireContext(),getString(R.string.no_addresses),Toast.LENGTH_SHORT).show()
                             this@AddressListDialogFragment.dismiss()
                         }
                     }

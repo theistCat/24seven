@@ -56,7 +56,7 @@ class SelectedAddressFragment : BaseFragment<FragmentSelectedAddressBinding>(Fra
             binding.selectedAddressDistrict.setText(data.region)
         }
         else {
-            showSnackbar("Success")
+            showSnackbar(getString(R.string.success))
             findNavController().popBackStack()
         }
     }

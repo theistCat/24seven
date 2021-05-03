@@ -617,7 +617,11 @@ fun Fragment.intentShareInstagram(msg: String?, app: Int) {
     if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
         activity.startActivityForResult(intent, 0)
     }}else {
-        Toast.makeText(requireContext(), "App not Installed", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.app_not_installed),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
 

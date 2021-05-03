@@ -142,18 +142,18 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
             when{
                 firstName.isBlank()->{
-                    binding.profileFullName.error = "name"}
+                    binding.profileFullName.error = getString(R.string.error_name)}
                     lastName.isBlank()->{
-                        binding.profileFullName.error = "lastname"
+                        binding.profileFullName.error = getString(R.string.error_last_name)
                     }
                     year.isBlank()->{
-                        binding.profileDOB.error = "year"
+                        binding.profileDOB.error = getString(R.string.error_year)
                     }
                     month==0->{
-                        binding.profileDOB.error = "month"}
+                        binding.profileDOB.error = getString(R.string.error_month)}
                     day.isBlank()-> {
 
-                        binding.profileDOB.error = "day"
+                        binding.profileDOB.error = getString(R.string.error_day)
                     }
             else->{
 
