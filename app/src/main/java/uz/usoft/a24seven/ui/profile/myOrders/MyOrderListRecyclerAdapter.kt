@@ -76,7 +76,13 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
                     }
                 }
 
-                binding.orderDate.text=order.created_at
+
+                if(order.status==Variables.orderType[3])
+                    binding.orderStatus.text=context.getString(R.string.cancelled)
+
+
+
+            binding.orderDate.text=order.created_at
                 binding.orderID.text=context.getString(R.string.order_number,order.id)
                 binding.orderItemCount.text=order.products_count.toString()
                 binding.orderPrice.text=context.getString(R.string.money_format_sum,order.price_products+order.price_delivery)

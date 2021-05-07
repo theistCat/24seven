@@ -72,7 +72,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun setUpAdapter() {
-        adapter = CategoriesListAdapter()
+        adapter = CategoriesListAdapter(requireContext())
         adapter.onItemClick = {
             val categoryName = it.name
             val action =

@@ -70,7 +70,7 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
                 requireContext().getString(R.string.delivered)
             }
             else -> {
-                requireContext().getString(R.string.in_wait)
+                data.status
             }
         }
         binding.orderPaymentMethod.text=data.payment_type
@@ -79,7 +79,7 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
 
         binding.cencelOrder.isVisible=data.status!=Variables.orderType[2]
 
-
+        binding.cencelOrder.isEnabled=data.status!=Variables.orderType[3]
     }
 
     override fun setUpObservers() {
