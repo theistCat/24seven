@@ -83,7 +83,7 @@ class AddressListFragment : BaseFragment<FragmentAddressListBinding>(FragmentAdd
     private fun setUpAdapter() {
         adapter = AddressListAdapter()
         adapter.onItemClick = {
-            val action= AddressListFragmentDirections.actionNavAddressListToSelectedAddressFragment(it.id)
+            val action= AddressListFragmentDirections.actionNavAddressListToSelectedAddressFragment(it.id,null,null,null,null)
             navigate(action)
         }
     }

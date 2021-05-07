@@ -9,6 +9,7 @@ import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentCheckOutBinding
 import uz.usoft.a24seven.network.models.Address
+import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressListDialogFragment
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.navigate
@@ -136,7 +137,8 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
         }
 
         binding.fromMap.setOnClickListener {
-            val action=CheckOutFragmentDirections.actionNavCheckOutToNavMap(safeArgs.checkOutData,isCheckout = true)
+            val action=CheckOutFragmentDirections.actionNavCheckOutToNavMap(safeArgs.checkOutData,
+                Variables.fromCheckout,addressId = -1)
             navigate(action)
         }
     }

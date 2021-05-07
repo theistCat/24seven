@@ -28,6 +28,16 @@ class OrdersViewModel constructor(private val repository: SevenRepository) : Vie
         }
     }
 
+    val cancelOrder = MutableLiveData<Event<Resource<Any>>>()
+
+    fun cancelOrder(orderId:Int) {
+        viewModelScope.launch {
+            repository.cancelOrder(orderId).onEach {
+                cancelOrder.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
     fun getOrders(ordersType:String): Flow<PagingData<Order>> {
         return try {
             repository.getOrders(ordersType)

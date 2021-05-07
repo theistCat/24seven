@@ -6,6 +6,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentAddAddressBinding
+import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.profile.ProfileViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.navigate
@@ -33,7 +34,7 @@ class AddAddressFragment : BaseFragment<FragmentAddAddressBinding>(FragmentAddAd
         }
 
         binding.showOnMap.setOnClickListener {
-                val action=AddAddressFragmentDirections.actionNavAddAddressToNavMap(null)
+                val action=AddAddressFragmentDirections.actionNavAddAddressToNavMap(null, Variables.fromAddAddress,addressId = -1)
                 navigate(action)
         }
     }

@@ -108,7 +108,6 @@ class SelectedNewsFragment : BaseFragment<FragmentSelectedNewsBinding>(FragmentS
                                 ) {
                                     bitmap = resource
                                     uri= getImageUri(bitmap)
-
                                 }
 
                                 override fun onLoadCleared(placeholder: Drawable?) {

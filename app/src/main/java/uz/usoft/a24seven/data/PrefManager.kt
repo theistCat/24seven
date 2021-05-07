@@ -2,6 +2,7 @@ package uz.usoft.a24seven.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import uz.usoft.a24seven.R
 
 
 class PrefManager {
@@ -60,7 +61,7 @@ class PrefManager {
         fun getPaymentMethod(context: Context): String {
             return getInstance(
                 context
-            ).getString(PAYMENT_METHOD, "cash")!!
+            ).getString(PAYMENT_METHOD, context.getString(R.string.cash))!!
         }
 
 

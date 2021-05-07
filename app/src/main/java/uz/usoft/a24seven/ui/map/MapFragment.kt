@@ -37,6 +37,9 @@ import uz.usoft.a24seven.databinding.FragmentMapBinding
 import uz.usoft.a24seven.network.models.LocPoint
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.Variables
+import uz.usoft.a24seven.ui.cart.CartFragmentDirections
+import uz.usoft.a24seven.ui.checkout.CheckOutFragmentDirections
+import uz.usoft.a24seven.ui.profile.myAddresses.AddressListFragmentDirections
 import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.show
 import uz.usoft.a24seven.utils.showSnackbar
@@ -210,20 +213,39 @@ class MapFragment : Fragment(), CameraListener {
         }
 
         binding.btnChooseLocation.setOnClickListener {
-            if(safeArgs.isCheckout) {
-                val action = MapFragmentDirections.actionNavMapToNavCheckOut(
+            when(safeArgs.fromDestination){
+                Variables.fromCheckout-> {
+                val action = CartFragmentDirections.actionNavCartToNavCheckOut(
                     safeArgs.checkOutData!!,
                     addresss,
                     region,
                     city,
                     LocPoint(lat, long)
                 )
+
+                    findNavController().popBackStack(R.id.nav_checkOut,true)
                 navigate(action)
             }
-            else{
-                val action = MapFragmentDirections.actionNavMapToNavAddAddress(addresss,region,city,
+                Variables.fromEditAddress-> {
+                    val action = AddressListFragmentDirections.actionNavAddressListToSelectedAddressFragment(
+                        safeArgs.addressId,
+                        addresss,
+                        region,
+                        city,
+                        LocPoint(lat, long)
+                    )
+                    findNavController().popBackStack(R.id.nav_selectedAddress,true)
+                    navigate(action)
+                }
+            else->{
+                val action = AddressListFragmentDirections.actionNavAddressListToNavAddAddress(addresss,region,city,
                     LocPoint(lat, long))
+
+
+                findNavController().popBackStack(R.id.nav_addAddress,true)
                 navigate(action)
+
+            }
             }
         }
     }

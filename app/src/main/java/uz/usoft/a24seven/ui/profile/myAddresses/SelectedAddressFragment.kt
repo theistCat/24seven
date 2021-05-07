@@ -10,11 +10,13 @@ import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
-import uz.usoft.a24seven.databinding.FragmentAddressListBinding
 import uz.usoft.a24seven.databinding.FragmentSelectedAddressBinding
 import uz.usoft.a24seven.network.models.Address
+import uz.usoft.a24seven.network.utils.Variables
+import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentDirections
 import uz.usoft.a24seven.ui.profile.ProfileViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.observeEvent
 import uz.usoft.a24seven.utils.showErrorIfNotFilled
 import uz.usoft.a24seven.utils.showSnackbar
@@ -22,8 +24,8 @@ import uz.usoft.a24seven.utils.showSnackbar
 class SelectedAddressFragment : BaseFragment<FragmentSelectedAddressBinding>(FragmentSelectedAddressBinding::inflate) {
 
 
-    private var lat=46.00
-    private var lng=69.00
+    private var lat=0.00
+    private var lng=0.00
 
 
     private val viewModel: ProfileViewModel by viewModel()
@@ -54,6 +56,23 @@ class SelectedAddressFragment : BaseFragment<FragmentSelectedAddressBinding>(Fra
             binding.selectedAddressAddress.setText(data.address)
             binding.selectedAddressCity.setText(data.city)
             binding.selectedAddressDistrict.setText(data.region)
+            if(data.location!=null) {
+                lat = data.location.lat.toDouble()
+                lng = data.location.lng.toDouble()
+            }
+
+
+            if(safeArgs.address!=null)
+                binding.selectedAddressAddress.setText(safeArgs.address)
+            if(safeArgs.region!=null)
+                binding.selectedAddressDistrict.setText(safeArgs.region)
+            if(safeArgs.city!=null)
+                binding.selectedAddressCity.setText(safeArgs.city)
+            if(safeArgs.point!=null)
+            {
+                lat=safeArgs.point!!.lat.toDouble()
+                lng=safeArgs.point!!.lng.toDouble()
+            }
         }
         else {
             showSnackbar(getString(R.string.success))
@@ -73,6 +92,11 @@ class SelectedAddressFragment : BaseFragment<FragmentSelectedAddressBinding>(Fra
         }
         binding.delete.setOnClickListener {
                 viewModel.deleteAddress(safeArgs.addressId)
+        }
+
+        binding.showOnMap.setOnClickListener {
+            val action=SelectedAddressFragmentDirections.actionNavSelectedAddressToNavMap(null,Variables.fromEditAddress,addressId = safeArgs.addressId)
+            navigate(action)
         }
     }
 

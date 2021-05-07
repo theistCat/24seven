@@ -39,7 +39,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     private var _bottomSheetBinding:SortBottomsheetBinding?=null
     private val bottomSheetBinding get() = _bottomSheetBinding!!
 
-    private var orderBy=Variables.sortBy[2]?:""
+    private var orderBy=Variables.sortBy[1]?:""
 
     private var updatePosition:Int=-1
     private var updateValue:Boolean=false

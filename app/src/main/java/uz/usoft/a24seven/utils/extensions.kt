@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -27,6 +26,7 @@ import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -52,7 +52,9 @@ import uz.usoft.a24seven.databinding.FragmentCollectionObjectBinding
 import uz.usoft.a24seven.network.models.Banner
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.ui.products.ImagesAdapter
-import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.NumberFormat
 import java.util.*
 
@@ -286,7 +288,7 @@ class ImageObjectFragment() : Fragment() {
             Glide.with(requireContext()).load(image).placeholder(R.drawable.banner)
                 .into(binding.imageView)
             binding.imageView.setOnClickListener {
-                Log.d("banner",imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")).toString())
+                Log.d("banner", imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")).toString())
                 if(imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")) == true)
                 {
                     val intent = Intent(Intent.ACTION_VIEW)
@@ -568,14 +570,25 @@ fun Fragment.createBottomSheet(view: View): BottomSheetDialog {
  * @param msg
  */
 fun Fragment.intentShare(msg: String?, app: Int, uri: Uri?) {
-    val appName = when(app) {
+    var appName = when(app) {
         0 -> "org.telegram.messenger"
         1 -> "com.instagram.android"
-        2 -> "com.facebook.orca"
+        2 -> "com.facebook.katana"
         else->"org.thunderdog.challegram"
     }
 
-    val isAppInstalled: Boolean = isAppAvailable(appName, requireContext().packageManager)
+    var isAppInstalled: Boolean = isAppAvailable(appName, requireContext().packageManager)
+
+    when(app) {
+        0 -> {
+            if (isAppAvailable("org.telegram.messenger.web", requireContext().packageManager)) {
+                isAppInstalled=true
+                appName = "org.telegram.messenger.web"
+            }
+        }
+
+    }
+
     if (isAppInstalled) {
         val myIntent = Intent(Intent.ACTION_SEND)
         myIntent.type = if(uri!=null)"image/*" else "text/plain"
@@ -635,15 +648,30 @@ private fun isAppAvailable(packageName: String, packageManager: PackageManager):
 }
 
 fun Fragment.getImageUri(inImage: Bitmap): Uri? {
-    val bytes = ByteArrayOutputStream()
-    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-    val path = MediaStore.Images.Media.insertImage(
-        requireActivity().contentResolver,
-        inImage,
-        UUID.randomUUID().toString() + ".png",
-        "drawing"
-    )
-    return Uri.parse(path)
+//    val bytes = ByteArrayOutputStream()
+//    inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+//    val path = MediaStore.Images.Media.insertImage(
+//        requireActivity().contentResolver,
+//        inImage,
+//        UUID.randomUUID().toString() + ".png",
+//        "drawing"
+//    )
+//    return Uri.parse(path)
+    try {
+        val cachePath = File(requireContext().cacheDir, "images")
+        cachePath.mkdirs() // don't forget to make the directory
+        val stream =
+            FileOutputStream("$cachePath/image.png") // overwrites this image every time
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        stream.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    val imagePath = File(requireContext().cacheDir, "images")
+    val newFile = File(imagePath, "image.png")
+    val contentUri: Uri =
+        FileProvider.getUriForFile(requireContext(), "uz.usoft.a24seven.fileprovider", newFile)
+    return contentUri
 }
 
 //fragment_collection_object xml

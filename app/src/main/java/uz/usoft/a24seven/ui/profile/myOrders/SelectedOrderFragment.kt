@@ -3,12 +3,15 @@ package uz.usoft.a24seven.ui.profile.myOrders
 import android.os.Bundle
 import uz.usoft.a24seven.R
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.databinding.FragmentSelectedOrderBinding
 import uz.usoft.a24seven.network.models.Order
 import uz.usoft.a24seven.network.models.OrderItem
+import uz.usoft.a24seven.network.utils.Event
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
@@ -26,6 +29,14 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
         }
         setUpAdapter()
         viewModel.showOrder(safeArgs.orderId)
+    }
+
+    override fun setUpOnClickListeners() {
+        super.setUpOnClickListeners()
+
+        binding.cencelOrder.setOnClickListener {
+            viewModel.cancelOrder(safeArgs.orderId)
+        }
     }
 
     override fun setUpUI() {
@@ -68,10 +79,33 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
 
         binding.cencelOrder.isVisible=data.status!=Variables.orderType[2]
 
+
     }
 
     override fun setUpObservers() {
         observeEvent(viewModel.showOrder,::handle)
+        observeEvent(viewModel.cancelOrder,::handleCancelOrder)
+
+
+    }
+
+    private fun handleCancelOrder(event: Event<Resource<Any>>){
+        event.getContentIfNotHandled()?.let { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    onLoading()
+                }
+                is Resource.Success -> {
+                    findNavController().popBackStack()
+                }
+                is Resource.GenericError -> {
+                    onGenericError(resource)
+                }
+                is Resource.Error -> {
+                    onError(resource)
+                }
+            }
+        }
     }
 
     override fun setUpRecyclers() {

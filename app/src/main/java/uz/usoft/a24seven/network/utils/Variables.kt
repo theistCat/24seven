@@ -15,6 +15,10 @@ object Variables {
     const val yandexKeySecond="814c74ce-2250-497f-9bee-c9b376d64431"
     const val yandexKey="1080018e-efa1-4eb6-821b-82f01120bf4c"
 
+    const val fromAddAddress="addAddress"
+    const val fromEditAddress="editAddress"
+    const val fromCheckout="checkout"
+
     var updateNeeded: Boolean by Delegates.observable(false) { _, _, newValue ->
         Log.i("Update request", "$newValue")
     }
