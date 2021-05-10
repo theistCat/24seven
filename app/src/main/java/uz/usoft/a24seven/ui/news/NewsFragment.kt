@@ -16,6 +16,7 @@ import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
+import uz.usoft.a24seven.utils.showSnackbar
 import uz.usoft.a24seven.utils.toDp
 
 class NewsFragment : BaseFragment<FragmentNewsBinding>(FragmentNewsBinding::inflate) {
@@ -69,9 +70,14 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>(FragmentNewsBinding::infl
                 {
                     is LoadState.Error->{
                         val error = loadStates.refresh as LoadState.Error
+
+                        hideLoadingDialog()
                         if (error.error is NoConnectivityException)
                         {
                             showNoConnectionDialog(this@NewsFragment::onRetry)
+                        }
+                        else{
+                            showSnackbar(error.error.message.toString())
                         }
                     }
                     is LoadState.Loading->{

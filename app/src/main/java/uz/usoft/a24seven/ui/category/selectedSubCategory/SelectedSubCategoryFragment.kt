@@ -282,9 +282,14 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
                 {
                     is LoadState.Error->{
                         val error = loadStates.refresh as LoadState.Error
+
+                        hideLoadingDialog()
                         if (error.error is NoConnectivityException)
                         {
                             showNoConnectionDialog(this@SelectedSubCategoryFragment::onRetry)
+                        }
+                        else{
+                            showSnackbar(error.error.message.toString())
                         }
                     }
                     is LoadState.Loading->{

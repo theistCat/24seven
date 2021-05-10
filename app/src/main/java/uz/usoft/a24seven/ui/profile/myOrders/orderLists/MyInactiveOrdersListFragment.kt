@@ -23,6 +23,7 @@ import uz.usoft.a24seven.ui.profile.myOrders.OrdersViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
+import uz.usoft.a24seven.utils.showSnackbar
 import uz.usoft.a24seven.utils.toDp
 
 class MyInactiveOrdersListFragment : BaseFragment<FragmentMyInactiveOrdersBinding>(FragmentMyInactiveOrdersBinding::inflate) {
@@ -73,9 +74,13 @@ class MyInactiveOrdersListFragment : BaseFragment<FragmentMyInactiveOrdersBindin
                 {
                     is LoadState.Error->{
                         val error = loadStates.refresh as LoadState.Error
+                        hideLoadingDialog()
                         if (error.error is NoConnectivityException)
                         {
                             showNoConnectionDialog(this@MyInactiveOrdersListFragment::onRetry)
+                        }
+                        else{
+                            showSnackbar(error.error.message.toString())
                         }
                     }
                     is LoadState.Loading->{

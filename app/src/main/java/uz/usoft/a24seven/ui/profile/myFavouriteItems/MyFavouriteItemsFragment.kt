@@ -81,6 +81,9 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
                         {
                             showNoConnectionDialog(this@MyFavouriteItemsFragment::onRetry)
                         }
+                        else{
+                            showSnackbar(error.error.message.toString())
+                        }
                     }
                     is LoadState.Loading->{
                         hideNoConnectionDialog()

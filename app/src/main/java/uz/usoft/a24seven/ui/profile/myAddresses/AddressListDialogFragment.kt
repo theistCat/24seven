@@ -99,9 +99,13 @@ class AddressListDialogFragment : DialogFragment() {
                 {
                     is LoadState.Error->{
                         val error = loadStates.refresh as LoadState.Error
+
                         if (error.error is NoConnectivityException)
                         {
                             showSnackbar(getString(R.string.loading_error))
+                        }
+                        else{
+                            showSnackbar(error.error.message.toString())
                         }
                     }
                     is LoadState.Loading->{

@@ -334,6 +334,11 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     private fun setUpAdapters() {
         similarItemAdapter = ProductsListAdapter(requireContext())
+        similarItemAdapter.onItemClick={
+            val action= SelectedProductFragmentDirections.actionNavSelectedProductSelf(safeArgs.selectedCategoryName,it.id)
+            navigate(action)
+
+        }
         feedbackListAdapter = FeedbackListAdapter()
         characteristicsListAdapter= CharacteristicsListAdapter()
     }
