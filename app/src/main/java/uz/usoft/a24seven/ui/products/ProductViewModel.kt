@@ -53,19 +53,22 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
     }
 
 
-    val addToCartResponse = MutableLiveData<Event<Resource<Any>>>()
+    //val addToCartResponse = MutableLiveData<Event<Resource<Any>>>()
+    val addToCartResponse = MutableLiveData<Long>()
 
     val addToCartResponseTwo = MutableLiveData<Long>()
     val updateCartResponse = MutableLiveData<Int>()
 
     fun addToCart(item: CartItem) = viewModelScope.launch {
 
-        Log.d("addtocart","inviewmodel")
-        addToCartResponse.value=Event(Resource.Loading)
-        repository.addToCart(item).onCompletion {
-            Log.d("addtocart","inviewmodel completed")
-            addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
-        }.launchIn(viewModelScope)
+//        Log.d("addtocart","inviewmodel")
+//        addToCartResponse.value=Event(Resource.Loading)
+//        repository.addToCart(item).onCompletion {
+//            Log.d("addtocart","inviewmodel completed")
+//            addToCartResponse.value=Event(Resource.Success(object :Any() { val data="Success"}))
+//        }.launchIn(viewModelScope)
+
+        addToCartResponse.value=repository.addToCartWithoutEmit(item)
     }
 
     fun addToCartWithoutEmit(item: CartItem,replace:Boolean=false) = viewModelScope.launch {

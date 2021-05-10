@@ -1,13 +1,16 @@
 package uz.usoft.a24seven.ui.category.selectedSubCategory
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -17,9 +20,11 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
 import uz.usoft.a24seven.databinding.SortBottomsheetBinding
 import uz.usoft.a24seven.network.models.CartItem
+import uz.usoft.a24seven.network.models.Characteristics
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Variables
@@ -41,6 +46,9 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
     private var orderBy=Variables.sortBy[1]?:""
 
+    val changeDecorator= MutableLiveData<Boolean>()
+    var itemsMoved:Boolean=false
+
     private var updatePosition:Int=-1
     private var updateValue:Boolean=false
 
@@ -50,6 +58,8 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         }
         setUpAdapter()
         getProducts()
+
+        changeDecorator.value=false
     }
 
     private fun getProducts() {
@@ -95,23 +105,17 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
 
     override fun setUpRecyclers() {
+
         binding.selectedSubCategoryRecycler.adapter = adapter
+        binding.selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
+
         binding.selectedSubCategoryRecycler.layoutManager = object:GridLayoutManager(requireContext(), 2){
             override fun onLayoutCompleted(state: RecyclerView.State?) {
                 super.onLayoutCompleted(state)
-                Log.d("Recycler","change decoreator")
-//                if(binding.selectedSubCategoryRecycler.itemDecorationCount>0) {
-//                    binding.selectedSubCategoryRecycler.removeItemDecorationAt(0)
-//                    Log.d("Recycler","change decoreator")
-//                    binding.selectedSubCategoryRecycler.addItemDecoration(
-//                        SpacesItemDecoration(
-//                            toDp(
-//                                16
-//                            )
-//                        )
-//                    )
-//                }
+                changeDecorator.value = itemsMoved
+
             }
+
 
             override fun onItemsMoved(
                 recyclerView: RecyclerView,
@@ -120,11 +124,10 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
                 itemCount: Int
             ) {
                 super.onItemsMoved(recyclerView, from, to, itemCount)
+                itemsMoved=true
 
-                Log.d("Recycler","items moved change decorator")
             }
         }
-        binding.selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
     }
 
     override fun setUpOnClickListeners() {
@@ -226,6 +229,42 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     override fun setUpObservers() {
 
         observeEvent(productViewModel.favResponse,::handle)
+
+        changeDecorator.observe(
+            viewLifecycleOwner, Observer { result->
+                result?.let {
+                    if(it)
+                    {
+                        Handler().postDelayed({
+                            if(binding.selectedSubCategoryRecycler.itemDecorationCount>0) {
+                                binding.selectedSubCategoryRecycler.removeItemDecorationAt(0)
+                                binding.selectedSubCategoryRecycler.addItemDecoration(
+                                    SpacesItemDecoration(
+                                        toDp(
+                                            16
+                                        )
+                                    )
+                                )
+                                itemsMoved=false
+                            }
+                        },200)
+
+                    }
+                }
+            }
+        )
+
+        productViewModel.addToCartResponse.observe(
+            viewLifecycleOwner, Observer { result->
+                result?.let {
+                    if(it.toInt()!=-1)
+                    {
+                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        )
 
         productViewModel.characteristics.observe(
             viewLifecycleOwner, Observer { characteristics ->

@@ -90,7 +90,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     )
                     intent.putExtra(
                         RecognizerIntent.EXTRA_LANGUAGE,
-                        Locale.getDefault()
+                        Locale("ru").language
                     )
                     intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speak_to_text))
                     try {

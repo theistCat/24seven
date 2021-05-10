@@ -249,7 +249,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
         observeEvent(productViewModel.favResponse,::handle)
         observeEvent(productViewModel.addCommentResponse,::handle)
-        observeEvent(productViewModel.addToCartResponse,::handle)
+        //observeEvent(productViewModel.addToCartResponse,::handle)
 
         productViewModel.getProductResponse.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { resource ->

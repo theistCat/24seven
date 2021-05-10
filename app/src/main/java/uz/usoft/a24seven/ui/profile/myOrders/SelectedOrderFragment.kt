@@ -77,7 +77,7 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
         binding.orderTotalPrice.text=getString(R.string.money_format_sum,data.price_products+data.price_delivery)
 
 
-        binding.cencelOrder.isVisible=data.status!=Variables.orderType[2]
+        binding.cencelOrder.isVisible=data.status!=Variables.orderType[4]
 
         binding.cencelOrder.isEnabled=data.status!=Variables.orderType[3]
     }
