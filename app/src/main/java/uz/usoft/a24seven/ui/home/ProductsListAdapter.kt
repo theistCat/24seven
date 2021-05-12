@@ -126,6 +126,12 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                     if (PrefManager.getInstance(context).getBoolean(product.id.toString(),false))
                     {
                         binding.addToCart.isEnabled=false
+                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_check)
+                    }
+                    else
+                    {
+                        binding.addToCart.isEnabled=true
+                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
                     }
                 }
                 is ItemProductBinding -> {

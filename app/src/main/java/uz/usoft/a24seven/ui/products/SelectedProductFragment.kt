@@ -3,6 +3,7 @@ package uz.usoft.a24seven.ui.products
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +45,11 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private var count=1
     private var unit:Unit?=null
     private var inCart=false
+
+    private var updateId=-1
+    private var updateValue=false
+    private var addSimilarToCart=false
+    private var addSimilarToCartId=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -157,14 +163,15 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
         binding.isFavourite.isChecked=updateStatus
+
         if(data is Comment)
         {
             feedbackBottomSheet.dismiss()
             showSnackbar(getString(R.string.tour_comment_in_review),Snackbar.LENGTH_LONG)
         }
         else{
-
             showSnackbar(getString(R.string.success))
+            similarItemAdapter.update(updateId,updateValue)
         }
     }
 
@@ -203,7 +210,15 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                          },Snackbar.LENGTH_LONG)
                      }
                     else{
-                         PrefManager.getInstance(requireContext()).edit().putBoolean(safeArgs.productId.toString(),true).apply()
+                         if(addSimilarToCart)
+                         {
+                             PrefManager.getInstance(requireContext()).edit().putBoolean(addSimilarToCartId.toString(),true).apply()
+                             similarItemAdapter.notifyDataSetChanged()
+                             addSimilarToCart=false
+                         }
+                         else
+                            PrefManager.getInstance(requireContext()).edit().putBoolean(safeArgs.productId.toString(),true).apply()
+
                      }
                 }
             }
@@ -263,14 +278,29 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                         binding.productName.text = product.name
                         binding.isFavourite.isChecked = product.is_favorite
 
-                        unit=product.unit
-                        binding.count.text=getString(R.string.count_with_unit,(count*product.unit.count),unit?.name)
+                        if (product.description != "null") {
+                            binding.productDetail.text = HtmlCompat.fromHtml(
+                                product.description ?: "",
+                                HtmlCompat.FROM_HTML_MODE_LEGACY
+                            )
+                        }
+                        else binding.productDetail.visibility=View.GONE
 
-                        binding.characteristics.isVisible=product.characteristics?.isNotEmpty()==true
+
+                        unit = product.unit
+                        binding.count.text = getString(
+                            R.string.count_with_unit,
+                            (count * product.unit.count),
+                            unit?.name
+                        )
+
+                        binding.characteristics.isVisible =
+                            product.characteristics?.isNotEmpty() == true
                         characteristicsListAdapter.updateList(product.characteristics as ArrayList<Characteristics>)
 
                         if (product.discount_percent > 0) {
-                            binding.discountTag.text=getString(R.string.discount,product.discount_percent)
+                            binding.discountTag.text =
+                                getString(R.string.discount, product.discount_percent)
                             binding.productOldPrice.text =
                                 requireContext().getString(R.string.money_format_sum, product.price)
                             binding.productPrice.text = requireContext().getString(
@@ -339,6 +369,27 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
             navigate(action)
 
         }
+        similarItemAdapter.addFav={product->
+            updateId=product.id
+            updateValue=true
+            productViewModel.addFav(product.id)
+
+        }
+
+        similarItemAdapter.removeFav={product->
+            updateId=product.id
+            updateValue=false
+            productViewModel.removeFav(product.id)
+
+        }
+
+        similarItemAdapter.addToCart={product->
+            addSimilarToCart=true
+            addSimilarToCartId=product.id
+            productViewModel.addToCartWithoutEmit(CartItem(product.id,1))
+        }
+
+
         feedbackListAdapter = FeedbackListAdapter()
         characteristicsListAdapter= CharacteristicsListAdapter()
     }

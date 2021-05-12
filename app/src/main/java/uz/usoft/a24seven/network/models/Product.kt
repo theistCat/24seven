@@ -8,6 +8,7 @@ data class Product(
     val image: Image?,
     val price: Int,
     val price_discount: Int?,
+    val description: String?,
     val unit: Unit,
     var is_favorite: Boolean,
     val category: Category,

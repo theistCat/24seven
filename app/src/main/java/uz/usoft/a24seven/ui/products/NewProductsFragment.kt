@@ -60,22 +60,17 @@ class NewProductsFragment : BaseFragment<FragmentNewProductsBinding>(FragmentNew
         {
             bottomSheetBinding.sortByNew.id->{
                 binding.sortBy.text=getString(R.string.sort_by_new)
-                adapter.sort()
             }
             bottomSheetBinding.sortByPopular.id->{
                 binding.sortBy.text=getString(R.string.sort_by_popular)
-
-                adapter.sort()
             }
             bottomSheetBinding.sortByCheap.id->{
                 binding.sortBy.text=getString(R.string.sort_by_cheap)
 
-                adapter.sort()
             }
             bottomSheetBinding.sortByExpensive.id->{
                 binding.sortBy.text=getString(R.string.sort_by_expensive)
 
-                adapter.sort()
             }
         }
         sortBottomSheet.dismiss()
