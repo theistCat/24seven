@@ -1,7 +1,9 @@
 package uz.usoft.a24seven.ui.profile.myFavouriteItems
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,8 +14,10 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentMyFavouriteItemsBinding
 import uz.usoft.a24seven.databinding.SortBottomsheetBinding
+import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingListAdapter
@@ -67,6 +71,18 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
 
     override fun setUpObservers() {
         observeEvent(viewModel.favResponse,::handle)
+
+        viewModel.addToCartResponse.observe(
+            viewLifecycleOwner, Observer { result->
+                result?.let {
+                    if(it.toInt()!=-1)
+                    {
+                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        )
 
         lifecycleScope.launch {
             adapter.loadStateFlow.collectLatest { loadStates ->
@@ -126,6 +142,9 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
                 viewModel.removeFav(product.id)
             }
         }
+
+        adapter.addToCart={product->
+            viewModel.addToCart(CartItem(product.id,1))}
 
     }
 

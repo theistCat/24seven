@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import uz.usoft.a24seven.network.models.Address
+import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.network.models.ProfileResponse
 import uz.usoft.a24seven.network.utils.Event
@@ -121,5 +122,12 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
         catch (e: NoConnectivityException) {
             throw e
         }
+    }
+
+    val addToCartResponse = MutableLiveData<Long>()
+    fun addToCart(item: CartItem) = viewModelScope.launch {
+
+        addToCartResponse.value=repository.addToCartWithoutEmit(item)
+
     }
 }

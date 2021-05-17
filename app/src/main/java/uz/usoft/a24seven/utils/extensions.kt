@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
@@ -146,7 +147,7 @@ fun <T> LifecycleOwner.observeEvent(liveData: LiveData<Event<T>>, action: (t: Ev
 
 fun ImageView.image(context: Context, imageLink: String, placeholder: Int = R.drawable.img)
 {
-    Glide.with(context).load(imageLink).placeholder(placeholder).into(this)
+    Glide.with(context).load(imageLink).placeholder(placeholder).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(this)
 }
 
 /**
