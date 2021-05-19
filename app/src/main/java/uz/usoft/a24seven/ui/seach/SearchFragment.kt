@@ -21,7 +21,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
+import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentSearchBinding
+import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.ui.category.selectedSubCategory.ProductPagingListAdapter
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
@@ -34,6 +36,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     private lateinit var adapter: ProductPagingListAdapter
     private val viewModel: SearchViewModel by viewModel()
 
+    private var updatePosition:Int=-1
+    private var updateValue:Boolean=false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpAdapter()
@@ -44,6 +49,22 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         adapter.onItemClick = {
                 val action=SearchFragmentDirections.actionNavSearchToNavSelectedProduct("",it.id)
                 navigate(action)
+        }
+
+        adapter.onFavClick = {product,position->
+            updatePosition = position
+            updateValue = !product.is_favorite
+
+            if(!product.is_favorite) {
+                viewModel.addFav(product.id)
+            }
+            else{
+                viewModel.removeFav(product.id)
+            }
+        }
+
+        adapter.addToCart={
+            viewModel.addToCart(CartItem(it.id,1))
         }
     }
 
@@ -60,6 +81,21 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         super.setUpUI()
 
         binding.searchQuery.requestFocus()
+    }
+
+
+    override fun setUpObservers() {
+        viewModel.addToCartResponse.observe(
+            viewLifecycleOwner, { result->
+                result?.let {
+                    if(it.toInt()!=-1)
+                    {
+                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
+                        adapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        )
     }
 
     override fun setUpRecyclers() {
