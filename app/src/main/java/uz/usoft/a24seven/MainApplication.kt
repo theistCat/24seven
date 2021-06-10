@@ -14,7 +14,7 @@ import uz.usoft.a24seven.network.utils.Variables
 
 class MainApplication : Application() {
 
-    //TODO: addComments
+    //TODO: alias : key0   password : a24sevenkey
 
     override fun onCreate() {
         super.onCreate()
