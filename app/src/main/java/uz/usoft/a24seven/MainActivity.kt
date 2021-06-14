@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         Log.d("loaderTag","$loadingDialog")
 
-       // PrefManager.saveToken(this,"")
+//        PrefManager.saveToken(this,"")
 //        if(PrefManager.getTheme(this)){
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 //        }
