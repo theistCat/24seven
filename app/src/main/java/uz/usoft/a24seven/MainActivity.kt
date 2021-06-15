@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     private val mainViewModel: MainViewModel by viewModel()
 
     var onSearchResult: ((Int) -> Unit)? = null
+    var onLocationGranted: ((Int) -> Unit)? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +143,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                 if (isGranted) {
                     // Permission is granted. Continue the action or workflow in your
                     // app.
+
 
                 } else {
                     // Explain to the user that the feature is unavailable because the

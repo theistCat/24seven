@@ -1,7 +1,9 @@
 package uz.usoft.a24seven.ui.map
 
+import android.Manifest
 import android.content.Context
 import android.content.IntentSender
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
@@ -13,6 +15,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -43,6 +47,7 @@ import uz.usoft.a24seven.ui.profile.myAddresses.AddressListFragmentDirections
 import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.show
 import uz.usoft.a24seven.utils.showSnackbar
+import java.security.Permission
 
 class MapFragment : Fragment(), CameraListener {
 
@@ -206,10 +211,15 @@ class MapFragment : Fragment(), CameraListener {
         }
 
         binding.findMe.setOnClickListener {
-            if(checkIfGpsEnabled())
+            Log.d("TagCheck", checkIfGpsEnabled().toString())
+            if(checkIfGpsEnabled()&& ContextCompat.checkSelfPermission(requireContext(),Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
                 findMe()
-            else
-                requestLocationSettingsOn()
+            }
+            else {
+                Toast.makeText(requireContext(),"permission denied", Toast.LENGTH_SHORT).show()
+                MainActivity.requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                //requestLocationSettingsOn()
+            }
         }
 
         binding.btnChooseLocation.setOnClickListener {
@@ -292,6 +302,7 @@ class MapFragment : Fragment(), CameraListener {
     }
 
     fun requestLocationSettingsOn() {
+
         val builder: LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
             .addLocationRequest(createLocationRequest()!!)
 

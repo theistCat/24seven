@@ -145,7 +145,7 @@ fun <T> LifecycleOwner.observeEvent(liveData: LiveData<Event<T>>, action: (t: Ev
     liveData.observe(this, Observer { it?.let { t -> action(t) } })
 }
 
-fun ImageView.image(context: Context, imageLink: String, placeholder: Int = R.drawable.img)
+fun ImageView.image(context: Context, imageLink: String, placeholder: Int = R.drawable.ic__24seven_logo)
 {
     Glide.with(context).load(imageLink).placeholder(placeholder).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(this)
 }
