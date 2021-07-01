@@ -167,7 +167,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
             viewModel.getUpdateProfileResponse(
                 firstName,
                 lastName,
-                "$year-${if(month<10) "0$month" else month}-$day",
+                "$year-${if(month<10) "0$month" else month}-${if(day.toInt()<10) "0$day" else day}",
                 if (gender) 1 else 0
             )
             }

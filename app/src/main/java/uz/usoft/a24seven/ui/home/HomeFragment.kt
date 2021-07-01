@@ -234,7 +234,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setUpOnClickListeners() {
         binding.newItems.setOnClickListener {
-           // findNavController().navigate(R.id.action_nav_home_to_nav_newProducts)
+            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))
+            navigate(action)
         }
         binding.newItemsAll.setOnClickListener {
           //  val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))

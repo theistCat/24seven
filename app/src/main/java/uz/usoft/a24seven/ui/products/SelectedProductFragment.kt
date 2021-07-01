@@ -141,7 +141,9 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
             if(inCart)
                 update()
             else
-                binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                binding.count.text =
+                    //getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                    (count*(unit?.count?:1.0)).toString()
         }
 
         binding.dec.setOnClickListener {
@@ -150,7 +152,9 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                 if(inCart)
                     update()
                 else
-                    binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                    binding.count.text =
+                        //getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                        (count*(unit?.count?:1.0)).toString()
             }
         }
 
@@ -288,11 +292,9 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
 
                         unit = product.unit
-                        binding.count.text = getString(
-                            R.string.count_with_unit,
-                            (count * product.unit.count),
-                            unit?.name
-                        )
+                        binding.count.text =
+                            //getString(R.string.count_with_unit, (count * product.unit.count), unit?.name )
+                            (count*(unit?.count?:1.0)).toString()
 
                         binding.characteristics.isVisible =
                             product.characteristics?.isNotEmpty() == true
@@ -303,13 +305,14 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                                 getString(R.string.discount, product.discount_percent)
                             binding.productOldPrice.text =
                                 requireContext().getString(R.string.money_format_sum, product.price)
-                            binding.productPrice.text = requireContext().getString(
-                                R.string.money_format_sum,
-                                product.price_discount
-                            )
+                            binding.productPrice.text =
+                                //requireContext().getString(R.string.money_format_sum, product.price_discount)
+                                requireContext().getString(R.string.money_format_sum_unit_two_lines, product.price_discount, product.unit.name)
                         } else {
                             binding.productPrice.text =
-                                requireContext().getString(R.string.money_format_sum, product.price)
+                                //requireContext().getString(R.string.money_format_sum, product.price)
+                                requireContext().getString(R.string.money_format_sum_unit_two_lines, product.price, product.unit.name)
+
                             binding.productOldPrice.visibility = View.INVISIBLE
                             binding.discountTag.visibility = View.INVISIBLE
 
