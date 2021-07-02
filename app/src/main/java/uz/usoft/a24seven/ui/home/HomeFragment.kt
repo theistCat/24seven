@@ -234,9 +234,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun setUpOnClickListeners() {
         binding.newItems.setOnClickListener {
-            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))
+            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList),getString(R.string.new_items))
             navigate(action)
         }
+
+        binding.popularItems.setOnClickListener {
+            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(popularProductsAdapter.productsList as ArrayList),getString(R.string.popular_items))
+            navigate(action)
+        }
+
+        binding.onSaleItems.setOnClickListener {
+            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(onSaleProductsAdapter.productsList as ArrayList),getString(R.string.on_sale_items))
+            navigate(action)
+        }
+
         binding.newItemsAll.setOnClickListener {
           //  val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))
            // navigate(action)

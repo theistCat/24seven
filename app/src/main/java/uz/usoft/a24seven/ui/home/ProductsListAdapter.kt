@@ -26,20 +26,16 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
         notifyDataSetChanged()
     }
 
-    fun sort()
-    {
-        this.productsList?.sortedByDescending {
-            it.price
-        }
-
-        notifyDataSetChanged()
-    }
 
     fun update(updateId:Int,updateValue:Boolean)
     {
+
+        Log.d("favTag", " $updateId to $updateValue")
+        productsList!![updateId].is_favorite=updateValue
         this.productsList?.forEach {
             if (it.id==updateId) {
                 it.is_favorite = updateValue
+                Log.d("favTag","changed")
                 notifyDataSetChanged()
             }
         }
@@ -47,6 +43,8 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
 
     var onItemClick: ((Product) -> Unit)? = null
     var addToCart: ((Product) -> Unit)? = null
+
+    var onFavClick: ((Product,position:Int) -> Unit)? = null
     var addFav: ((Product) -> Unit)? = null
     var removeFav: ((Product) -> Unit)? = null
 
@@ -77,14 +75,21 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
             itemView.setOnClickListener {
                 onItemClick?.invoke(productsList!![bindingAdapterPosition])
             }
+
+
             when (binding) {
                 is ItemProductGridBinding -> {
                     val binding = binding as ItemProductGridBinding
                     binding.productIsFav.setOnClickListener {
-                        if(binding.productIsFav.isChecked)
-                            addFav?.invoke(productsList!![bindingAdapterPosition])
-                        else
-                            removeFav?.invoke(productsList!![bindingAdapterPosition])
+                        onFavClick?.invoke(
+                            productsList!![bindingAdapterPosition] as Product,
+                            bindingAdapterPosition
+                        )
+
+                        Log.d("favTag", "change ${productsList!![bindingAdapterPosition].id} at position $bindingAdapterPosition")
+                    }
+                    binding.addToCart.setOnClickListener {
+                        addToCart?.invoke(productsList!![bindingAdapterPosition] as Product)
                     }
                 }
                 is ItemProductBinding -> {
