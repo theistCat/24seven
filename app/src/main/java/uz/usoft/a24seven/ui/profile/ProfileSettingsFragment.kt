@@ -81,11 +81,11 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         when(PrefManager.getLocale(requireContext())){
             "ru"->{
                 Log.d("locale", "russian")
-                bottomSheetBinding.ru.isChecked=true
+                binding.ru.isChecked=true
             }
             "uz"->{
                 Log.d("locale", "uzbek")
-                bottomSheetBinding.uz.isChecked=true
+                binding.uz.isChecked=true
             }
         }
 
@@ -108,6 +108,13 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         }
 
         bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->
+            when(i){
+                R.id.ru->{changeLocale("ru")}
+                R.id.uz->{changeLocale("uz")}
+            }
+        }
+
+        binding.radioGroupLocale.setOnCheckedChangeListener { _, i ->
             when(i){
                 R.id.ru->{changeLocale("ru")}
                 R.id.uz->{changeLocale("uz")}
@@ -178,8 +185,9 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
 
         binding.changeLanguage.setOnClickListener {
-            bottomsheet.show()
+          //  bottomsheet.show()
         }
+
         binding.profileDOB.setOnClickListener {
             val dpd = DatePickerDialog(
                 requireContext(), R.style.datePicker,
