@@ -94,7 +94,7 @@ class NewProductsFragment : BaseFragment<FragmentNewProductsBinding>(FragmentNew
     override fun setUpOnClickListeners() {
 
         adapter.onFavClick = {product,position->
-            updatePosition = position
+            updatePosition = product.id
             updateValue = !product.is_favorite
 
             Log.d("favTag", "change ${product.id} at position $position")

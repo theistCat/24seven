@@ -29,9 +29,8 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
 
     fun update(updateId:Int,updateValue:Boolean)
     {
-
         Log.d("favTag", " $updateId to $updateValue")
-        productsList!![updateId].is_favorite=updateValue
+        //productsList!![updateId].is_favorite=updateValue
         this.productsList?.forEach {
             if (it.id==updateId) {
                 it.is_favorite = updateValue
