@@ -17,7 +17,7 @@ import uz.usoft.a24seven.network.utils.LogoutInterceptor
 import java.util.concurrent.TimeUnit
 
 
-private const val BASE_URL: String = "http://api-seven.usoftdev.uz/"
+private const val BASE_URL: String = "http://api.24seven.uz/"
 
 val networkModule = module {
 
