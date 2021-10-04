@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.ui.checkout
 
 import android.util.Log
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -15,6 +16,7 @@ import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.observeEvent
 import uz.usoft.a24seven.utils.showErrorIfNotFilled
+import uz.usoft.a24seven.utils.showSnackbar
 
 
 class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutBinding::inflate) {
@@ -33,12 +35,18 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 //        setUpSpinnerAdapter()
 
 
-        if(safeArgs.address!=null)
+        if(safeArgs.address!=null) {
             binding.checkoutAddress.setText(safeArgs.address)
-        if(safeArgs.region!=null)
+            binding.checkoutAddress.visibility= View.VISIBLE
+        }
+        if(safeArgs.region!=null) {
             binding.checkoutDistrict.setText(safeArgs.region)
-        if(safeArgs.city!=null)
+            binding.checkoutDistrict.visibility= View.VISIBLE
+        }
+        if(safeArgs.city!=null) {
             binding.checkoutCity.setText(safeArgs.city)
+            binding.checkoutCity.visibility= View.VISIBLE
+        }
 
         if(safeArgs.point!=null)
         {
@@ -121,6 +129,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                             address
                         )
                     }
+                else showSnackbar("Choose address")
             }
         }
 

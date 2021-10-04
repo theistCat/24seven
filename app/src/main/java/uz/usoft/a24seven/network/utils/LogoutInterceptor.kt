@@ -26,8 +26,7 @@ class LogoutInterceptor(val context: Context) : Interceptor {
             ) {
                 PrefManager.logout(context)
                 Log.d("Result","caught")
-                MainActivity.openAuthActivityCustom.launch(
-                Intent(context, AuthActivity::class.java)
+                MainActivity.openAuthActivityCustom.launch(Intent(context, AuthActivity::class.java)
             )
 
             }

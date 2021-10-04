@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.profile.myAddresses
 
+import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,12 +44,18 @@ class AddAddressFragment : BaseFragment<FragmentAddAddressBinding>(FragmentAddAd
         super.setUpUI()
 
 
-        if(safeArgs.address!=null)
+        if(safeArgs.address!=null) {
             binding.addAddressAddress.setText(safeArgs.address)
-        if(safeArgs.region!=null)
+            binding.addAddressAddress.visibility= View.VISIBLE
+        }
+        if(safeArgs.region!=null) {
             binding.addAddressDistrict.setText(safeArgs.region)
-        if(safeArgs.city!=null)
+            binding.addAddressDistrict.visibility = View.VISIBLE
+        }
+        if(safeArgs.city!=null) {
             binding.addAddressCity.setText(safeArgs.city)
+            binding.addAddressCity.visibility= View.VISIBLE
+        }
         if(safeArgs.point!=null)
         {
             lat=safeArgs.point!!.lat.toDouble()

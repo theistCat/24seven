@@ -46,7 +46,7 @@ class SubCategoriesListAdapter : RecyclerView.Adapter<SubCategoriesListAdapter.V
             val binding = binding as ItemSubCategoryBinding
             binding.subCategoryName.text = product.name
 
-             binding.productCount.isVisible= product.parents.isEmpty()
+            // binding.productCount.isVisible= product.parents.isEmpty()
              binding.productCount.text = product.products_count.toString()
         }
     }
