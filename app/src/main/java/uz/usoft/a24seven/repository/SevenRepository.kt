@@ -53,6 +53,11 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(safeApiCall { api.getProfile() })
     }
 
+    suspend fun getCoins() = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.getCoins() })
+    }
+
     suspend fun updateProfile(firstName:String,lastName:String,dob:String,gender:Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender) })
@@ -156,6 +161,19 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(safeApiCall { api.getProduct(productID) })
     }
 
+    suspend fun getCoinProduct(productID:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.getProduct(productID) })
+    }
+    suspend fun getCoinProducts() = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.getCoinProducts() })
+    }
+
+    suspend fun orderCoinProducts(productId:Int,count:Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.orderCoins(productId,count) })
+    }
 
     fun getProductComments(
         productID: Int,

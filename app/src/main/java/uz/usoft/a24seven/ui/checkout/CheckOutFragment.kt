@@ -159,8 +159,12 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
     private fun setAddress(address: Address) {
                     binding.checkoutAddress.setText(address.address)
+
+                    binding.checkoutAddress.visibility= View.VISIBLE
                     binding.checkoutCity.setText(address.city)
+                    binding.checkoutCity.visibility= View.VISIBLE
                     binding.checkoutDistrict.setText(address.region)
+                    binding.checkoutDistrict.visibility= View.VISIBLE
     }
 
     override fun onResume() {

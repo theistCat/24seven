@@ -32,6 +32,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ActivityMainBinding
+import uz.usoft.a24seven.network.utils.NoConnectivityException
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.category.CategoryFragmentDirections
 import uz.usoft.a24seven.ui.category.selectedSubCategory.SelectedSubCategoryFragmentDirections
 import uz.usoft.a24seven.ui.category.subCategory.SubCategoriesFragmentDirections
@@ -191,8 +193,10 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         bottomNavigationView.setupWithNavController(navController)
         binding.mainToolbar.setupWithNavController(navController, appBarConfiguration)
 
+
         binding.scanBarCode.setOnClickListener {
-            navController.navigate(R.id.nav_barcodeScanner)
+            navController.navigate(R.id.nav_coin)
+
         }
 
         binding.favItems.setOnClickListener {
@@ -272,6 +276,28 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             }
         )
 
+
+        mainViewModel.getCoinResponse.observe(this, Observer {
+            it.getContentIfNotHandled()?.let {resource->
+                when (resource) {
+                    is Resource.Loading -> {
+
+                    }
+                    is Resource.Success -> {
+                        binding.coins.text=resource.data.toString()
+                    }
+                    is Resource.GenericError -> {
+                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                    }
+                    is Resource.Error -> {
+                        if (resource.exception is NoConnectivityException) {
+                            //showNoConnectionDialog(this::onRetry)
+                        } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
+                    }
+                }
+            }
+        })
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         val speechRecognizerIntent =  Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(
@@ -347,6 +373,10 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     override fun onResume() {
         super.onResume()
+
+        if(PrefManager.isLoggedIn(this))
+            mainViewModel.getCoins()
+        else binding.coins.text=""
         KeyboardEventListener(this) { isOpen ->
             if (isOpen) bottomNavigationView.hide()
         }

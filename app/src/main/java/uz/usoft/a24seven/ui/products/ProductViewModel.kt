@@ -11,10 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import uz.usoft.a24seven.network.models.CartItem
-import uz.usoft.a24seven.network.models.Characteristics
-import uz.usoft.a24seven.network.models.Comment
-import uz.usoft.a24seven.network.models.Product
+import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource

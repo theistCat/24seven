@@ -72,10 +72,11 @@ val networkModule = module {
                 }
                 return@addInterceptor chain.proceed(chain.request())
             }
-        //If debugged version, network request debugger added
-        if (BuildConfig.DEBUG) {
-            clientBuilder.addInterceptor(ChuckerInterceptor(get()))
-        }
+            //If debugged version, network request debugger added
+            if (BuildConfig.DEBUG) {
+                clientBuilder.addInterceptor(ChuckerInterceptor(get()))
+            }
         clientBuilder.build()
     }
+
 }
