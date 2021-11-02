@@ -24,6 +24,7 @@ import uz.usoft.a24seven.network.models.Characteristics
 import uz.usoft.a24seven.network.models.Comment
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.models.Unit
+import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.home.ProductsListAdapter
@@ -72,13 +73,13 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     private fun update() {
         lifecycleScope.launch {
-            productViewModel.update(CartItem(safeArgs.productId,count))
+            productViewModel.updateCart(CartItem(safeArgs.productId,count))
         }
     }
 
     private fun remove() {
         lifecycleScope.launch {
-            productViewModel.remove(CartItem(safeArgs.productId,count))
+            productViewModel.deleteItem(CartItem(safeArgs.productId,count))
         }
     }
 
@@ -113,8 +114,8 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
         binding.addProductToCart.setOnClickListener {
 
-            //productViewModel.addToCart(CartItem(safeArgs.productId,1))
-            productViewModel.addToCartWithoutEmit(CartItem(safeArgs.productId,count))
+            productViewModel.storeCart(CartItem(safeArgs.productId,count))
+           // productViewModel.addToCartWithoutEmit(CartItem(safeArgs.productId,count))
         }
 
 
@@ -184,20 +185,68 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         productViewModel.updateCartResponse.observe(
             viewLifecycleOwner, Observer { result ->
                 result?.let {
-                    if (it == 0) {
-                        Log.i("cart", "something went wrong")
-                    } else {
-                        binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
-                        if (count > 1) {
-                            binding.dec.visibility = View.VISIBLE
-                            binding.remove.visibility = View.GONE
-                        }
-                        else if(inCart)
-                            {
-                                binding.dec.visibility=View.GONE
-                                binding.remove.visibility=View.VISIBLE
-                            }
 
+                        result.getContentIfNotHandled()?.let { resource ->
+                            when (resource) {
+                                is Resource.Loading -> {
+                                    onLoading()
+                                }
+                                is Resource.Success -> {
+                                    //viewModel.st(productsList)
+                                    hideLoadingDialog()
+                                    binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                                    if (count > 1) {
+                                        binding.dec.visibility = View.VISIBLE
+                                        binding.remove.visibility = View.GONE
+                                    }
+                                    else if(inCart)
+                                    {
+                                        binding.dec.visibility=View.GONE
+                                        binding.remove.visibility=View.VISIBLE
+                                    }
+                                }
+                                is Resource.GenericError -> {
+                                    onGenericError(resource)
+                                }
+                                is Resource.Error -> {
+                                    onError(resource)
+                                }
+                            }
+                        }
+                }
+            }
+        )
+
+        productViewModel.deleteItem.observe(
+            viewLifecycleOwner, Observer { result ->
+                result?.let {
+                    result.getContentIfNotHandled()?.let { resource ->
+                        when (resource) {
+                            is Resource.Loading -> {
+                                onLoading()
+                            }
+                            is Resource.Success -> {
+                                //viewModel.st(productsList)
+                                hideLoadingDialog()
+                                inCart=false
+                                count=1
+                                binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+
+                                binding.dec.visibility = View.VISIBLE
+                                binding.remove.visibility = View.GONE
+
+                                binding.addProductToCart.isEnabled=true
+                                binding.addProductToCart.text=getString(R.string.add_to_cart)
+
+
+                            }
+                            is Resource.GenericError -> {
+                                onGenericError(resource)
+                            }
+                            is Resource.Error -> {
+                                onError(resource)
+                            }
+                        }
                     }
                 }
             }
@@ -217,7 +266,6 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                          if(addSimilarToCart)
                          {
                              PrefManager.getInstance(requireContext()).edit().putBoolean(addSimilarToCartId.toString(),true).apply()
-                             similarItemAdapter.notifyDataSetChanged()
                              addSimilarToCart=false
                          }
                          else
@@ -243,31 +291,33 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
         productViewModel.checkItemResponse.observe(
             viewLifecycleOwner, Observer { result ->
-                if (result == null) {
-                    inCart=false
-                    binding.addProductToCart.isEnabled=true
-                    binding.addProductToCart.text=getString(R.string.add_to_cart)
-                }
-                result?.let {
-                    inCart = true
-                    count=it.count
-                    binding.addProductToCart.isEnabled = false
-                    binding.addProductToCart.text = getString(R.string.in_cart)
-                    if (count > 1) {
-                        binding.dec.visibility = View.VISIBLE
-                        binding.remove.visibility = View.GONE
-                    }
-                    else if(inCart)
-                    {
-                        binding.dec.visibility=View.GONE
-                        binding.remove.visibility=View.VISIBLE
-                    }
-                }
+//                if (result == null) {
+//                    inCart=false
+//                    binding.addProductToCart.isEnabled=true
+//                    binding.addProductToCart.text=getString(R.string.add_to_cart)
+//                }
+//                result?.let {
+//                    inCart = true
+//                    count=it.count
+//                    binding.addProductToCart.isEnabled = false
+//                    binding.addProductToCart.text = getString(R.string.in_cart)
+//                    if (count > 1) {
+//                        binding.dec.visibility = View.VISIBLE
+//                        binding.remove.visibility = View.GONE
+//                    }
+//                    else if(inCart)
+//                    {
+//                        binding.dec.visibility=View.GONE
+//                        binding.remove.visibility=View.VISIBLE
+//                    }
+//                }
             }
         )
 
         observeEvent(productViewModel.favResponse,::handle)
         observeEvent(productViewModel.addCommentResponse,::handle)
+
+        observeEvent(productViewModel.storeCartResponse,::handleAddItem)
         //observeEvent(productViewModel.addToCartResponse,::handle)
 
         productViewModel.getProductResponse.observe(viewLifecycleOwner, {
@@ -291,10 +341,14 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                         else binding.productDetail.visibility=View.GONE
 
 
+                        if (product.cart_count>0)
+                            count=product.cart_count
+
+
                         unit = product.unit
                         binding.count.text =
-                            //getString(R.string.count_with_unit, (count * product.unit.count), unit?.name )
-                            (count*(unit?.count?:1.0)).toString()
+                            getString(R.string.count_with_unit, (count * product.unit.count), unit?.name )
+                            //(count*(unit?.count?:1.0)).toString()
 
                         binding.characteristics.isVisible =
                             product.characteristics?.isNotEmpty() == true
@@ -318,7 +372,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
                         }
 
-
+                        inCart=product.is_cart
                         if (!product.images.isNullOrEmpty()) {
                             imgList.clear()
                             for (images in product.images) {
@@ -331,6 +385,28 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                             similarItemAdapter.updateList(similarItems)
                         }
 
+                        if( product.product_count==0)
+                        {
+                            binding.addProductToCart.isEnabled=false
+                            binding.addProductToCart.text=getString(R.string.out_of_stock)
+                        }
+
+
+                        if(product.is_cart)
+                        {
+                            binding.addProductToCart.isEnabled = false
+                            binding.addProductToCart.text = getString(R.string.in_cart)
+                        }
+
+                        if (product.cart_count > 1) {
+                            binding.dec.visibility = View.VISIBLE
+                            binding.remove.visibility = View.GONE
+                        }
+                        else if(product.is_cart)
+                        {
+                            binding.dec.visibility=View.GONE
+                            binding.remove.visibility=View.VISIBLE
+                        }
 
                         hideNoConnectionDialog()
                         hideLoadingDialog()
@@ -389,7 +465,7 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         similarItemAdapter.addToCart={product->
             addSimilarToCart=true
             addSimilarToCartId=product.id
-            productViewModel.addToCartWithoutEmit(CartItem(product.id,1))
+            productViewModel.storeCart(CartItem(product.id,1))
         }
 
 
@@ -413,5 +489,53 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     override fun onDestroy() {
         super.onDestroy()
         _feedbackBottomSheetBinding=null
+    }
+
+
+    private fun handleAddItem(event: Event<Resource<Any>>){
+        if(addSimilarToCart)
+        {
+            PrefManager.getInstance(requireContext()).edit().putBoolean(addSimilarToCartId.toString(),true).apply()
+            similarItemAdapter.getItem(addSimilarToCartId)?.is_cart=true
+            addSimilarToCart=false
+        }
+        else
+        {
+        event.getContentIfNotHandled()?.let { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    onLoading()
+                }
+                is Resource.Success -> {
+                    //viewModel.st(productsList)
+                    hideLoadingDialog()
+                    inCart = true
+                    binding.addProductToCart.isEnabled = false
+                    binding.addProductToCart.text = getString(R.string.in_cart)
+                    binding.count.text = getString(
+                        R.string.count_with_unit,
+                        (count * (unit?.count ?: 1.0)),
+                        unit?.name
+                    )
+
+                    if (count > 1) {
+                        binding.dec.visibility = View.VISIBLE
+                        binding.remove.visibility = View.GONE
+                    } else if (inCart) {
+                        binding.dec.visibility = View.GONE
+                        binding.remove.visibility = View.VISIBLE
+                    }
+
+
+                }
+                is Resource.GenericError -> {
+                    onGenericError(resource)
+                }
+                is Resource.Error -> {
+                    onError(resource)
+                }
+            }
+        }
+        }
     }
 }

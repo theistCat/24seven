@@ -78,7 +78,7 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
 
 
                 if(order.status==Variables.orderType[3])
-                    binding.orderStatus.text=context.getString(R.string.cancelled)
+                    binding.orderStatus.text=context.getString(R.string.canceled)
 
 
 

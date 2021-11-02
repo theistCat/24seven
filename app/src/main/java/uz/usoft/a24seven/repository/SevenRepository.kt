@@ -58,9 +58,14 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(safeApiCall { api.getCoins() })
     }
 
-    suspend fun updateProfile(firstName:String,lastName:String,dob:String,gender:Int) = flow {
+    suspend fun getRegions() = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender) })
+        emit(safeApiCall { api.getRegions() })
+    }
+
+    suspend fun updateProfile(firstName:String,lastName:String,dob:String,gender:Int,region_id: Int) = flow {
+        emit(Resource.Loading)
+        emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender,region_id) })
     }
 
     fun getFavProducts(orderBy:String): Flow<PagingData<Product>> {
@@ -86,14 +91,14 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         ).flow
     }
 
-    suspend fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) = flow {
+    suspend fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.addAddress(name, address, city, region, lat, lng, phone) })
+        emit(safeApiCall { api.addAddress(name, address, city, region, lat, lng, phone,regionId, cityId) })
     }
 
-    suspend fun updateAddress(id:Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) = flow {
+    suspend fun updateAddress(id:Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.updateAddress(id,name, address, city, region, lat, lng, phone) })
+        emit(safeApiCall { api.updateAddress(id,name, address, city, region, lat, lng, phone, regionId, cityId) })
     }
 
     suspend fun showAddress(id:Int) = flow {
@@ -226,7 +231,7 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     //region cart
     suspend fun getCart(products: HashMap<String,Int>) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.getCart(products) })
+        emit(safeApiCall { api.getCartAll() })
     }
     //endregion
 
@@ -235,11 +240,24 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     val cart: Flow<List<CartItem>> = cartDao.getAll()
 
 
-    suspend fun addToCart(cartItem: CartItem) =flow{
-        Log.d("addtocart","inrepository")
+    suspend fun storeCart(cartItem: CartItem) =flow{
         emit(Resource.Loading)
-        emit(cartDao.insert(cartItem))
+        emit(safeApiCall { api.storeCart(cartItem.id,cartItem.count)})
     }
+
+
+
+    suspend fun deleteCart(cartItem: CartItem) =flow{
+        emit(Resource.Loading)
+        emit(safeApiCall { api.deleteCart(cartItem.id)})
+    }
+
+    suspend fun updateCart(cartItem: CartItem) =flow{
+        emit(Resource.Loading)
+        emit(safeApiCall { api.updateCart(cartItem.id,cartItem.count)})
+    }
+
+
 
     suspend fun addToCartWithoutEmit(cartItem: CartItem) :Long{
        return cartDao.insert(cartItem)
@@ -253,17 +271,24 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         return cartDao.insertReplace(cartItem)
     }
 
+//    suspend fun delete(cartItem: CartItem) = flow{
+//
+//        Log.d("remove","inrepository")
+//        emit(Resource.Loading)
+//        emit(cartDao.delete(cartItem))
+//    }
+
     suspend fun delete(cartItem: CartItem) = flow{
 
-        Log.d("remove","inrepository")
         emit(Resource.Loading)
-        emit(cartDao.delete(cartItem))
+        emit(safeApiCall { api.deleteCart(cartItem.id) })
     }
 
     suspend fun deleteW(cartItem: CartItem) :Int{
 
         return cartDao.delete(cartItem)
     }
+
 
     suspend fun update(cartItem: CartItem) = flow{
 

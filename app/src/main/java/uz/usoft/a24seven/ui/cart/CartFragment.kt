@@ -3,12 +3,15 @@ package uz.usoft.a24seven.ui.cart
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentCartBinding
 import uz.usoft.a24seven.network.models.*
+import uz.usoft.a24seven.network.utils.Event
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.SpacesItemDecoration
 import uz.usoft.a24seven.utils.navigate
@@ -30,6 +33,8 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         arguments?.let {
         }
         setUpAdapter()
+
+        viewModel.getCart(productsList)
     }
 
     private fun setUpAdapter() {
@@ -37,12 +42,13 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
 
         adapter.remove = {
             productId = it.id
+
             viewModel.remove(CartItem(it.id, it.count))
         }
 
         adapter.updateCart = { it, inc ->
             if (it.count > 1 || inc)
-                viewModel.update(CartItem(it.id, if (inc) it.count + 1 else it.count - 1))
+                viewModel.updateCart(CartItem(it.id, if (inc) it.count + 1 else it.count - 1))
         }
     }
 
@@ -73,22 +79,50 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-        data as CartResponse
-        adapter.updateList(data.products as ArrayList<Product>)
-        adapter.updateItems(viewModel.cart.value!!)
-        binding.totalPrice.text = getString(R.string.money_format_sum, data.total)
-        for (i in adapter.productsList!!.indices) {
-            products["products[$i][id]"] = adapter.productsList!![i].id
-            products["products[$i][count]"] = adapter.productsList!![i].count
-        }
-        checkOutData = CheckOutData(
-            products,
-            data.total,
-            data.total + data.delivery_price,
-            data.delivery_price
-        )
+        if (data is CartResponse) {
+            data as CartResponse
+//        adapter.updateList(data.products as ArrayList<Product>)
+//        adapter.updateItems(viewModel.cart.value!!)
+//        binding.totalPrice.text = getString(R.string.money_format_sum, data.total)
+//        for (i in adapter.productsList!!.indices) {
+//            products["products[$i][id]"] = adapter.productsList!![i].id
+//            products["products[$i][count]"] = adapter.productsList!![i].count
+//        }
+//        checkOutData = CheckOutData(
+//            products,
+//            data.total,
+//            data.total + data.delivery_price,
+//            data.delivery_price
+//        )
+//
+//        binding.checkout.isEnabled = adapter.itemCount != 0
 
-        binding.checkout.isEnabled = adapter.itemCount != 0
+
+            val productsList = ArrayList<Product>()
+            val cartItems = ArrayList<CartItem>()
+
+            data.products.forEach { cartItemImpl ->
+                productsList.add(cartItemImpl.product)
+                cartItems.add(CartItem(cartItemImpl.product.id, cartItemImpl.count))
+            }
+            adapter.updateList(productsList)
+            adapter.updateItems(cartItems)
+
+            binding.totalPrice.text = getString(R.string.money_format_sum, data.total)
+
+            for (i in adapter.productsList!!.indices) {
+                products["products[$i][id]"] = adapter.productsList!![i].id
+                products["products[$i][count]"] = adapter.productsList!![i].count
+            }
+            checkOutData = CheckOutData(
+                products,
+                data.total,
+                data.total + data.delivery_price,
+                data.delivery_price
+            )
+
+            binding.checkout.isEnabled = adapter.itemCount != 0
+        }
     }
 
     override fun onRetry() {
@@ -101,15 +135,25 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
 
     override fun setUpObservers() {
 
-        viewModel.cart.observe(
+        viewModel.updateCartResponse.observe(
             viewLifecycleOwner, Observer { products ->
                 products?.let {
-                    productsList.clear()
-                    for (i in it.indices) {
-                        productsList["products[$i][id]"] = it[i].id
-                        productsList["products[$i][count]"] = it[i].count
+                    products.getContentIfNotHandled()?.let { resource ->
+                        when (resource) {
+                            is Resource.Loading -> {
+                               // onLoading()
+                            }
+                            is Resource.Success -> {
+                                viewModel.getCart(productsList)
+                            }
+                            is Resource.GenericError -> {
+                                onGenericError(resource)
+                            }
+                            is Resource.Error -> {
+                                onError(resource)
+                            }
+                        }
                     }
-                    viewModel.getCart(productsList)
                 }
             }
         )
@@ -122,6 +166,26 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         }
 
         observeEvent(viewModel.cartResponse, ::handle)
+
+        observeEvent(viewModel.removeCart, ::handleRemoveItem)
     }
 
+    private fun handleRemoveItem(event: Event<Resource<Any>>){
+        event.getContentIfNotHandled()?.let { resource ->
+            when (resource) {
+                is Resource.Loading -> {
+                    onLoading()
+                }
+                is Resource.Success -> {
+                    viewModel.getCart(productsList)
+                }
+                is Resource.GenericError -> {
+                    onGenericError(resource)
+                }
+                is Resource.Error -> {
+                    onError(resource)
+                }
+            }
+        }
+    }
 }

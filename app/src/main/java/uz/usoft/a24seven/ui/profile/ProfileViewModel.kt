@@ -9,10 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import uz.usoft.a24seven.network.models.Address
-import uz.usoft.a24seven.network.models.CartItem
-import uz.usoft.a24seven.network.models.Product
-import uz.usoft.a24seven.network.models.ProfileResponse
+import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
@@ -28,6 +25,7 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     val updateAddressResponse = MutableLiveData<Event<Resource<Address>>>()
     val showAddressResponse = MutableLiveData<Event<Resource<Address>>>()
     val deleteAddressResponse = MutableLiveData<Event<Resource<Any>>>()
+    val regionsResponse = MutableLiveData<Event<Resource<List<Region>>>>()
 
     var update:Boolean=false
 
@@ -76,24 +74,24 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     }
 
 
-    fun getUpdateProfileResponse(firstName:String,lastName:String,dob:String,gender:Int) {
+    fun getUpdateProfileResponse(firstName:String,lastName:String,dob:String,gender:Int,region_id: Int) {
         viewModelScope.launch {
-            repository.updateProfile(firstName, lastName, dob, gender).onEach {
+            repository.updateProfile(firstName, lastName, dob, gender, region_id).onEach {
                 updateResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
 
-    fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) {
+    fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) {
         viewModelScope.launch {
-            repository.addAddress(name, address, city, region, lat, lng, phone).onEach {
+            repository.addAddress(name, address, city, region, lat, lng, phone,regionId, cityId).onEach {
                 addAddressResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
-    fun updateAddress(id: Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long) {
+    fun updateAddress(id: Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) {
         viewModelScope.launch {
-            repository.updateAddress(id,name, address, city, region, lat, lng, phone).onEach {
+            repository.updateAddress(id,name, address, city, region, lat, lng, phone, regionId, cityId).onEach {
                 updateAddressResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
@@ -111,6 +109,14 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
         viewModelScope.launch {
             repository.deleteAddress(id).onEach {
                 deleteAddressResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    fun getRegions() {
+        viewModelScope.launch {
+            repository.getRegions().onEach {
+                regionsResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }

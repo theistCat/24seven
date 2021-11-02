@@ -1,7 +1,9 @@
 package uz.usoft.a24seven.ui.checkout
 
+import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AutoCompleteTextView
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -10,7 +12,10 @@ import uz.usoft.a24seven.R
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.FragmentCheckOutBinding
 import uz.usoft.a24seven.network.models.Address
+import uz.usoft.a24seven.network.models.Region
 import uz.usoft.a24seven.network.utils.Variables
+import uz.usoft.a24seven.ui.profile.TypedDropdownAdapter
+import uz.usoft.a24seven.ui.profile.myAddresses.AddAddressData
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressListDialogFragment
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.navigate
@@ -24,10 +29,23 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
     private val safeArgs: CheckOutFragmentArgs by navArgs()
     private val viewModel: CheckoutViewModel by viewModel()
+
     private var addressId: Int =-1
     private var lat="0.0"
     private var lng="0.0"
     private val address=HashMap<String,String>()
+
+    val regionsArray=ArrayList<Region>()
+    val citiesArray=ArrayList<Region>()
+
+    private var regionId=-1
+    private var cityId=-1
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.getRegions()
+    }
 
     override fun setUpUI() {
         super.setUpUI()
@@ -54,6 +72,15 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             lng=safeArgs.point!!.lng
         }
 
+        safeArgs.addAddressData?.let {
+            with(binding){
+                this.regionDropDownValue.setText(it.region,false)
+                this.cityDropDownValue.setText(it.city,false)
+                regionId=it.regionId
+                cityId=it.cityId
+            }
+        }
+
         binding.totalPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.total)
         binding.deliveryPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.delivery_fee)
         binding.orderPrice.text=getString(R.string.money_format_sum,safeArgs.checkOutData.order_price)
@@ -66,6 +93,33 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             getString(R.string.transfer)->{binding.transfer.isChecked=true}
             else-> {
                 binding.cash.isChecked=true
+            }
+        }
+
+        val arrayAdapter = TypedDropdownAdapter(requireContext(), R.layout.support_simple_spinner_dropdown_item,
+            regionsArray)
+
+        (binding.regionDropDownValue as? AutoCompleteTextView)?.setAdapter(arrayAdapter)
+
+
+        binding.regionDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+            arrayAdapter.getItem(i)?.let {
+                regionId=it.id
+                citiesArray.clear()
+                citiesArray.addAll(it.cities as ArrayList<Region>)
+
+            }
+        }
+
+        val cityAdapter = TypedDropdownAdapter(requireContext(), R.layout.support_simple_spinner_dropdown_item,
+            citiesArray)
+
+        (binding.cityDropDownValue as? AutoCompleteTextView)?.setAdapter(cityAdapter)
+
+
+        binding.cityDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+            cityAdapter.getItem(i)?.let {
+                cityId=it.id
             }
         }
     }
@@ -87,19 +141,29 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
     override fun setUpObservers() {
         observeEvent(viewModel.checkoutResponse,::handle)
+        observeEvent(viewModel.regionsResponse,::handle)
     }
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-        viewModel.emptyTheCart()
-        var i=0
-        safeArgs.checkOutData.productList.forEach{
-            Log.d("cart",it.key)
-            if(it.key.matches(Regex("(products\\[[0-9]\\]+\\[id\\])")))
-                PrefManager.getInstance(requireContext()).edit().remove(it.value.toString()).apply()
-            i++
+        when(data)
+        {
+            is List<*>->{
+                regionsArray.addAll(data as ArrayList<Region>)
+            }
+            else->{
+                viewModel.emptyTheCart()
+                var i=0
+                safeArgs.checkOutData.productList.forEach{
+                    Log.d("cart",it.key)
+                    if(it.key.matches(Regex("(products\\[[0-9]\\]+\\[id\\])")))
+                        PrefManager.getInstance(requireContext()).edit().remove(it.value.toString()).apply()
+                    i++
+                }
+                findNavController().navigate(R.id.action_nav_checkOut_to_nav_myOrders)
+            }
         }
-        findNavController().navigate(R.id.action_nav_checkOut_to_nav_myOrders)
+
     }
 
     override fun setUpOnClickListeners() {
@@ -122,6 +186,8 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                         address["address[location][lat]"]=lat
                         address["address[location][lng]"]=lng
                         address["address[address]"]=binding.checkoutAddress.text.toString()
+                        address["address[region_id]"]=regionId.toString()
+                        address["address[city_id]"]=cityId.toString()
                         viewModel.checkout(
                             paymentMethod,
                             null,
@@ -129,7 +195,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                             address
                         )
                     }
-                else showSnackbar("Choose address")
+                else showSnackbar(getString(R.string.chose_address))
             }
         }
 
@@ -147,7 +213,14 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
         binding.fromMap.setOnClickListener {
             val action=CheckOutFragmentDirections.actionNavCheckOutToNavMap(safeArgs.checkOutData,
-                Variables.fromCheckout,addressId = -1)
+                Variables.fromCheckout,addressId = -1, addAddressData = AddAddressData(
+                    "Manual",
+                    binding.regionDropDownValue.text.toString(),
+                    regionId,
+                    binding.cityDropDownValue.text.toString(),
+                    cityId
+                )
+            )
             navigate(action)
         }
     }
@@ -165,6 +238,18 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                     binding.checkoutCity.visibility= View.VISIBLE
                     binding.checkoutDistrict.setText(address.region)
                     binding.checkoutDistrict.visibility= View.VISIBLE
+
+                    regionId=address.region_id?:-1
+                    binding.regionDropDownValue.let {
+                        it.setText((it.adapter as TypedDropdownAdapter).setSelection(regionId),false)
+                        citiesArray.clear()
+                        citiesArray.addAll((it.adapter as TypedDropdownAdapter).getSelection(regionId)?.cities?: arrayListOf() )
+                    }
+
+                    cityId=address.city_id?:-1
+                    binding.cityDropDownValue.let {
+                        it.setText((it.adapter as TypedDropdownAdapter).setSelection(cityId),false)
+                    }
     }
 
     override fun onResume() {

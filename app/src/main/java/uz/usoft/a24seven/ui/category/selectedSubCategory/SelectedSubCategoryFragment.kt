@@ -25,8 +25,10 @@ import uz.usoft.a24seven.databinding.FragmentSelectedSubCategoryBinding
 import uz.usoft.a24seven.databinding.SortBottomsheetBinding
 import uz.usoft.a24seven.network.models.CartItem
 import uz.usoft.a24seven.network.models.Characteristics
+import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.network.utils.NoConnectivityException
+import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.filter.FilterFragment
 import uz.usoft.a24seven.ui.products.ProductViewModel
@@ -51,6 +53,8 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
     private var updatePosition:Int=-1
     private var updateValue:Boolean=false
+
+    private var cartItemPosition:Int=-1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,7 +155,36 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         }
 
         adapter.addToCart={
-            productViewModel.addToCart(CartItem(it.id,1))
+            productViewModel.storeCart(CartItem(it.id,1))
+
+            productViewModel.storeCartResponse.observe(
+                viewLifecycleOwner, Observer { result->
+
+                    result.getContentIfNotHandled()?.let { resource ->
+                        when (resource) {
+                            is Resource.Loading -> {
+                                onLoading()
+                            }
+                            is Resource.Success -> {
+                                //viewModel.st(productsList)
+                                hideLoadingDialog()
+                                it.is_cart=true
+                                PrefManager.getInstance(requireContext()).edit().putBoolean(it.id.toString(),true).apply()
+                                adapter.notifyDataSetChanged()
+                            }
+                            is Resource.GenericError -> {
+                                onGenericError(resource)
+                            }
+                            is Resource.Error -> {
+                                onError(resource)
+                            }
+                        }
+                    }
+                    result?.let {
+
+                    }
+                }
+            )
         }
 
 
@@ -259,6 +292,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
                 result?.let {
                     if(it.toInt()!=-1)
                     {
+
                         PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
                         adapter.notifyDataSetChanged()
                     }
@@ -327,4 +361,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         super.onDestroy()
         (requireActivity() as MainActivity).drawerLayout.removeDrawerListener(this)
     }
+
+
+
 }

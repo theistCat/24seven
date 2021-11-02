@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -15,10 +16,13 @@ import uz.usoft.a24seven.utils.createBottomSheet
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.network.models.MockData
 import uz.usoft.a24seven.network.models.ProfileResponse
+import uz.usoft.a24seven.network.models.Region
+import uz.usoft.a24seven.network.models.RegionResponse
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.observeEvent
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 //Todo: disable update button if no update are made
@@ -30,6 +34,9 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
+    var region:Int=1
+
+    val regionsArray=ArrayList<Region>()
 
     private lateinit var bottomsheet : BottomSheetDialog
     private var _bottomSheetBinding : ChangeLanguageBottomsheetBinding?=null
@@ -38,27 +45,53 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getProfileResponse()
+        viewModel.getRegions()
     }
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
 
-        data as ProfileResponse
-        binding.profilePhone.setText(getString(R.string.phone_format, data.phone))
+        when(data){
+        is ProfileResponse->{
+            binding.profilePhone.setText(getString(R.string.phone_format, data.phone))
 
-        val monthName = resources.getStringArray(R.array.month)
+            val monthName = resources.getStringArray(R.array.month)
 
-        if(data.first_name!=null&&data.last_name!=null)
-            binding.profileFullName.setText(getString(R.string.full_name_format, data.firstName, data.lastName))
-        if (data.dob.isNotEmpty()) {
-            val dob= data.dob.split("-")
-            binding.profileDOB.text =
-                getString(R.string.dob_format, dob[2].toInt(), monthName[dob[1].toInt()-1], dob[0].toInt())
+            if (data.first_name != null && data.last_name != null)
+                binding.profileFullName.setText(
+                    getString(
+                        R.string.full_name_format,
+                        data.firstName,
+                        data.lastName
+                    )
+                )
+            if (data.dob.isNotEmpty()) {
+                val dob = data.dob.split("-")
+                binding.profileDOB.text =
+                    getString(
+                        R.string.dob_format,
+                        dob[2].toInt(),
+                        monthName[dob[1].toInt() - 1],
+                        dob[0].toInt()
+                    )
+            }
+            if (data.gender)
+                binding.male.isChecked = true
+            else
+                binding.female.isChecked = true
+
+            region=data.region_id
+
+            if(regionsArray.contains(Region(data.region_id,"", ArrayList<Region>()))) {
+                    val index=regionsArray.indexOf(Region(data.region_id,"", ArrayList<Region>()))
+                (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(regionsArray[index].name, false)
+            }
         }
-        if(data.gender)
-            binding.male.isChecked=true
-        else
-            binding.female.isChecked=true
+            is List<*>->{
+                regionsArray.addAll(data as ArrayList<Region>)
+            }
+        }
+
     }
 
     override fun onRetry() {
@@ -70,6 +103,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
         observeEvent(viewModel.profileResponse,::handle)
         observeEvent(viewModel.updateResponse,::handle)
+        observeEvent(viewModel.regionsResponse,::handle)
     }
 
 
@@ -92,6 +126,19 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
         uiMode=resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
 
         binding.switch1.isChecked= uiMode == Configuration.UI_MODE_NIGHT_YES
+
+
+        val arrayAdapter = TypedDropdownAdapter(requireContext(), R.layout.support_simple_spinner_dropdown_item,
+            regionsArray)
+
+        (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setAdapter(arrayAdapter)
+
+
+        binding.activityTypeDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+                arrayAdapter.getItem(i)?.let {
+                    region=it.id
+                }
+        }
 
     }
 
@@ -175,7 +222,8 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
                 firstName,
                 lastName,
                 "$year-${if(month<10) "0$month" else month}-${if(day.toInt()<10) "0$day" else day}",
-                if (gender) 1 else 0
+                if (gender) 1 else 0,
+                region
             )
             }
             }

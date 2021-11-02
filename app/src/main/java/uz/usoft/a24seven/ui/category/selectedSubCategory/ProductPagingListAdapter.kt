@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.ui.category.selectedSubCategory
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -91,7 +92,7 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
                     binding.productName.text = product.name
                     binding.productImage.image(context, product.image!!.path_thumb)
 
-                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(), false)) {
+                    if (product.is_cart) {
                         binding.addToCart.isEnabled = false
                         binding.addToCart.icon =
                             ContextCompat.getDrawable(context, R.drawable.ic_check)
@@ -100,6 +101,8 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
                         binding.addToCart.icon =
                             ContextCompat.getDrawable(context, R.drawable.ic_add_cart)
                     }
+
+                    binding.addToCart.isVisible=product.product_count?:0!=0
                 }
             }
         }

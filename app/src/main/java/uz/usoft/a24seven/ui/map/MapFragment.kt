@@ -43,6 +43,7 @@ import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.network.utils.Variables
 import uz.usoft.a24seven.ui.cart.CartFragmentDirections
 import uz.usoft.a24seven.ui.checkout.CheckOutFragmentDirections
+import uz.usoft.a24seven.ui.profile.myAddresses.AddAddressData
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressListFragmentDirections
 import uz.usoft.a24seven.utils.navigate
 import uz.usoft.a24seven.utils.show
@@ -67,6 +68,8 @@ class MapFragment : Fragment(), CameraListener {
     var chosenAddressCity=""
     var chosenAddressDistrict=""
     var chosenAddressComment=""
+
+    var addAddressDate:AddAddressData?=null
 
     var lat=""
     var long=""
@@ -230,7 +233,8 @@ class MapFragment : Fragment(), CameraListener {
                     addresss,
                     region,
                     city,
-                    LocPoint(lat, long)
+                    LocPoint(lat, long),
+                    addAddressData = safeArgs.addAddressData
                 )
 
                     findNavController().popBackStack(R.id.nav_checkOut,true)
@@ -249,7 +253,8 @@ class MapFragment : Fragment(), CameraListener {
                 }
             else->{
                 val action = AddressListFragmentDirections.actionNavAddressListToNavAddAddress(addresss,region,city,
-                    LocPoint(lat, long))
+                    LocPoint(lat, long),
+                    addAddressData = safeArgs.addAddressData)
 
 
                 findNavController().popBackStack(R.id.nav_addAddress,true)

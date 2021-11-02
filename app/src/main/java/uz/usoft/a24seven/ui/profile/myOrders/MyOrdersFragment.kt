@@ -48,13 +48,13 @@ class MyOrdersFragment : Fragment() {
 
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
-                0 -> {
+                2 -> {
                     tab.text = getString(R.string.in_wait)
                 }
-                1 -> {
+                0 -> {
                     tab.text = getString(R.string.active)
                 }
-                2 -> {
+                1 -> {
                     tab.text = getString(R.string.delivered)
                 }
             }
@@ -63,7 +63,7 @@ class MyOrdersFragment : Fragment() {
         binding.tabLayout.setSelectedTabIndicatorColor(
             ContextCompat.getColor(
                 requireContext(),
-                R.color.tabInactiveOrder
+                R.color.tabActiveOrder
             )
         )
 
@@ -75,7 +75,7 @@ class MyOrdersFragment : Fragment() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    0 -> {
+                    2 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -83,7 +83,7 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
-                    1 -> {
+                    0 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -91,7 +91,7 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
-                    2 -> {
+                    1 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -104,7 +104,7 @@ class MyOrdersFragment : Fragment() {
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    0 -> {
+                    2 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -112,7 +112,7 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
-                    1 -> {
+                    0 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -120,7 +120,7 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
-                    2 -> {
+                    1 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -134,7 +134,7 @@ class MyOrdersFragment : Fragment() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    0 -> {
+                    2 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -142,7 +142,7 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
-                    1 -> {
+                    0 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),
@@ -150,7 +150,7 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
-                    2 -> {
+                    1 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
                             ContextCompat.getColor(
                                 requireContext(),

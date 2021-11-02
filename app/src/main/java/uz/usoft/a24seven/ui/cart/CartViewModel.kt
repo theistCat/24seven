@@ -22,8 +22,23 @@ class CartViewModel constructor(private val repository: SevenRepository) : ViewM
 
     val cartResponse= MutableLiveData<Event<Resource<CartResponse>>>()
 
-    fun remove(item: CartItem) = viewModelScope.launch {
-            removeFromCartResponse.value= repository.deleteW(item)
+//    fun remove(item: CartItem) = viewModelScope.launch {
+//            removeFromCartResponse.value= repository.deleteW(item)
+//    }
+
+//    fun remove(item: CartItem) = viewModelScope.launch {
+//        removeFromCartResponse.value= repository.deleteW(item)
+//    }
+
+    val removeCart = MutableLiveData<Event<Resource<Any>>>()
+
+
+    fun remove(item: CartItem) {
+        viewModelScope.launch {
+            repository.delete(item).onEach {
+                removeCart.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
     }
 
     fun update(item: CartItem) = viewModelScope.launch {
@@ -33,6 +48,14 @@ class CartViewModel constructor(private val repository: SevenRepository) : ViewM
             Log.d("update","inviewmodel completed")
             updateCartResponse.value= Event(Resource.Success(object :Any() { val data="Success"}))
         }.launchIn(viewModelScope)
+    }
+
+    fun updateCart(item: CartItem) = viewModelScope.launch {
+        viewModelScope.launch {
+            repository.updateCart(item).onEach {
+                updateCartResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
     }
 
     fun emptyTheCart() = viewModelScope.launch {

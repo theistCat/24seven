@@ -6,5 +6,7 @@ data class Address(
     val city:String?,
     val region:String?,
     val address:String?,
-    val location: LocPoint?
+    val location: LocPoint?,
+    val city_id: Int?,
+    val region_id: Int?,
 )

@@ -12,7 +12,8 @@ data class ProfileResponse (
     val language:String?,
     val favorites_count:Int,
     val addresses_count:Int,
-    val orders_count:Int
+    val orders_count:Int,
+    val region_id:Int
 )
 {
     val lastName get()=last_name?:""

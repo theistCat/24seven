@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import uz.usoft.a24seven.network.models.Region
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
@@ -35,4 +36,15 @@ class CheckoutViewModel constructor(val repository: SevenRepository) : ViewModel
             updateCartResponse.value= Event(Resource.Success(object :Any() { val data="Success"}))
         }.launchIn(viewModelScope)
     }
+
+
+    val regionsResponse = MutableLiveData<Event<Resource<List<Region>>>>()
+    fun getRegions() {
+        viewModelScope.launch {
+            repository.getRegions().onEach {
+                regionsResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
+    }
+
 }

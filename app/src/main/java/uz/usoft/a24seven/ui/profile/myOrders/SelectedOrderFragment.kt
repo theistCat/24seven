@@ -69,6 +69,9 @@ class SelectedOrderFragment : BaseFragment<FragmentSelectedOrderBinding>(Fragmen
             Variables.orderType[2]!! -> {
                 requireContext().getString(R.string.delivered)
             }
+            Variables.orderType[3]!!->{
+                getString(R.string.canceled)
+            }
             else -> {
                 data.status
             }

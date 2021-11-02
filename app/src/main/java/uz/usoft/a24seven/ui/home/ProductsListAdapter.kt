@@ -27,6 +27,15 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
     }
 
 
+    fun getItem(position:Int):Product?
+    {
+         productsList!!.forEach { product ->
+            if (product.id == position)
+                return product
+        }
+        return null
+    }
+
     fun update(updateId:Int,updateValue:Boolean)
     {
         Log.d("favTag", " $updateId to $updateValue")
@@ -137,6 +146,9 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                         binding.addToCart.isEnabled=true
                         binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
                     }
+
+
+                    binding.addToCart.isVisible=product.product_count!=0
                 }
                 is ItemProductBinding -> {
                     val binding = binding as ItemProductBinding
@@ -168,6 +180,8 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                         binding.addToCart.isEnabled=true
                         binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
                     }
+
+                    binding.addToCart.isVisible=product.product_count?:0!=0
                 }
 
             }

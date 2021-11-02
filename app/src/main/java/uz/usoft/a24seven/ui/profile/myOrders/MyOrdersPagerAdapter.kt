@@ -12,13 +12,13 @@ class MyOrdersPagerAdapter (fragment: Fragment):FragmentStateAdapter(fragment){
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> {
+            2 -> {
                 MyInactiveOrdersListFragment()
             }
-            1 -> {
+            0 -> {
                 MyActiveOrdersListFragment()
             }
-            2 -> {
+            1 -> {
                 MyDeliveredOrdersListFragment()
             }
             else->

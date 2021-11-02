@@ -3,6 +3,7 @@ package uz.usoft.a24seven.ui.home
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -62,19 +63,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         observeEvent(homeViewModel.getHomeResponse, ::handle)
         observeEvent(homeViewModel.favResponse,::handle)
 
-        homeViewModel.addToCartResponse.observe(
-            viewLifecycleOwner, Observer { result->
-                result?.let {
-                    if(it.toInt()!=-1)
-                    {
-                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
-                        newProductsAdapter.notifyDataSetChanged()
-                        popularProductsAdapter.notifyDataSetChanged()
-                        onSaleProductsAdapter.notifyDataSetChanged()
-                    }
-                }
-            }
-        )
+
     }
 
     override fun <T : Any> onSuccess(data: T) {
@@ -172,7 +161,38 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             it.addToCart={product->
 
                 Log.d("addtocart","infragment")
-                homeViewModel.addToCart(CartItem(product.id,1))
+                homeViewModel.storeCart(CartItem(product.id,1))
+
+                homeViewModel.addToCartResponse.observe(
+                    viewLifecycleOwner, Observer { result->
+
+                        result.getContentIfNotHandled()?.let { resource ->
+                            when (resource) {
+                                is Resource.Loading -> {
+                                    onLoading()
+                                }
+                                is Resource.Success -> {
+                                    //viewModel.st(productsList)
+                                    hideLoadingDialog()
+                                    product.is_cart=true
+                                    PrefManager.getInstance(requireContext()).edit().putBoolean(product.id.toString(),true).apply()
+                                    newProductsAdapter.notifyDataSetChanged()
+                                    popularProductsAdapter.notifyDataSetChanged()
+                                    onSaleProductsAdapter.notifyDataSetChanged()
+                                }
+                                is Resource.GenericError -> {
+                                    onGenericError(resource)
+                                }
+                                is Resource.Error -> {
+                                    onError(resource)
+                                }
+                            }
+                        }
+                        result?.let {
+
+                        }
+                    }
+                )
             }
         }
 
@@ -303,5 +323,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         return super.onOptionsItemSelected(item)
 
     }
+
+
 
 }

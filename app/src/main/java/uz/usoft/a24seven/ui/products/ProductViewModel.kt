@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import okhttp3.Response
 import uz.usoft.a24seven.network.models.*
 import uz.usoft.a24seven.network.utils.Event
 import uz.usoft.a24seven.network.utils.NoConnectivityException
@@ -54,7 +55,8 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
     val addToCartResponse = MutableLiveData<Long>()
 
     val addToCartResponseTwo = MutableLiveData<Long>()
-    val updateCartResponse = MutableLiveData<Int>()
+ //   val updateCartResponse = MutableLiveData<Int>()
+    val updateCartResponse = MutableLiveData<Event<Resource<Any>>>()
 
     fun addToCart(item: CartItem) = viewModelScope.launch {
 
@@ -66,6 +68,17 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
 //        }.launchIn(viewModelScope)
 
         addToCartResponse.value=repository.addToCartWithoutEmit(item)
+    }
+
+
+
+    val storeCartResponse = MutableLiveData<Event<Resource<Any>>>()
+    fun storeCart(item: CartItem) = viewModelScope.launch {
+        viewModelScope.launch {
+            repository.storeCart(item).onEach {
+                storeCartResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
     }
 
     fun addToCartWithoutEmit(item: CartItem,replace:Boolean=false) = viewModelScope.launch {
@@ -90,7 +103,15 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
        // updateCartResponse.value= Event(Resource.Loading)
 
             Log.d("update","inviewmodel completed")
-            updateCartResponse.value= repository.updateWithoutEmit(item)
+          //  updateCartResponse.value= repository.updateWithoutEmit(item)
+    }
+
+    fun updateCart(item:CartItem){
+        viewModelScope.launch {
+            repository.updateCart(item).onEach {
+                updateCartResponse.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
     }
 
 
@@ -101,6 +122,16 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
             Log.d("removeFromCartResponse","inviewmodel completed")
             removeFromCartResponse.value= repository.deleteW(item)
 
+    }
+
+    val deleteItem = MutableLiveData<Event<Resource<Any>>>()
+
+    fun deleteItem(item: CartItem) {
+        viewModelScope.launch {
+            repository.deleteCart(item).onEach {
+                deleteItem.value = Event(it)
+            }.launchIn(viewModelScope)
+        }
     }
 
     val checkItemResponse = MutableLiveData<CartItem>()
