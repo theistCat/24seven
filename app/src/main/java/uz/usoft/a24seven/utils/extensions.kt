@@ -471,6 +471,14 @@ fun EditText.showErrorIfNotFilled() :Boolean{
     return true
 }
 
+fun EditText.showErrorIfNotFilled(lay:com.google.android.material.textfield.TextInputLayout) :Boolean{
+    if (this.text.toString().isEmpty()) {
+        lay.error = context.getString(R.string.warning_fill_the_fields)
+        return false
+    }
+    return true
+}
+
 fun EditText.showError() {
     this.error = context.getString(R.string.warning_fill_the_fields)
 }

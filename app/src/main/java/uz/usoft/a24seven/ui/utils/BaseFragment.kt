@@ -142,7 +142,9 @@ abstract class BaseFragment<VB: ViewBinding> (private val inflate: Inflate<VB> )
 
     open fun onGenericError(resource: Resource.GenericError){
         hideLoadingDialog()
-        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+        if(resource.errorResponse.jsonResponse.has("Error"))
+            showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+        else showSnackbar(resource.errorResponse.message)
     }
 
     open fun onError(resource: Resource.Error){

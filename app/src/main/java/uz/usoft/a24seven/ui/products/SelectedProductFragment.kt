@@ -238,6 +238,10 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                                 binding.addProductToCart.isEnabled=true
                                 binding.addProductToCart.text=getString(R.string.add_to_cart)
 
+                                if (safeArgs.productId != -1) {
+                                    PrefManager.getInstance(requireContext()).edit().remove(safeArgs.productId.toString())
+                                        .apply()
+                                }
 
                             }
                             is Resource.GenericError -> {

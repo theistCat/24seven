@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -103,6 +104,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
 
         binding.regionDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+            binding.regionDropDown.error=null
             arrayAdapter.getItem(i)?.let {
                 regionId=it.id
                 citiesArray.clear()
@@ -117,7 +119,12 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
         (binding.cityDropDownValue as? AutoCompleteTextView)?.setAdapter(cityAdapter)
 
 
+        binding.cityDropDownValue.setOnClickListener {
+            if(cityAdapter.isEmpty)
+                Toast.makeText(requireContext(), getString(R.string.warning_region), Toast.LENGTH_SHORT).show()
+        }
         binding.cityDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+
             cityAdapter.getItem(i)?.let {
                 cityId=it.id
             }
@@ -175,26 +182,35 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                     R.id.cash->"cash"
                     else->"cash"
                 }
-                if(isAddressValid())
-                    if(addressId!=-1)
-                        viewModel.checkout(paymentMethod,addressId,safeArgs.checkOutData.productList)
-                    else {
-                        address["address[name]"]="Manual"
-                        address["address[phone]"]= binding.checkoutPhone.text.toString()
-                        address["address[region]"]=binding.checkoutDistrict.text.toString()
-                        address["address[city]"]=binding.checkoutCity.text.toString()
-                        address["address[location][lat]"]=lat
-                        address["address[location][lng]"]=lng
-                        address["address[address]"]=binding.checkoutAddress.text.toString()
-                        address["address[region_id]"]=regionId.toString()
-                        address["address[city_id]"]=cityId.toString()
-                        viewModel.checkout(
-                            paymentMethod,
-                            null,
-                            safeArgs.checkOutData.productList,
-                            address
-                        )
+                if(isAddressValid()) {
+                    if(binding.regionDropDownValue.showErrorIfNotFilled(binding.regionDropDown)
+                        && binding.cityDropDownValue.showErrorIfNotFilled(binding.cityDropDown)) {
+                        if (addressId != -1)
+                            viewModel.checkout(
+                                paymentMethod,
+                                addressId,
+                                safeArgs.checkOutData.productList
+                            )
+                        else {
+                            address["address[name]"] = "Manual"
+                            address["address[phone]"] = binding.checkoutPhone.text.toString()
+                            address["address[region]"] = binding.checkoutDistrict.text.toString()
+                            address["address[city]"] = binding.checkoutCity.text.toString()
+                            address["address[location][lat]"] = lat
+                            address["address[location][lng]"] = lng
+                            address["address[address]"] = binding.checkoutAddress.text.toString()
+                            address["address[region_id]"] = regionId.toString()
+                            address["address[city_id]"] = cityId.toString()
+                            viewModel.checkout(
+                                paymentMethod,
+                                null,
+                                safeArgs.checkOutData.productList,
+                                address
+                            )
+                        }
                     }
+                    else binding.scrollView.smoothScrollTo(binding.regionDropDownValue.scrollX,binding.regionDropDownValue.scrollY)
+                }
                 else showSnackbar(getString(R.string.chose_address))
             }
         }
@@ -226,7 +242,9 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
     }
 
     private fun isAddressValid(): Boolean {
-        return (binding.checkoutAddress.showErrorIfNotFilled() && binding.checkoutCity.showErrorIfNotFilled() && binding.checkoutDistrict.showErrorIfNotFilled())
+        return (binding.checkoutAddress.showErrorIfNotFilled()
+                && binding.checkoutCity.showErrorIfNotFilled()
+                && binding.checkoutDistrict.showErrorIfNotFilled())
 
     }
 

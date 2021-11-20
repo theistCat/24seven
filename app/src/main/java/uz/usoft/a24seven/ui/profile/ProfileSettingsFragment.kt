@@ -20,6 +20,7 @@ import uz.usoft.a24seven.network.models.Region
 import uz.usoft.a24seven.network.models.RegionResponse
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.ui.utils.BaseFragment
+import uz.usoft.a24seven.utils.observe
 import uz.usoft.a24seven.utils.observeEvent
 import java.util.*
 import kotlin.collections.ArrayList
@@ -103,7 +104,24 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
         observeEvent(viewModel.profileResponse,::handle)
         observeEvent(viewModel.updateResponse,::handle)
-        observeEvent(viewModel.regionsResponse,::handle)
+        viewModel.regionsResponse.observe(viewLifecycleOwner)
+        {event->
+            event.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Success -> {
+                        onSuccess(resource.data)
+                    }
+                    is Resource.GenericError -> {
+                        onGenericError(resource)
+                    }
+                    is Resource.Error -> {
+                        onError(resource)
+                    }
+                }
+            }
+        }
     }
 
 

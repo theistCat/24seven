@@ -178,6 +178,10 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                 }
                 is Resource.Success -> {
                     viewModel.getCart(productsList)
+                    if (productId != -1) {
+                        PrefManager.getInstance(requireContext()).edit().remove(productId.toString())
+                            .apply()
+                    }
                 }
                 is Resource.GenericError -> {
                     onGenericError(resource)
