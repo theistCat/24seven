@@ -188,6 +188,8 @@
 
     <string name="null__">.......................................................................................................................</string>
 
+    <string name="call_notification_channel_id" translatable="false">101</string>
+
     <!--    <string name="sort_by_new_key" translatable="false">new</string>-->
     <!--    <string name="sort_by_popular_key" translatable="false">popular</string>-->
     <!--    <string name="sort_by_cheap_key" translatable="false">cheap</string>-->

@@ -1,8 +1,17 @@
 package uz.usoft.a24seven
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.messaging.FirebaseMessaging
 import com.yandex.mapkit.MapKitFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -15,6 +24,12 @@ import uz.usoft.a24seven.network.utils.Variables
 class MainApplication : Application() {
 
     //TODO: alias : key0   password : a24sevenkey
+
+    lateinit var channel: NotificationChannel
+
+
+    lateinit var mgr : NotificationManager
+
 
     override fun onCreate() {
         super.onCreate()
@@ -33,6 +48,26 @@ class MainApplication : Application() {
 
         MapKitFactory.setApiKey(Variables.yandexKey)
         ConnectivityMonitor(this).startNetworkCallback()
+
+        FirebaseApp.initializeApp(this)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = NotificationChannel(
+                getString(R.string.call_notification_channel_id), "New notification",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+           mgr=getSystemService(NotificationManager::class.java)
+        } else {
+           mgr= getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if(this::mgr.isInitialized)
+                mgr.createNotificationChannel(channel)
+        }
 
     }
 

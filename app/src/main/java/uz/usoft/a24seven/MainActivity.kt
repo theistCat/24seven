@@ -27,8 +27,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.onNavDestinationSelected
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.messaging.FirebaseMessaging
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ActivityMainBinding
@@ -88,8 +91,24 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 //        }
 //        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCMTAG", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            //Hawk.put(Constants.FCM, token)
+
+            // Log and toast
+            Log.d("FCMTAG", token.toString())
+        })
 
 
         openAuthActivityCustom =
