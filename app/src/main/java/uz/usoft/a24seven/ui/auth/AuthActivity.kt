@@ -5,21 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
-import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ActivityAuthBinding
 import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
+import uz.usoft.a24seven.ui.profile.myAddresses.AddressListDialogFragment
 import uz.usoft.a24seven.utils.*
 
 class AuthActivity : AppCompatActivity() {
@@ -35,6 +30,15 @@ class AuthActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_backicon)
         binding.plus.visibility=View.INVISIBLE
+
+
+        binding.policy.setOnClickListener {
+            val fm = this.supportFragmentManager
+            val policyDialogFragment = PolicyDialogFragment()
+
+            policyDialogFragment.show(fm, "AddressList")
+            policyDialogFragment.isCancelable = true
+        }
 
         binding.getCode.setOnClickListener {
 

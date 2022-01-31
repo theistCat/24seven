@@ -19,21 +19,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private val TAG = "FCM"
 
-
-
-
-
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d(TAG, "From: ${remoteMessage.from}")
 
-
-
        if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
-
-
-
-
         }
 
         if (remoteMessage.notification != null) {
@@ -49,9 +39,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             val mNotificationManager =
                 this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-
-
 
             with(mNotificationManager) {
                 notify(0, notification)
