@@ -114,6 +114,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                 products["products[$i][id]"] = adapter.productsList!![i].id
                 products["products[$i][count]"] = adapter.productsList!![i].count
             }
+
             checkOutData = CheckOutData(
                 products,
                 data.total,

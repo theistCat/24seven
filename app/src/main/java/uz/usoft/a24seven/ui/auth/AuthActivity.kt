@@ -73,7 +73,7 @@ class AuthActivity : AppCompatActivity() {
                         }
                         is Resource.GenericError -> {
                             binding.loaderAuth.hideProgress()
-                            showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                            showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
                         }
                         is Resource.Error -> {
                             binding.loaderAuth.hideProgress()
@@ -96,7 +96,7 @@ class AuthActivity : AppCompatActivity() {
                         binding.motionLayout.transitionToEnd()
                     }
                     is Resource.GenericError -> {
-                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
 
                         binding.loaderGetCode.hideProgress()
                     }

@@ -125,7 +125,7 @@ class SelectedNewsFragment : BaseFragment<FragmentSelectedNewsBinding>(FragmentS
                     }
                     is Resource.GenericError -> {
                         hideLoadingDialog()
-                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
                     }
                     is Resource.Error -> {
                         hideLoadingDialog()

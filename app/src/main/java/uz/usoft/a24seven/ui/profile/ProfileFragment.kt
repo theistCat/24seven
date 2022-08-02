@@ -75,7 +75,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     is Resource.GenericError -> {
                         hideLoadingDialog()
                         hideNoConnectionDialog()
-                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
                     }
                     is Resource.Error -> {
                         hideLoadingDialog()

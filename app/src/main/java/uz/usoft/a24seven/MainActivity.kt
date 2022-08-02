@@ -306,7 +306,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
                         binding.coins.text=resource.data.toString()
                     }
                     is Resource.GenericError -> {
-                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
                     }
                     is Resource.Error -> {
                         if (resource.exception is NoConnectivityException) {

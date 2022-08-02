@@ -115,7 +115,7 @@ class CoinProductsListAdapter(val context: Context, val isGrid: Boolean = false)
                     val binding = binding as ItemCoinProductGridBinding
 
                         binding.productPrice.text = context.getString(R.string.money_format_coin_unit, product.price)
-                        binding.productOldPrice.visibility= View.INVISIBLE
+                        binding.productOldPrice.visibility= View.GONE
                         binding.productTag.isVisible=false
 
                     binding.productName.text=product.name
@@ -136,7 +136,7 @@ class CoinProductsListAdapter(val context: Context, val isGrid: Boolean = false)
                     val binding = binding as ItemCoinProductBinding
 
                         binding.productPrice.text = context.getString(R.string.money_format_coin_unit, product.price)
-                        binding.productOldPrice.visibility= View.INVISIBLE
+                        binding.productOldPrice.visibility= View.GONE
                         binding.productTag.isVisible=false
 
                     binding.productName.text=product.name

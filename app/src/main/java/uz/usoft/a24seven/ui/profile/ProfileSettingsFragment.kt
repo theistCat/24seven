@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.AutoCompleteTextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -35,7 +36,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
     val year = c.get(Calendar.YEAR)
     val month = c.get(Calendar.MONTH)
     val day = c.get(Calendar.DAY_OF_MONTH)
-    var region:Int=1
+    var region:Int=-1
 
     val regionsArray=ArrayList<Region>()
 
@@ -88,9 +89,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
                 (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(regionsArray[index].name, false)
             }
         }
-            is List<*>->{
-                regionsArray.addAll(data as ArrayList<Region>)
-            }
+
         }
 
     }
@@ -111,7 +110,12 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
                     is Resource.Loading -> {
                     }
                     is Resource.Success -> {
-                        onSuccess(resource.data)
+                        regionsArray.addAll(resource.data as ArrayList<Region>)
+                        if (region!=-1)
+                        if(regionsArray.contains(Region(region,"", ArrayList<Region>()))) {
+                            val index=regionsArray.indexOf(Region(region,"", ArrayList<Region>()))
+                            (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(regionsArray[index].name, false)
+                        }
                     }
                     is Resource.GenericError -> {
                         onGenericError(resource)
@@ -213,19 +217,23 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
 
 
             when{
-                firstName.isBlank()->{
-                    binding.profileFullName.error = getString(R.string.error_name)}
-                    lastName.isBlank()->{
-                        binding.profileFullName.error = getString(R.string.error_last_name)
-                    }
-                    year.isBlank()->{
-                        binding.profileDOB.error = getString(R.string.error_year)
-                    }
-                    month==0->{
-                        binding.profileDOB.error = getString(R.string.error_month)}
-                    day.isBlank()-> {
-
-                        binding.profileDOB.error = getString(R.string.error_day)
+//                firstName.isBlank()->{
+//                    binding.profileFullName.error = getString(R.string.error_name)}
+//                    lastName.isBlank()->{
+//                        binding.profileFullName.error = getString(R.string.error_last_name)
+//                    }
+//                    year.isBlank()->{
+//                        binding.profileDOB.error = getString(R.string.error_year)
+//                    }
+//                    month==0->{
+//                        binding.profileDOB.error = getString(R.string.error_month)}
+//                    day.isBlank()-> {
+//
+//                        binding.profileDOB.error = getString(R.string.error_day)
+//                    }
+                    region==-1->{
+                        binding.changeRegion.error = getString(R.string.warning_region)
+                        Toast.makeText(requireContext(), getString(R.string.warning_region), Toast.LENGTH_SHORT).show()
                     }
             else->{
 
@@ -239,7 +247,7 @@ class ProfileSettingsFragment : BaseFragment<FragmentProfileSettingsBinding>(Fra
             viewModel.getUpdateProfileResponse(
                 firstName,
                 lastName,
-                "$year-${if(month<10) "0$month" else month}-${if(day.toInt()<10) "0$day" else day}",
+                "",
                 if (gender) 1 else 0,
                 region
             )

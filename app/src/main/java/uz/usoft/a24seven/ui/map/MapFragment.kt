@@ -192,9 +192,9 @@ class MapFragment : Fragment(), CameraListener {
                         binding.findMe.isEnabled = true
                         Log.i(
                             "mapkitlocation",
-                            resource.errorResponse.jsonResponse.getString("error")
+                            resource.errorResponse.jsonResponse.optString("error")?:"error"
                         )
-                        showSnackbar(resource.errorResponse.jsonResponse.getString("error"))
+                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
                     }
                     is Resource.Error -> {
 
