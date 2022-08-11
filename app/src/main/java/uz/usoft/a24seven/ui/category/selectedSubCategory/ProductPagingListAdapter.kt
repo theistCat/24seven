@@ -85,7 +85,7 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
                         binding.productOldPrice.visibility = View.INVISIBLE
                         binding.productTag.isVisible = false
                     }
-                    binding.productCategory.text = product.category.name
+                    binding.productCategory.text = product.category?.name
                     binding.productComments.text =
                         context.getString(R.string.comments_count, product.comments_count)
                     binding.productIsFav.isChecked = product.is_favorite

@@ -13,7 +13,7 @@ data class Product(
     val description: String?,
     val unit: Unit,
     var is_favorite: Boolean,
-    val category: Category,
+    val category: Category?,
     val characteristics: List<Characteristics>?,
     val is_card: Boolean,
     var is_cart: Boolean,
