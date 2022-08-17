@@ -15,8 +15,7 @@ import uz.usoft.a24seven.network.utils.NoConnectivityException
 import uz.usoft.a24seven.network.utils.Resource
 import uz.usoft.a24seven.repository.SevenRepository
 
-class ProfileViewModel constructor(private val repository: SevenRepository) : ViewModel()
-{
+class ProfileViewModel constructor(private val repository: SevenRepository) : ViewModel() {
 
     val logoutResponse = MutableLiveData<Event<Resource<Any>>>()
     val profileResponse = MutableLiveData<Event<Resource<ProfileResponse>>>()
@@ -27,21 +26,21 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     val deleteAddressResponse = MutableLiveData<Event<Resource<Any>>>()
     val regionsResponse = MutableLiveData<Event<Resource<List<Region>>>>()
 
-    var update:Boolean=false
+    var update: Boolean = false
 
 
     val favResponse = MutableLiveData<Event<Resource<Any>>>()
 
-    fun getFavProductsResponse(orderBy:String): Flow<PagingData<Product>> {
+    fun getFavProductsResponse(orderBy: Map<String, String>): Flow<PagingData<Product>> {
         return try {
             repository.getFavProducts(orderBy)
-                .cachedIn(viewModelScope) }
-        catch (e: NoConnectivityException) {
+                .cachedIn(viewModelScope)
+        } catch (e: NoConnectivityException) {
             throw e
         }
     }
 
-    fun addFav(productId:Int) {
+    fun addFav(productId: Int) {
         viewModelScope.launch {
             repository.addFav(productId).onEach {
                 favResponse.value = Event(it)
@@ -49,7 +48,7 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
         }
     }
 
-    fun removeFav(productId:Int) {
+    fun removeFav(productId: Int) {
         viewModelScope.launch {
             repository.removeFav(productId).onEach {
                 favResponse.value = Event(it)
@@ -74,30 +73,70 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     }
 
 
-    fun getUpdateProfileResponse(firstName:String,lastName:String,dob:String,gender:Int,region_id: Int) {
+    fun getUpdateProfileResponse(
+        firstName: String,
+        lastName: String,
+        inn: Int,
+        name: String,
+        region_id: Int
+    ) {
         viewModelScope.launch {
-            repository.updateProfile(firstName, lastName, dob, gender, region_id).onEach {
+            repository.updateProfile(firstName, lastName, inn, name, region_id).onEach {
                 updateResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
 
-    fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) {
+    fun addAddress(
+        name: String,
+        address: String,
+        city: String,
+        region: String,
+        lat: Double,
+        lng: Double,
+        phone: Long,
+        regionId: Int,
+        cityId: Int
+    ) {
         viewModelScope.launch {
-            repository.addAddress(name, address, city, region, lat, lng, phone,regionId, cityId).onEach {
-                addAddressResponse.value = Event(it)
-            }.launchIn(viewModelScope)
+            repository.addAddress(name, address, city, region, lat, lng, phone, regionId, cityId)
+                .onEach {
+                    addAddressResponse.value = Event(it)
+                }.launchIn(viewModelScope)
         }
     }
-    fun updateAddress(id: Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) {
+
+    fun updateAddress(
+        id: Int,
+        name: String,
+        address: String,
+        city: String,
+        region: String,
+        lat: Double,
+        lng: Double,
+        phone: Long,
+        regionId: Int,
+        cityId: Int
+    ) {
         viewModelScope.launch {
-            repository.updateAddress(id,name, address, city, region, lat, lng, phone, regionId, cityId).onEach {
+            repository.updateAddress(
+                id,
+                name,
+                address,
+                city,
+                region,
+                lat,
+                lng,
+                phone,
+                regionId,
+                cityId
+            ).onEach {
                 updateAddressResponse.value = Event(it)
             }.launchIn(viewModelScope)
         }
     }
 
-    fun showAddress(id:Int) {
+    fun showAddress(id: Int) {
         viewModelScope.launch {
             repository.showAddress(id).onEach {
                 showAddressResponse.value = Event(it)
@@ -105,7 +144,7 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
         }
     }
 
-    fun deleteAddress(id:Int) {
+    fun deleteAddress(id: Int) {
         viewModelScope.launch {
             repository.deleteAddress(id).onEach {
                 deleteAddressResponse.value = Event(it)
@@ -124,8 +163,8 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     fun getAddresses(): Flow<PagingData<Address>> {
         return try {
             repository.getAddresses()
-                .cachedIn(viewModelScope) }
-        catch (e: NoConnectivityException) {
+                .cachedIn(viewModelScope)
+        } catch (e: NoConnectivityException) {
             throw e
         }
     }
@@ -133,7 +172,7 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     val addToCartResponse = MutableLiveData<Long>()
     fun addToCart(item: CartItem) = viewModelScope.launch {
 
-        addToCartResponse.value=repository.addToCartWithoutEmit(item)
+        addToCartResponse.value = repository.addToCartWithoutEmit(item)
 
     }
 }

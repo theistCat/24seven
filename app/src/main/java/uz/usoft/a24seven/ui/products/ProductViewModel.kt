@@ -24,7 +24,7 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
     val characteristics= MutableLiveData<List<Characteristics>>()
 
     fun getProductsResponse(categoryId: Int,
-                            orderBy: String): Flow<PagingData<Product>> {
+                            orderBy: Map<String,String>): Flow<PagingData<Product>> {
         return try {
          repository.getCategoryProducts(categoryId, orderBy,characteristics)
             .cachedIn(viewModelScope) }
@@ -34,7 +34,7 @@ class ProductViewModel constructor(private val repository: SevenRepository) : Vi
     }
 
     fun getFilteredProductsResponse(categoryId: Int,
-                                    orderBy: String,
+                                    orderBy: Map<String,String>,
                                     filterOptions :HashMap<String,String>): Flow<PagingData<Product>> {
         return try {
             repository.getFilteredCategoryProducts(categoryId, orderBy,characteristics,filterOptions)

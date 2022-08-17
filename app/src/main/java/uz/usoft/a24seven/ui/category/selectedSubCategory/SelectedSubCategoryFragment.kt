@@ -35,7 +35,8 @@ import uz.usoft.a24seven.ui.products.ProductViewModel
 import uz.usoft.a24seven.utils.*
 
 
-class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBinding>(FragmentSelectedSubCategoryBinding::inflate),
+class SelectedSubCategoryFragment :
+    BaseFragment<FragmentSelectedSubCategoryBinding>(FragmentSelectedSubCategoryBinding::inflate),
     DrawerLayout.DrawerListener {
 
     private lateinit var adapter: ProductPagingListAdapter
@@ -43,18 +44,18 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     private val productViewModel: ProductViewModel by viewModel()
 
     private lateinit var sortBottomSheet: BottomSheetDialog
-    private var _bottomSheetBinding:SortBottomsheetBinding?=null
+    private var _bottomSheetBinding: SortBottomsheetBinding? = null
     private val bottomSheetBinding get() = _bottomSheetBinding!!
 
-    private var orderBy=Variables.sortBy[1]?:""
+    private var orderBy = mapOf("sort[id]" to "desc")
 
-    val changeDecorator= MutableLiveData<Boolean>()
-    var itemsMoved:Boolean=false
+    val changeDecorator = MutableLiveData<Boolean>()
+    var itemsMoved: Boolean = false
 
-    private var updatePosition:Int=-1
-    private var updateValue:Boolean=false
+    private var updatePosition: Int = -1
+    private var updateValue: Boolean = false
 
-    private var cartItemPosition:Int=-1
+    private var cartItemPosition: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +64,12 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         setUpAdapter()
         getProducts()
 
-        changeDecorator.value=false
+        changeDecorator.value = false
     }
 
     private fun getProducts() {
         lifecycleScope.launch {
-            productViewModel.getProductsResponse(safeArgs.subCategoryId,orderBy.trim()).collect {
+            productViewModel.getProductsResponse(safeArgs.subCategoryId, orderBy).collect {
                 adapter.submitData(it)
                 return@collect
             }
@@ -77,33 +78,37 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
 
 
     private fun applyFilter() {
-        val filterFragment=(requireActivity().supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment)
-        val filter=filterFragment.filter
-        val filterOptions=HashMap<String,String>()
-        filter.forEach{
-            if(filter[it.key]?.isNotEmpty()==true)
-            {
-                it.value.forEach {attribute->
-                    val keyId="filter[${filterOptions.size}][id]"
-                    val keyAttribute="filter[${filterOptions.size}][attribute]"
-                    filterOptions[keyId]=it.key
-                    filterOptions[keyAttribute]=attribute
+        val filterFragment =
+            (requireActivity().supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment)
+        val filter = filterFragment.filter
+        val filterOptions = HashMap<String, String>()
+        filter.forEach {
+            if (filter[it.key]?.isNotEmpty() == true) {
+                it.value.forEach { attribute ->
+                    val keyId = "filter[${filterOptions.size}][id]"
+                    val keyAttribute = "filter[${filterOptions.size}][attribute]"
+                    filterOptions[keyId] = it.key
+                    filterOptions[keyAttribute] = attribute
                 }
             }
         }
 
-        Log.d("filterT","$filterOptions")
+        Log.d("filterT", "$filterOptions")
 
-        if(filterOptions.isNotEmpty())
+        if (filterOptions.isNotEmpty())
             lifecycleScope.launch {
-                productViewModel.getFilteredProductsResponse(safeArgs.subCategoryId,orderBy,filterOptions = filterOptions).collect {
+                productViewModel.getFilteredProductsResponse(
+                    safeArgs.subCategoryId,
+                    orderBy,
+                    filterOptions = filterOptions
+                ).collect {
                     adapter.submitData(it)
                     return@collect
                 }
             }
-        else if(filterFragment.resetFilter) {
+        else if (filterFragment.resetFilter) {
             getProducts()
-            filterFragment.resetFilter=false
+            filterFragment.resetFilter = false
         }
     }
 
@@ -113,25 +118,26 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         binding.selectedSubCategoryRecycler.adapter = adapter
         binding.selectedSubCategoryRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
 
-        binding.selectedSubCategoryRecycler.layoutManager = object:GridLayoutManager(requireContext(), 2){
-            override fun onLayoutCompleted(state: RecyclerView.State?) {
-                super.onLayoutCompleted(state)
-                changeDecorator.value = itemsMoved
+        binding.selectedSubCategoryRecycler.layoutManager =
+            object : GridLayoutManager(requireContext(), 2) {
+                override fun onLayoutCompleted(state: RecyclerView.State?) {
+                    super.onLayoutCompleted(state)
+                    changeDecorator.value = itemsMoved
 
+                }
+
+
+                override fun onItemsMoved(
+                    recyclerView: RecyclerView,
+                    from: Int,
+                    to: Int,
+                    itemCount: Int
+                ) {
+                    super.onItemsMoved(recyclerView, from, to, itemCount)
+                    itemsMoved = true
+
+                }
             }
-
-
-            override fun onItemsMoved(
-                recyclerView: RecyclerView,
-                from: Int,
-                to: Int,
-                itemCount: Int
-            ) {
-                super.onItemsMoved(recyclerView, from, to, itemCount)
-                itemsMoved=true
-
-            }
-        }
     }
 
     override fun setUpOnClickListeners() {
@@ -142,23 +148,22 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
             sortBottomSheet.show()
         }
 
-        adapter.onFavClick = {product,position->
+        adapter.onFavClick = { product, position ->
             updatePosition = position
             updateValue = !product.is_favorite
 
-            if(!product.is_favorite) {
+            if (!product.is_favorite) {
                 productViewModel.addFav(product.id)
-            }
-            else{
+            } else {
                 productViewModel.removeFav(product.id)
             }
         }
 
-        adapter.addToCart={
-            productViewModel.storeCart(CartItem(it.id,1))
+        adapter.addToCart = {
+            productViewModel.storeCart(CartItem(it.id, 1))
 
             productViewModel.storeCartResponse.observe(
-                viewLifecycleOwner, Observer { result->
+                viewLifecycleOwner, Observer { result ->
 
                     result.getContentIfNotHandled()?.let { resource ->
                         when (resource) {
@@ -168,8 +173,9 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
                             is Resource.Success -> {
                                 //viewModel.st(productsList)
                                 hideLoadingDialog()
-                                it.is_cart=true
-                                PrefManager.getInstance(requireContext()).edit().putBoolean(it.id.toString(),true).apply()
+                                it.is_cart = true
+                                PrefManager.getInstance(requireContext()).edit()
+                                    .putBoolean(it.id.toString(), true).apply()
                                 adapter.notifyDataSetChanged()
                             }
                             is Resource.GenericError -> {
@@ -204,27 +210,28 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         }
     }
 
-    fun onSort(option: View)
-    {
-        when(option.id)
-        {
-            bottomSheetBinding.sortByNew.id->{
-                binding.sortBy.text=getString(R.string.sort_by_new)
-                orderBy=Variables.sortBy[0]!!
+    fun onSort(option: View) {
+        val queryMap = mutableMapOf<String, String>()
+        when (option.id) {
+            bottomSheetBinding.sortByNew.id -> {
+                binding.sortBy.text = getString(R.string.sort_by_new)
+                queryMap["sort[id]"] = "desc"
             }
-            bottomSheetBinding.sortByPopular.id->{
-                binding.sortBy.text=getString(R.string.sort_by_popular)
-                orderBy=Variables.sortBy[1]!!
+            bottomSheetBinding.sortByPopular.id -> {
+                queryMap["sort[views]"] = "desc"
+                binding.sortBy.text = getString(R.string.sort_by_popular)
             }
-            bottomSheetBinding.sortByCheap.id->{
-                binding.sortBy.text=getString(R.string.sort_by_cheap)
-                orderBy=Variables.sortBy[2]!!
+            bottomSheetBinding.sortByCheap.id -> {
+                queryMap["sort[price]"] = "asc"
+                binding.sortBy.text = getString(R.string.sort_by_cheap)
             }
-            bottomSheetBinding.sortByExpensive.id->{
-                binding.sortBy.text=getString(R.string.sort_by_expensive)
-                orderBy=Variables.sortBy[3]!!
+            bottomSheetBinding.sortByExpensive.id -> {
+                queryMap["sort[price]"] = "desc"
+                binding.sortBy.text = getString(R.string.sort_by_expensive)
             }
         }
+        orderBy = queryMap
+
         sortBottomSheet.dismiss()
         getProducts()
     }
@@ -238,10 +245,13 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     private fun setUpAdapter() {
         adapter = ProductPagingListAdapter(requireContext())
         adapter.onItemClick = {
-            val subCategoryName=safeArgs.subCategoryName
-            val productId=it.id
+            val subCategoryName = safeArgs.subCategoryName
+            val productId = it.id
             val action =
-                SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSelectedProduct(subCategoryName, productId)
+                SelectedSubCategoryFragmentDirections.actionNavSelectedSubCategoryToNavSelectedProduct(
+                    subCategoryName,
+                    productId
+                )
             navigate(action)
         }
     }
@@ -249,7 +259,7 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     override fun setUpUI() {
         mainActivity.setTitle(safeArgs.subCategoryName)
         mainActivity.drawerLayout.addDrawerListener(this)
-        _bottomSheetBinding= SortBottomsheetBinding.inflate(layoutInflater)
+        _bottomSheetBinding = SortBottomsheetBinding.inflate(layoutInflater)
         sortBottomSheet = createBottomSheet(bottomSheetBinding.root)
 
     }
@@ -257,19 +267,19 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
 
-        adapter.update(updatePosition,updateValue)
+        adapter.update(updatePosition, updateValue)
     }
+
     override fun setUpObservers() {
 
-        observeEvent(productViewModel.favResponse,::handle)
+        observeEvent(productViewModel.favResponse, ::handle)
 
         changeDecorator.observe(
-            viewLifecycleOwner, Observer { result->
+            viewLifecycleOwner, Observer { result ->
                 result?.let {
-                    if(it)
-                    {
+                    if (it) {
                         Handler().postDelayed({
-                            if(binding.selectedSubCategoryRecycler.itemDecorationCount>0) {
+                            if (binding.selectedSubCategoryRecycler.itemDecorationCount > 0) {
                                 binding.selectedSubCategoryRecycler.removeItemDecorationAt(0)
                                 binding.selectedSubCategoryRecycler.addItemDecoration(
                                     SpacesItemDecoration(
@@ -278,9 +288,9 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
                                         )
                                     )
                                 )
-                                itemsMoved=false
+                                itemsMoved = false
                             }
-                        },200)
+                        }, 200)
 
                     }
                 }
@@ -288,12 +298,12 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         )
 
         productViewModel.addToCartResponse.observe(
-            viewLifecycleOwner, Observer { result->
+            viewLifecycleOwner, Observer { result ->
                 result?.let {
-                    if(it.toInt()!=-1)
-                    {
+                    if (it.toInt() != -1) {
 
-                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
+                        PrefManager.getInstance(requireContext()).edit()
+                            .putBoolean(it.toString(), true).apply()
                         adapter.notifyDataSetChanged()
                     }
                 }
@@ -303,7 +313,8 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         productViewModel.characteristics.observe(
             viewLifecycleOwner, Observer { characteristics ->
                 characteristics?.let {
-                    (requireActivity().supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).characteristics.value=it
+                    (requireActivity().supportFragmentManager.findFragmentByTag("filterFragmentSideSheet") as FilterFragment).characteristics.value =
+                        it
                 }
             }
         )
@@ -312,25 +323,22 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
             adapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading
                 //retry.isVisible = loadState.refresh !is LoadState.Loading
-                when(loadStates.refresh)
-                {
-                    is LoadState.Error->{
+                when (loadStates.refresh) {
+                    is LoadState.Error -> {
                         val error = loadStates.refresh as LoadState.Error
 
                         hideLoadingDialog()
-                        if (error.error is NoConnectivityException)
-                        {
+                        if (error.error is NoConnectivityException) {
                             showNoConnectionDialog(this@SelectedSubCategoryFragment::onRetry)
-                        }
-                        else{
+                        } else {
                             showSnackbar(error.error.message.toString())
                         }
                     }
-                    is LoadState.Loading->{
+                    is LoadState.Loading -> {
                         hideNoConnectionDialog()
                         showLoadingDialog()
                     }
-                    else->{
+                    else -> {
                         hideNoConnectionDialog()
                         hideLoadingDialog()
                     }
@@ -361,7 +369,6 @@ class SelectedSubCategoryFragment : BaseFragment<FragmentSelectedSubCategoryBind
         super.onDestroy()
         (requireActivity() as MainActivity).drawerLayout.removeDrawerListener(this)
     }
-
 
 
 }

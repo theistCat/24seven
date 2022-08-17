@@ -97,8 +97,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     newProductsAdapter.update(updateId,updateValue)
                 getString(R.string.popular_items)->
                     popularProductsAdapter.update(updateId,updateValue)
-                getString(R.string.on_sale_items)->
-                    onSaleProductsAdapter.update(updateId,updateValue)
+//                getString(R.string.on_sale_items)->
+//                    onSaleProductsAdapter.update(updateId,updateValue)
             }
         }
     }

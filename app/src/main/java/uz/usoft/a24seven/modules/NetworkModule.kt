@@ -64,7 +64,7 @@ val networkModule = module {
                     if (locale != "")
                         request.addHeader("Accept-Language", locale)
                     else
-                        request.addHeader("Accept-Language", "ru")
+                        request.addHeader("x", "ru")
 
                     return@addInterceptor chain.proceed(request.build())
                 } catch (e: Throwable) {

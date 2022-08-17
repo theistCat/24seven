@@ -2,6 +2,7 @@ package uz.usoft.a24seven.ui.cart
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -108,6 +109,9 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
             adapter.updateList(productsList)
             adapter.updateItems(cartItems)
 
+            binding.cartEmpty.isVisible = productsList.isEmpty()
+
+
             binding.totalPrice.text = getString(R.string.money_format_sum, data.total)
 
             for (i in adapter.productsList!!.indices) {
@@ -142,7 +146,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                     products.getContentIfNotHandled()?.let { resource ->
                         when (resource) {
                             is Resource.Loading -> {
-                               // onLoading()
+                                // onLoading()
                             }
                             is Resource.Success -> {
                                 viewModel.getCart(productsList)
@@ -171,7 +175,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         observeEvent(viewModel.removeCart, ::handleRemoveItem)
     }
 
-    private fun handleRemoveItem(event: Event<Resource<Any>>){
+    private fun handleRemoveItem(event: Event<Resource<Any>>) {
         event.getContentIfNotHandled()?.let { resource ->
             when (resource) {
                 is Resource.Loading -> {
@@ -180,7 +184,8 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                 is Resource.Success -> {
                     viewModel.getCart(productsList)
                     if (productId != -1) {
-                        PrefManager.getInstance(requireContext()).edit().remove(productId.toString())
+                        PrefManager.getInstance(requireContext()).edit()
+                            .remove(productId.toString())
                             .apply()
                     }
                 }

@@ -25,8 +25,6 @@ class FilterSelectedOptionFragment : Fragment() {
 
     fun setUpAdapter()
     {
-
-
         adapter=SelectedFilterOptionsAdapter()
     }
     override fun onCreateView(

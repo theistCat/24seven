@@ -19,10 +19,10 @@ import uz.usoft.a24seven.ui.products.CommentsPagingSource
 import uz.usoft.a24seven.ui.profile.myAddresses.AddressPagingSource
 import uz.usoft.a24seven.ui.profile.myOrders.OrderPagingSource
 
-class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
+class SevenRepository(private val api: SevenApi, private val cartDao: CartDao) {
 
 
-    companion object{
+    companion object {
         private const val PRODUCT_PAGING_SIZE = 5
         private const val COMMENT_PAGING_SIZE = 5
         private const val ADDRESS_PAGING_SIZE = 5
@@ -31,12 +31,12 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     }
 
     //region Auth
-    suspend fun verify(phone:String,code:String) = flow {
+    suspend fun verify(phone: String, code: String) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.verifyCode(phone, code) })
     }
 
-    suspend fun authFirstStep(phone:String) = flow {
+    suspend fun authFirstStep(phone: String) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.authFirstStep(phone) })
     }
@@ -63,19 +63,31 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
         emit(safeApiCall { api.getRegions() })
     }
 
-    suspend fun updateProfile(firstName:String,lastName:String,dob:String,gender:Int,region_id: Int) = flow {
+    suspend fun updateProfile(
+        firstName: String,
+        lastName: String,
+        inn: Int,
+        name: String,
+        region_id: Int
+    ) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.updateProfile(firstName, lastName, dob, gender,region_id) })
+        emit(safeApiCall { api.updateProfile(firstName, lastName, inn, name, region_id) })
     }
 
-    fun getFavProducts(orderBy:String): Flow<PagingData<Product>> {
+    fun getFavProducts(orderBy: Map<String,String>): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PRODUCT_PAGING_SIZE,
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { try{ ProductPagingSource(api,orderBy = orderBy,getFav = true) } catch (e:NoConnectivityException) { throw  e} }
+            pagingSourceFactory = {
+                try {
+                    ProductPagingSource(api, orderBy = orderBy, getFav = true)
+                } catch (e: NoConnectivityException) {
+                    throw  e
+                }
+            }
         ).flow
 
     }
@@ -87,26 +99,78 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { try{ AddressPagingSource(api) }catch (e:NoConnectivityException) { throw  e} }
+            pagingSourceFactory = {
+                try {
+                    AddressPagingSource(api)
+                } catch (e: NoConnectivityException) {
+                    throw  e
+                }
+            }
         ).flow
     }
 
-    suspend fun addAddress(name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) = flow {
+    suspend fun addAddress(
+        name: String,
+        address: String,
+        city: String,
+        region: String,
+        lat: Double,
+        lng: Double,
+        phone: Long,
+        regionId: Int,
+        cityId: Int
+    ) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.addAddress(name, address, city, region, lat, lng, phone,regionId, cityId) })
+        emit(safeApiCall {
+            api.addAddress(
+                name,
+                address,
+                city,
+                region,
+                lat,
+                lng,
+                phone,
+                regionId,
+                cityId
+            )
+        })
     }
 
-    suspend fun updateAddress(id:Int,name:String,address:String,city:String,region:String,lat:Double,lng:Double,phone:Long,regionId: Int,cityId:Int) = flow {
+    suspend fun updateAddress(
+        id: Int,
+        name: String,
+        address: String,
+        city: String,
+        region: String,
+        lat: Double,
+        lng: Double,
+        phone: Long,
+        regionId: Int,
+        cityId: Int
+    ) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.updateAddress(id,name, address, city, region, lat, lng, phone, regionId, cityId) })
+        emit(safeApiCall {
+            api.updateAddress(
+                id,
+                name,
+                address,
+                city,
+                region,
+                lat,
+                lng,
+                phone,
+                regionId,
+                cityId
+            )
+        })
     }
 
-    suspend fun showAddress(id:Int) = flow {
+    suspend fun showAddress(id: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.showAddress(id) })
     }
 
-    suspend fun deleteAddress(id:Int) = flow {
+    suspend fun deleteAddress(id: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.deleteAddress(id) })
     }
@@ -128,7 +192,7 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
     fun getCategoryProducts(
         categoryId: Int,
-        orderBy: String,
+        orderBy: Map<String,String>,
         characteristics: MutableLiveData<List<Characteristics>>
     ): Flow<PagingData<Product>> {
         return Pager(
@@ -137,15 +201,21 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy,characteristics=characteristics)}catch (e:NoConnectivityException) { throw  e} }
+            pagingSourceFactory = {
+                try {
+                    ProductPagingSource(api, categoryId, orderBy, characteristics = characteristics)
+                } catch (e: NoConnectivityException) {
+                    throw  e
+                }
+            }
         ).flow
     }
 
     fun getFilteredCategoryProducts(
         categoryId: Int,
-        orderBy: String,
+        orderBy: Map<String,String>,
         characteristics: MutableLiveData<List<Characteristics>>,
-        filterOptions :HashMap<String,String>
+        filterOptions: HashMap<String, String>
     ): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
@@ -153,7 +223,20 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
                 enablePlaceholders = true,
                 maxSize = 50
             ),
-            pagingSourceFactory = { try{ProductPagingSource(api, categoryId, orderBy,characteristics=characteristics,isFilter = true,filterOptions= filterOptions)}catch (e:NoConnectivityException) { throw  e} }
+            pagingSourceFactory = {
+                try {
+                    ProductPagingSource(
+                        api,
+                        categoryId,
+                        orderBy,
+                        characteristics = characteristics,
+                        isFilter = true,
+                        filterOptions = filterOptions
+                    )
+                } catch (e: NoConnectivityException) {
+                    throw  e
+                }
+            }
         ).flow
 
     }
@@ -161,23 +244,24 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
     //region Product
 
-    suspend fun getProduct(productID:Int) = flow {
+    suspend fun getProduct(productID: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getProduct(productID) })
     }
 
-    suspend fun getCoinProduct(productID:Int) = flow {
+    suspend fun getCoinProduct(productID: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getProduct(productID) })
     }
+
     suspend fun getCoinProducts() = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getCoinProducts() })
     }
 
-    suspend fun orderCoinProducts(productId:Int,count:Int) = flow {
+    suspend fun orderCoinProducts(productId: Int, count: Int) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.orderCoins(productId,count) })
+        emit(safeApiCall { api.orderCoins(productId, count) })
     }
 
     fun getProductComments(
@@ -194,17 +278,17 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
     }
 
-    suspend fun addComment(productID:Int,firstName: String,commentBody:String) = flow {
+    suspend fun addComment(productID: Int, firstName: String, commentBody: String) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.postProductComments(productID,firstName, commentBody) })
+        emit(safeApiCall { api.postProductComments(productID, firstName, commentBody) })
     }
 
-    suspend fun addFav(productID:Int) = flow {
+    suspend fun addFav(productID: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.addFav(productID) })
     }
 
-    suspend fun removeFav(productID:Int) = flow {
+    suspend fun removeFav(productID: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.removeFav(productID) })
     }
@@ -222,14 +306,14 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
     }
 
-    suspend fun showNews(newsId:Int) = flow {
+    suspend fun showNews(newsId: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.showNews(newsId) })
     }
     //endregion
 
     //region cart
-    suspend fun getCart(products: HashMap<String,Int>) = flow {
+    suspend fun getCart(products: HashMap<String, Int>) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.getCartAll() })
     }
@@ -240,34 +324,32 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
     val cart: Flow<List<CartItem>> = cartDao.getAll()
 
 
-    suspend fun storeCart(cartItem: CartItem) =flow{
+    suspend fun storeCart(cartItem: CartItem) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.storeCart(cartItem.id,cartItem.count)})
+        emit(safeApiCall { api.storeCart(cartItem.id, cartItem.count) })
     }
 
 
-
-    suspend fun deleteCart(cartItem: CartItem) =flow{
+    suspend fun deleteCart(cartItem: CartItem) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.deleteCart(cartItem.id)})
+        emit(safeApiCall { api.deleteCart(cartItem.id) })
     }
 
-    suspend fun updateCart(cartItem: CartItem) =flow{
+    suspend fun updateCart(cartItem: CartItem) = flow {
         emit(Resource.Loading)
-        emit(safeApiCall { api.updateCart(cartItem.id,cartItem.count)})
+        emit(safeApiCall { api.updateCart(cartItem.id, cartItem.count) })
     }
 
 
-
-    suspend fun addToCartWithoutEmit(cartItem: CartItem) :Long{
-       return cartDao.insert(cartItem)
+    suspend fun addToCartWithoutEmit(cartItem: CartItem): Long {
+        return cartDao.insert(cartItem)
     }
 
-    suspend fun getItem(id: Int) :CartItem {
+    suspend fun getItem(id: Int): CartItem {
         return cartDao.getItem(id)
     }
 
-    suspend fun addToCartReplace(cartItem: CartItem) :Long{
+    suspend fun addToCartReplace(cartItem: CartItem): Long {
         return cartDao.insertReplace(cartItem)
     }
 
@@ -278,32 +360,32 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 //        emit(cartDao.delete(cartItem))
 //    }
 
-    suspend fun delete(cartItem: CartItem) = flow{
+    suspend fun delete(cartItem: CartItem) = flow {
 
         emit(Resource.Loading)
         emit(safeApiCall { api.deleteCart(cartItem.id) })
     }
 
-    suspend fun deleteW(cartItem: CartItem) :Int{
+    suspend fun deleteW(cartItem: CartItem): Int {
 
         return cartDao.delete(cartItem)
     }
 
 
-    suspend fun update(cartItem: CartItem) = flow{
+    suspend fun update(cartItem: CartItem) = flow {
 
-        Log.d("remove","inrepository")
+        Log.d("remove", "inrepository")
         emit(Resource.Loading)
         emit(cartDao.updateCartItem(cartItem))
     }
 
-    suspend fun updateWithoutEmit(cartItem: CartItem): Int{
-          return  cartDao.updateCartItem(cartItem)
+    suspend fun updateWithoutEmit(cartItem: CartItem): Int {
+        return cartDao.updateCartItem(cartItem)
     }
 
-    suspend fun emptyTheCart() = flow{
+    suspend fun emptyTheCart() = flow {
 
-        Log.d("remove","inrepository")
+        Log.d("remove", "inrepository")
         emit(Resource.Loading)
         emit(cartDao.emptyTheCart())
     }
@@ -311,10 +393,22 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
 
     //region Checkout
-    suspend fun checkout(paymentType: String,addressId: Int?=null,products: HashMap<String,Int>,address: HashMap<String,String>?=null) = flow {
+    suspend fun checkout(
+        paymentType: String,
+        addressId: Int? = null,
+        products: HashMap<String, Int>,
+        address: HashMap<String, String>? = null
+    ) = flow {
         emit(Resource.Loading)
-        if(address!=null)
-            emit(safeApiCall { api.checkout(paymentType, addressId, products = products,address = address) })
+        if (address != null)
+            emit(safeApiCall {
+                api.checkout(
+                    paymentType,
+                    addressId,
+                    products = products,
+                    address = address
+                )
+            })
         else
             emit(safeApiCall { api.checkout(paymentType, addressId, products = products) })
     }
@@ -322,22 +416,22 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
 
     //region Orders
-    fun getOrders(orderType:String): Flow<PagingData<Order>> {
+    fun getOrders(orderType: String): Flow<PagingData<Order>> {
         return Pager(
             config = PagingConfig(
                 pageSize = ORDERS_PAGING_SIZE
             ),
-            pagingSourceFactory = { OrderPagingSource(api,orderType) }
+            pagingSourceFactory = { OrderPagingSource(api, orderType) }
         ).flow
 
     }
 
-    suspend fun showOrder(orderId:Int) = flow {
+    suspend fun showOrder(orderId: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.showOrder(orderId) })
     }
 
-    suspend fun cancelOrder(orderId:Int) = flow {
+    suspend fun cancelOrder(orderId: Int) = flow {
         emit(Resource.Loading)
         emit(safeApiCall { api.cancelOrder(orderId) })
     }
@@ -345,13 +439,13 @@ class SevenRepository(private val api: SevenApi,private val cartDao: CartDao) {
 
     //region Search
 
-    fun search(query:String) :Flow<PagingData<Product>>{
+    fun search(query: String): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
                 pageSize = PRODUCT_PAGING_SIZE
             ),
             initialKey = 1,
-            pagingSourceFactory = { ProductPagingSource(api,isSearch = true,query = query) }
+            pagingSourceFactory = { ProductPagingSource(api, isSearch = true, query = query) }
         ).flow
 
     }

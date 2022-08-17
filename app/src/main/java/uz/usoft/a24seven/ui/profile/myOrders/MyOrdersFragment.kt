@@ -57,6 +57,9 @@ class MyOrdersFragment : Fragment() {
                 1 -> {
                     tab.text = getString(R.string.delivered)
                 }
+                3 -> {
+                    tab.text = getString(R.string.canceled)
+                }
             }
         }.attach()
 
@@ -99,6 +102,15 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
+                    3 -> {
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabCanceledOrder
+                            )
+                        )
+                    }
+
                 }
             }
 
@@ -128,6 +140,15 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
+                    3 -> {
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabCanceledOrder
+                            )
+                        )
+                    }
+
                 }
 
             }
@@ -158,6 +179,15 @@ class MyOrdersFragment : Fragment() {
                             )
                         )
                     }
+                    3 -> {
+                        binding.tabLayout.setSelectedTabIndicatorColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.tabCanceledOrder
+                            )
+                        )
+                    }
+
                 }
             }
 

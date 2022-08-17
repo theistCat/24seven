@@ -10,12 +10,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import uz.usoft.a24seven.databinding.FragmentFilterOptionsBinding
+import uz.usoft.a24seven.utils.showSnackbar
 
 class FilterOptionsFragment : Fragment() {
 
     private var _binding: FragmentFilterOptionsBinding? = null
     private val binding get() = _binding!!
-   // private val parent = parentFragment as FilterFragment
+  //  private val parent = parentFragment as FilterFragment
 
 
     private lateinit var adapter: FilterOptionsAdapter
@@ -35,6 +36,7 @@ class FilterOptionsFragment : Fragment() {
         (parentFragment as FilterFragment).characteristics.observe(
             viewLifecycleOwner, Observer { characteristics ->
                 characteristics?.let {
+                    showSnackbar(it.size.toString())
                     adapter.updateList(it)
                 }
             }
@@ -44,11 +46,11 @@ class FilterOptionsFragment : Fragment() {
     }
 
 
-    fun setUpClickListeners(){
+    fun setUpClickListeners() {
 
         binding.resetFilter.setOnClickListener {
             (parentFragment as FilterFragment).filter.clear()
-            (parentFragment as FilterFragment).resetFilter=true
+            (parentFragment as FilterFragment).resetFilter = true
             adapter.notifyDataSetChanged()
         }
 
@@ -59,24 +61,24 @@ class FilterOptionsFragment : Fragment() {
 
     private fun setUpAdapter() {
         adapter = FilterOptionsAdapter(requireContext())
-        //adapter.updateList((parentFragment as FilterFragment).characteristics)
+       // adapter.updateList((parentFragment as FilterFragment).characteristics)
 
         adapter.onItemClick = {
-            (parentFragment as FilterFragment).selectedOptionId=it.id
-            (parentFragment as FilterFragment).selectedOptionTitle=it.name
-            (parentFragment as FilterFragment).selectedOption.value=it.attributes
+            (parentFragment as FilterFragment).selectedOptionId = it.id
+            (parentFragment as FilterFragment).selectedOptionTitle = it.name
+            (parentFragment as FilterFragment).selectedOption.value = it.attributes
             (parentFragment as FilterFragment).changePage(1)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (this::adapter.isInitialized)
-        {
-            adapter.filter=(parentFragment as FilterFragment).filter
+        if (this::adapter.isInitialized) {
+            adapter.filter = (parentFragment as FilterFragment).filter
             adapter.notifyDataSetChanged()
         }
     }
+
     private fun setUpRecycler() {
         binding.filterOptionsRecycler.adapter = adapter
         binding.filterOptionsRecycler.layoutManager = LinearLayoutManager(requireContext())

@@ -14,7 +14,7 @@ import uz.usoft.a24seven.network.models.Order
 import uz.usoft.a24seven.network.utils.Variables
 
 class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String = "") :
-   PagingDataAdapter<Order,MyOrderListRecyclerAdapter.ViewHolder>(ORDER) {
+    PagingDataAdapter<Order, MyOrderListRecyclerAdapter.ViewHolder>(ORDER) {
 
 
     var onItemClick: ((Order) -> Unit)? = null
@@ -40,23 +40,23 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
 
         fun bindData(order: Order) {
 
-                binding.orderStatus.setTextColor(
-                    when (orderListType) {
-                        Variables.orderType[1]!! -> {
-                            Color.parseColor("#1BC06D")
-                        }
-                        Variables.orderType[0]!! -> {
-                            Color.parseColor("#F8B068")
-                        }
-
-                        Variables.orderType[2]!! -> {
-                            Color.parseColor("#DB3022")
-                        }
-                        else -> {
-                            Color.parseColor("#1BC06D")
-                        }
+            binding.orderStatus.setTextColor(
+                when (orderListType) {
+                    Variables.orderType[1]!! -> {
+                        Color.parseColor("#1BC06D")
                     }
-                )
+                    Variables.orderType[0]!! -> {
+                        Color.parseColor("#F8B068")
+                    }
+
+                    Variables.orderType[2]!! -> {
+                        Color.parseColor("#DB3022")
+                    }
+                    else -> {
+                        Color.parseColor("#DB3022")
+                    }
+                }
+            )
 
             binding.orderStatus.text =
                 when (orderListType) {
@@ -77,17 +77,20 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
                 }
 
 
-                if(order.status==Variables.orderType[3])
-                    binding.orderStatus.text=context.getString(R.string.canceled)
+            if (order.status == Variables.orderType[3])
+                binding.orderStatus.text = context.getString(R.string.canceled)
 
 
 
-            binding.orderDate.text=order.created_at
-                binding.orderID.text=context.getString(R.string.order_number,order.id)
-                binding.orderItemCount.text=order.products_count.toString()
-                binding.orderPrice.text=context.getString(R.string.money_format_sum,order.price_products+order.price_delivery)
-            }
+            binding.orderDate.text = order.created_at
+            binding.orderID.text = context.getString(R.string.order_number, order.id)
+            binding.orderItemCount.text = order.products_count.toString()
+            binding.orderPrice.text = context.getString(
+                R.string.money_format_sum,
+                order.price_products + order.price_delivery
+            )
         }
+    }
 
 
     companion object {
@@ -95,12 +98,14 @@ class MyOrderListRecyclerAdapter(val context: Context, val orderListType: String
             DiffUtil.ItemCallback<Order>() {
             // Concert details may have changed if reloaded from the database,
             // but ID is fixed.
-            override fun areItemsTheSame(oldConcert: Order,
-                                         newConcert: Order
+            override fun areItemsTheSame(
+                oldConcert: Order,
+                newConcert: Order
             ) = oldConcert.id == newConcert.id
 
-            override fun areContentsTheSame(oldConcert: Order,
-                                            newConcert: Order
+            override fun areContentsTheSame(
+                oldConcert: Order,
+                newConcert: Order
             ) = oldConcert == newConcert
         }
     }

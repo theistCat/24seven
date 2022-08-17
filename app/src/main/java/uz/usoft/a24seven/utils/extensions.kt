@@ -62,8 +62,19 @@ import java.util.*
 fun Fragment.toDp(px: Int): Int {
     return ((requireContext().resources.displayMetrics.density * px) + 0.5f).toInt()
 }
+
 fun Activity.toDp(px: Int): Int {
     return ((this.resources.displayMetrics.density * px) + 0.5f).toInt()
+}
+
+fun View.hideKeyboard(): Boolean {
+    try {
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        return inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
+    } catch (ignored: RuntimeException) {
+    }
+    return false
 }
 
 class SpacesItemDecoration(
@@ -145,9 +156,13 @@ fun <T> LifecycleOwner.observeEvent(liveData: LiveData<Event<T>>, action: (t: Ev
     liveData.observe(this, Observer { it?.let { t -> action(t) } })
 }
 
-fun ImageView.image(context: Context, imageLink: String, placeholder: Int = R.drawable.ic__24seven_logo)
-{
-    Glide.with(context).load(imageLink).placeholder(placeholder).override(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL).into(this)
+fun ImageView.image(
+    context: Context,
+    imageLink: String,
+    placeholder: Int = R.drawable.ic__24seven_logo
+) {
+    Glide.with(context).load(imageLink).placeholder(placeholder)
+        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(this)
 }
 
 /**
@@ -180,17 +195,17 @@ fun Fragment.showActionSnackbar(
 }
 
 
-fun View.showAsProgress(){
-    val loadingAnimation= AnimationUtils.loadAnimation(this.context, R.anim.spinning)
+fun View.showAsProgress() {
+    val loadingAnimation = AnimationUtils.loadAnimation(this.context, R.anim.spinning)
     this.startAnimation(loadingAnimation)
-    this.visibility= View.VISIBLE
+    this.visibility = View.VISIBLE
 }
 
-fun View.hideProgress()
-{
+fun View.hideProgress() {
     this.clearAnimation()
-    this.visibility= View.INVISIBLE
+    this.visibility = View.INVISIBLE
 }
+
 /**
  * navigate with animations.
  * has one animation at the moment,
@@ -198,7 +213,7 @@ fun View.hideProgress()
  *
  * @return nothing
  */
-fun Fragment.navigate(resId: Int, args: Bundle? = null){
+fun Fragment.navigate(resId: Int, args: Bundle? = null) {
 
     val builder = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in)
@@ -209,7 +224,7 @@ fun Fragment.navigate(resId: Int, args: Bundle? = null){
     this.findNavController().navigate(resId, args, builder.build())
 }
 
-fun Fragment.navigate(action: NavDirections, slowLoad: Boolean = false){
+fun Fragment.navigate(action: NavDirections, slowLoad: Boolean = false) {
 
     val builder = NavOptions.Builder()
         .setEnterAnim(R.anim.slide_in)
@@ -275,7 +290,7 @@ class ImageObjectFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding= FragmentCollectionObjectBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentCollectionObjectBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -290,8 +305,7 @@ class ImageObjectFragment() : Fragment() {
                 .into(binding.imageView)
             binding.imageView.setOnClickListener {
                 Log.d("banner", imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")).toString())
-                if(imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")) == true)
-                {
+                if (imageLink?.matches(Regex("(https*:\\/\\/[a-z]+.*)")) == true) {
                     val intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(imageLink)
                     startActivity(intent)
@@ -463,7 +477,7 @@ fun EditText.hideErrorIfFilled() {
     }
 }
 
-fun EditText.showErrorIfNotFilled() :Boolean{
+fun EditText.showErrorIfNotFilled(): Boolean {
     if (this.text.toString().isEmpty()) {
         this.error = context.getString(R.string.warning_fill_the_fields)
         return false
@@ -471,7 +485,7 @@ fun EditText.showErrorIfNotFilled() :Boolean{
     return true
 }
 
-fun EditText.showErrorIfNotFilled(lay:com.google.android.material.textfield.TextInputLayout) :Boolean{
+fun EditText.showErrorIfNotFilled(lay: com.google.android.material.textfield.TextInputLayout): Boolean {
     if (this.text.toString().isEmpty()) {
         lay.error = context.getString(R.string.warning_fill_the_fields)
         return false
@@ -495,7 +509,7 @@ fun AppCompatButton.hideError() {
     this.error = null
 }
 
-fun Activity.changeAppLocale(localeCode: String, context: Context) :Context{
+fun Activity.changeAppLocale(localeCode: String, context: Context): Context {
     val resources = context.resources
     val config = resources.configuration
     config.setLocale(Locale(localeCode.toLowerCase(Locale.ROOT)))
@@ -579,19 +593,19 @@ fun Fragment.createBottomSheet(view: View): BottomSheetDialog {
  * @param msg
  */
 fun Fragment.intentShare(msg: String?, app: Int, uri: Uri?) {
-    var appName = when(app) {
+    var appName = when (app) {
         0 -> "org.telegram.messenger"
         1 -> "com.instagram.android"
         2 -> "com.facebook.katana"
-        else->"org.thunderdog.challegram"
+        else -> "org.thunderdog.challegram"
     }
 
     var isAppInstalled: Boolean = isAppAvailable(appName, requireContext().packageManager)
 
-    when(app) {
+    when (app) {
         0 -> {
             if (isAppAvailable("org.telegram.messenger.web", requireContext().packageManager)) {
-                isAppInstalled=true
+                isAppInstalled = true
                 appName = "org.telegram.messenger.web"
             }
         }
@@ -600,7 +614,7 @@ fun Fragment.intentShare(msg: String?, app: Int, uri: Uri?) {
 
     if (isAppInstalled) {
         val myIntent = Intent(Intent.ACTION_SEND)
-        myIntent.type = if(uri!=null)"image/*" else "text/plain"
+        myIntent.type = if (uri != null) "image/*" else "text/plain"
         myIntent.setPackage(appName)
         myIntent.putExtra(Intent.EXTRA_TEXT, msg) //
         // Create the URI from the media
@@ -617,28 +631,28 @@ fun Fragment.intentShare(msg: String?, app: Int, uri: Uri?) {
  * @param msg
  */
 fun Fragment.intentShareInstagram(msg: String?, app: Int) {
-    if(isAppAvailable("com.instagram.android", requireContext().packageManager)){
-    val MEDIA_TYPE_JPEG= "image/jpg"
+    if (isAppAvailable("com.instagram.android", requireContext().packageManager)) {
+        val MEDIA_TYPE_JPEG = "image/jpg"
 
-    // Define image asset URI
-    val backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here")
-    val sourceApplication = "com.my.app"
+        // Define image asset URI
+        val backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here")
+        val sourceApplication = "com.my.app"
 
 
+        // Instantiate implicit intent with ADD_TO_STORY action and background asset
+        val intent = Intent("com.instagram.share.ADD_TO_STORY")
 
-    // Instantiate implicit intent with ADD_TO_STORY action and background asset
-    val intent = Intent("com.instagram.share.ADD_TO_STORY")
+        intent.setDataAndType(backgroundAssetUri, MEDIA_TYPE_JPEG)
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
 
-    intent.setDataAndType(backgroundAssetUri, MEDIA_TYPE_JPEG)
-    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        // Instantiate activity and verify it will resolve implicit intent
 
-    // Instantiate activity and verify it will resolve implicit intent
-
-    // Instantiate activity and verify it will resolve implicit intent
-    val activity: Activity? = activity
-    if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
-        activity.startActivityForResult(intent, 0)
-    }}else {
+        // Instantiate activity and verify it will resolve implicit intent
+        val activity: Activity? = activity
+        if (activity!!.packageManager.resolveActivity(intent, 0) != null) {
+            activity.startActivityForResult(intent, 0)
+        }
+    } else {
         Toast.makeText(
             requireContext(),
             getString(R.string.app_not_installed),

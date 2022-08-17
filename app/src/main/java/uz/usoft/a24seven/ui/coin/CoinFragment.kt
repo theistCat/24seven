@@ -1,6 +1,7 @@
 package uz.usoft.a24seven.ui.coin
 
 import android.os.Bundle
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.android.ext.android.bind
@@ -32,16 +33,17 @@ class CoinFragment : BaseFragment<FragmentCoinItemsBinding>(FragmentCoinItemsBin
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-        when(data) {
+        binding.empty.isVisible = true
+
+        when (data) {
             is Int -> {
-                binding.balance.text=getString(R.string.balance_,data)
+                binding.balance.text = getString(R.string.balance_, data as Int)
             }
-            is OrderCoinProduct->
-            {
+            is OrderCoinProduct -> {
                 showSnackbar("Сделка проведена успешно")
                 viewModel.getCoins()
             }
-            else ->{
+            else -> {
                 adapter.updateList(data as ArrayList<CoinProduct>)
             }
         }
@@ -49,13 +51,13 @@ class CoinFragment : BaseFragment<FragmentCoinItemsBinding>(FragmentCoinItemsBin
 
     override fun setUpObservers() {
         super.setUpObservers()
-        observeEvent(viewModel.getCoinProductsResponse,::handle)
-        observeEvent(viewModel.getCoinResponse,::handle)
-        observeEvent(viewModel.getOrderCoinResponse,::handle)
+        observeEvent(viewModel.getCoinProductsResponse, ::handle)
+        observeEvent(viewModel.getCoinResponse, ::handle)
+        observeEvent(viewModel.getOrderCoinResponse, ::handle)
     }
 
     private fun setUpAdapter() {
-        adapter = CoinProductsListAdapter(requireContext(),isGrid = true)
+        adapter = CoinProductsListAdapter(requireContext(), isGrid = true)
 
         viewModel.getCoinProducts()
         viewModel.getCoins()
@@ -70,7 +72,7 @@ class CoinFragment : BaseFragment<FragmentCoinItemsBinding>(FragmentCoinItemsBin
                 }
                 .setPositiveButton("Обменять") { dialog, which ->
                     // Respond to positive button press
-                    viewModel.orderCoins(it.id,1)
+                    viewModel.orderCoins(it.id, 1)
                 }
                 .show()
         }

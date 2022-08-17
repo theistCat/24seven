@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.profile.myFavouriteItems
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.fragment_my_favourite_items.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,20 +27,21 @@ import uz.usoft.a24seven.ui.profile.ProfileViewModel
 import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.utils.*
 
-class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(FragmentMyFavouriteItemsBinding::inflate) {
+class MyFavouriteItemsFragment :
+    BaseFragment<FragmentMyFavouriteItemsBinding>(FragmentMyFavouriteItemsBinding::inflate) {
 
 
     private val viewModel: ProfileViewModel by viewModel()
 
     private lateinit var adapter: ProductPagingListAdapter
-    private lateinit var  sortBottomSheet: BottomSheetDialog
+    private lateinit var sortBottomSheet: BottomSheetDialog
 
-    private var orderBy=Variables.sortBy[1]?:""
-    private var _bottomSheetBinding: SortBottomsheetBinding?=null
+    private var orderBy: Map<String, String> = mapOf("sort[id]" to "desc")
+    private var _bottomSheetBinding: SortBottomsheetBinding? = null
     private val bottomSheetBinding get() = _bottomSheetBinding!!
 
-    private var updatePosition:Int=-1
-    private var updateValue:Boolean=false
+    private var updatePosition: Int = -1
+    private var updateValue: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +49,20 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
         }
         setUpAdapters()
         getFavProducts()
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.refresh.setOnRefreshListener {
+            getFavProducts()
+        }
     }
 
     override fun setUpUI() {
         super.setUpUI()
 
-        _bottomSheetBinding= SortBottomsheetBinding.inflate(layoutInflater)
+        _bottomSheetBinding = SortBottomsheetBinding.inflate(layoutInflater)
         sortBottomSheet = createBottomSheet(bottomSheetBinding.root)
     }
 
@@ -69,15 +80,16 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
         getFavProducts()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun setUpObservers() {
-        observeEvent(viewModel.favResponse,::handle)
+        observeEvent(viewModel.favResponse, ::handle)
 
         viewModel.addToCartResponse.observe(
-            viewLifecycleOwner, Observer { result->
+            viewLifecycleOwner, Observer { result ->
                 result?.let {
-                    if(it.toInt()!=-1)
-                    {
-                        PrefManager.getInstance(requireContext()).edit().putBoolean(it.toString(),true).apply()
+                    if (it.toInt() != -1) {
+                        PrefManager.getInstance(requireContext()).edit()
+                            .putBoolean(it.toString(), true).apply()
                         adapter.notifyDataSetChanged()
                     }
                 }
@@ -88,26 +100,25 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
             adapter.loadStateFlow.collectLatest { loadStates ->
                 //progressBar.isVisible = loadStates.refresh is LoadState.Loading
                 //retry.isVisible = loadState.refresh !is LoadState.Loading
-                when(loadStates.refresh)
-                {
-                    is LoadState.Error->{
+                when (loadStates.refresh) {
+                    is LoadState.Error -> {
                         hideLoadingDialog()
                         val error = loadStates.refresh as LoadState.Error
-                        if (error.error is NoConnectivityException)
-                        {
+                        if (error.error is NoConnectivityException) {
                             showNoConnectionDialog(this@MyFavouriteItemsFragment::onRetry)
-                        }
-                        else{
+                        } else {
                             showSnackbar(error.error.message.toString())
+                            binding.refresh.isRefreshing = false
                         }
                     }
-                    is LoadState.Loading->{
+                    is LoadState.Loading -> {
                         hideNoConnectionDialog()
                         showLoadingDialog()
                     }
-                    else->{
+                    else -> {
                         hideNoConnectionDialog()
                         hideLoadingDialog()
+                        binding.refresh.isRefreshing = false
                     }
                 }
 
@@ -117,8 +128,7 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-
-        adapter.update(updatePosition,updateValue)
+        adapter.update(updatePosition, updateValue)
     }
 
 
@@ -127,24 +137,24 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
         adapter.onItemClick = {
             val action =
                 MyFavouriteItemsFragmentDirections.actionNavMyFavouriteItemsToNavSelectedProduct(
-                    resources.getString(R.string.title_myFavourites),it.id
+                    resources.getString(R.string.title_myFavourites), it.id
                 )
             navigate(action)
         }
-        adapter.onFavClick = {product,position->
+        adapter.onFavClick = { product, position ->
             updatePosition = position
             updateValue = !product.is_favorite
 
-            if(!product.is_favorite) {
+            if (!product.is_favorite) {
                 viewModel.addFav(product.id)
-            }
-            else{
+            } else {
                 viewModel.removeFav(product.id)
             }
         }
 
-        adapter.addToCart={product->
-            viewModel.addToCart(CartItem(product.id,1))}
+        adapter.addToCart = { product ->
+            viewModel.addToCart(CartItem(product.id, 1))
+        }
 
     }
 
@@ -181,27 +191,28 @@ class MyFavouriteItemsFragment : BaseFragment<FragmentMyFavouriteItemsBinding>(F
 
     }
 
-    fun onSort(option: View)
-    {
-        when(option.id)
-        {
-            bottomSheetBinding.sortByNew.id->{
-                binding.sortBy.text=getString(R.string.sort_by_new)
-                orderBy= Variables.sortBy[0]!!
+    fun onSort(option: View) {
+        val queryMap = mutableMapOf<String,String>()
+        when (option.id) {
+            bottomSheetBinding.sortByNew.id -> {
+                binding.sortBy.text = getString(R.string.sort_by_new)
+                queryMap["sort[id]"] = "desc"
             }
-            bottomSheetBinding.sortByPopular.id->{
-                binding.sortBy.text=getString(R.string.sort_by_popular)
-                orderBy= Variables.sortBy[1]!!
+            bottomSheetBinding.sortByPopular.id -> {
+                queryMap["sort[views]"] = "desc"
+                binding.sortBy.text = getString(R.string.sort_by_popular)
             }
-            bottomSheetBinding.sortByCheap.id->{
-                binding.sortBy.text=getString(R.string.sort_by_cheap)
-                orderBy= Variables.sortBy[2]!!
+            bottomSheetBinding.sortByCheap.id -> {
+                queryMap["sort[price]"] = "asc"
+                binding.sortBy.text = getString(R.string.sort_by_cheap)
             }
-            bottomSheetBinding.sortByExpensive.id->{
-                binding.sortBy.text=getString(R.string.sort_by_expensive)
-                orderBy= Variables.sortBy[3]!!
+            bottomSheetBinding.sortByExpensive.id -> {
+                queryMap["sort[price]"] = "desc"
+                binding.sortBy.text = getString(R.string.sort_by_expensive)
             }
         }
+        orderBy = queryMap
+
         sortBottomSheet.dismiss()
         getFavProducts()
     }
