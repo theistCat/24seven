@@ -32,6 +32,7 @@ import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.messaging.FirebaseMessaging
+//import com.google.firebase.messaging.FirebaseMessaging
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.data.PrefManager
 import uz.usoft.a24seven.databinding.ActivityMainBinding
@@ -50,27 +51,26 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
-    companion object{
+    companion object {
 
-        lateinit var openAuthActivityCustom:ActivityResultLauncher<Intent>
-        lateinit var openSearchActivityCustom:ActivityResultLauncher<Intent>
-        lateinit var openSpeechToText:ActivityResultLauncher<Intent>
-        lateinit var requestPermissionLauncher:ActivityResultLauncher<String>
-        const val ACCESS_TOKEN="access_token"
-        const val SEARCH_RESULT="searched_product_id"
-        val RecordAudioRequestCode=120
+        lateinit var openAuthActivityCustom: ActivityResultLauncher<Intent>
+        lateinit var openSearchActivityCustom: ActivityResultLauncher<Intent>
+        lateinit var openSpeechToText: ActivityResultLauncher<Intent>
+        lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+        const val ACCESS_TOKEN = "access_token"
+        const val SEARCH_RESULT = "searched_product_id"
+        val RecordAudioRequestCode = 120
 
         private var speechRecognizer: SpeechRecognizer? = null
     }
 
-    var loadingDialog= LoaderDialogFragment()
-    private var _badge: BadgeDrawable?=null
+    var loadingDialog = LoaderDialogFragment()
+    private var _badge: BadgeDrawable? = null
     private val badge get() = _badge!!
     lateinit var bottomNavigationView: BottomNavigationView
     lateinit var drawerLayout: DrawerLayout
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-
 
 
     private val mainViewModel: MainViewModel by viewModel()
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         setTheme(R.style.Theme_24seven)
 
 
-        Log.d("loaderTag","$loadingDialog")
+        Log.d("loaderTag", "$loadingDialog")
 
 //        PrefManager.saveToken(this,"")
 //        if(PrefManager.getTheme(this)){
@@ -92,28 +92,29 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 //        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
 
-        binding= ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG)
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w("FCMTAG", "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
+        FirebaseMessaging.getInstance().subscribeToTopic("all")
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w("FCMTAG", "Fetching FCM registration token failed", task.exception)
+                    return@OnCompleteListener
+                }
 
-            // Get new FCM registration token
-            val token = task.result
-            //Hawk.put(Constants.FCM, token)
+                // Get new FCM registration token
+                val token = task.result
+                //Hawk.put(Constants.FCM, token)
 
-            // Log and toast
-            Log.d("FCMTAG", token.toString())
-        })
+                // Log and toast
+//                Log.d("FCMTAG", token.toString())
+            })
 
 
         openAuthActivityCustom =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                when(result.resultCode){
+                when (result.resultCode) {
                     Activity.RESULT_OK -> {
                         Log.d(
                             ACCESS_TOKEN, "access_token : ${
@@ -138,16 +139,17 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         openSpeechToText =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                when(result.resultCode){
+                when (result.resultCode) {
                     Activity.RESULT_OK -> {
                         val results: ArrayList<String> =
                             result?.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                                 ?: ArrayList()
                         if (navController.currentDestination?.id == R.id.nav_search) {
-                            val navHost=
+                            val navHost =
                                 (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment)
-                            val searchFragment= navHost.childFragmentManager.fragments[0] as SearchFragment
-                                searchFragment.binding.searchQuery.setText(results.joinToString())
+                            val searchFragment =
+                                navHost.childFragmentManager.fragments[0] as SearchFragment
+                            searchFragment.binding.searchQuery.setText(results.joinToString())
                         }
                     }
                     Activity.RESULT_CANCELED -> {
@@ -176,11 +178,12 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
             }
 
         MainActivity.requestPermissionLauncher.launch(
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
 
         openSearchActivityCustom =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                when(result.resultCode){
+                when (result.resultCode) {
                     Activity.RESULT_OK -> {
                         onSearchResult?.invoke(result.data?.getIntExtra(SEARCH_RESULT, 0) ?: 0)
                     }
@@ -223,8 +226,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         }
 
         binding.searchItems.setOnClickListener {
-            when(navController.currentDestination?.id)
-            {
+            when (navController.currentDestination?.id) {
                 R.id.nav_home ->
                     navController.navigate(HomeFragmentDirections.actionNavHomeToNavSearch())
                 R.id.nav_categories ->
@@ -267,10 +269,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         }
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            if(navController.currentDestination?.id != item.itemId) {
+            if (navController.currentDestination?.id != item.itemId) {
                 onNavDestinationSelected(item, navController)
-            }
-            else false
+            } else false
 
         }
 
@@ -279,13 +280,14 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
         badge.isVisible = false
         badge.number = 0
-        val uiMode=resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
-        if(uiMode == Configuration.UI_MODE_NIGHT_YES)
-            badge.backgroundColor= ContextCompat.getColor(applicationContext, R.color.color_secondary)
+        val uiMode = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+        if (uiMode == Configuration.UI_MODE_NIGHT_YES)
+            badge.backgroundColor =
+                ContextCompat.getColor(applicationContext, R.color.color_secondary)
         else
-            badge.backgroundColor= ContextCompat.getColor(applicationContext, R.color.snackbar)
+            badge.backgroundColor = ContextCompat.getColor(applicationContext, R.color.snackbar)
 
-        badge.badgeTextColor= Color.WHITE
+        badge.badgeTextColor = Color.WHITE
 
         mainViewModel.cart.observe(
             this, Observer { products ->
@@ -297,16 +299,18 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
 
         mainViewModel.getCoinResponse.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {resource->
+            it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
 
                     }
                     is Resource.Success -> {
-                        binding.coins.text=resource.data.toString()
+                        binding.coins.text = resource.data.toString()
                     }
                     is Resource.GenericError -> {
-                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
+                        showSnackbar(
+                            resource.errorResponse.jsonResponse.optString("error") ?: "error"
+                        )
                     }
                     is Resource.Error -> {
                         if (resource.exception is NoConnectivityException) {
@@ -318,7 +322,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         })
 
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        val speechRecognizerIntent =  Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        val speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
@@ -328,17 +332,18 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
 
     }
 
-    fun showLoadingDialog(){
+    fun showLoadingDialog() {
 
         val fm = supportFragmentManager
-        try{
-        fm.executePendingTransactions()}
-        catch (e:IllegalStateException){}
-        Log.d("loaderTag","${fm.findFragmentByTag("Loading")?.isAdded}")
-        if(!(loadingDialog.isAdded)) {
-                loadingDialog!!.show(fm, "Loading")
-                loadingDialog!!.isCancelable = false
-            }
+        try {
+            fm.executePendingTransactions()
+        } catch (e: IllegalStateException) {
+        }
+        Log.d("loaderTag", "${fm.findFragmentByTag("Loading")?.isAdded}")
+        if (!(loadingDialog.isAdded)) {
+            loadingDialog!!.show(fm, "Loading")
+            loadingDialog!!.isCancelable = false
+        }
     }
 
     fun hideLoadingDialog() {
@@ -346,37 +351,31 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     }
 
 
-    fun updateBadge(count: Int)
-    {
+    fun updateBadge(count: Int) {
         badge.number = count
-        if(badge.number < 1)
-        {
-                badge.isVisible = false
-                badge.clearNumber()
-        }
-        else badge.isVisible = true
+        if (badge.number < 1) {
+            badge.isVisible = false
+            badge.clearNumber()
+        } else badge.isVisible = true
     }
 
-    fun hideBottomNavigation()
-    {
+    fun hideBottomNavigation() {
         bottomNavigationView.hide()
     }
 
-    fun hideToolbar()
-    {
+    fun hideToolbar() {
         supportActionBar?.hide()
     }
 
 
-    fun showBottomNavigation()
-    {
+    fun showBottomNavigation() {
         bottomNavigationView.show()
     }
 
-    fun showToolbar()
-    {
+    fun showToolbar() {
         supportActionBar?.show()
     }
+
     fun openDrawer() {
         drawerLayout.openDrawer(GravityCompat.END)
     }
@@ -393,9 +392,9 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     override fun onResume() {
         super.onResume()
 
-        if(PrefManager.isLoggedIn(this))
+        if (PrefManager.isLoggedIn(this))
             mainViewModel.getCoins()
-        else binding.coins.text=""
+        else binding.coins.text = ""
         KeyboardEventListener(this) { isOpen ->
             if (isOpen) bottomNavigationView.hide()
         }
@@ -437,9 +436,8 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         return binding.drawerFragment
     }
 
-    fun setTitle(title: String)
-    {
-        supportActionBar?.title=title
+    fun setTitle(title: String) {
+        supportActionBar?.title = title
     }
 
     override fun onDestroy() {
@@ -468,7 +466,7 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
     }
 
     override fun attachBaseContext(newContext: Context?) {
-        val context= newContext?.let {  changeAppLocale(PrefManager.getLocale(it), it) }
+        val context = newContext?.let { changeAppLocale(PrefManager.getLocale(it), it) }
         Log.d("locale", PrefManager.getLocale(context!!))
         super.attachBaseContext(context)
     }
