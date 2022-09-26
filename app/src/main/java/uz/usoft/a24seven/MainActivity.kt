@@ -337,17 +337,17 @@ class MainActivity : AppCompatActivity(), DrawerLayout.DrawerListener {
         val fm = supportFragmentManager
         try {
             fm.executePendingTransactions()
-        } catch (e: IllegalStateException) {
+        } catch (_: IllegalStateException) {
         }
         Log.d("loaderTag", "${fm.findFragmentByTag("Loading")?.isAdded}")
         if (!(loadingDialog.isAdded)) {
-            loadingDialog!!.show(fm, "Loading")
-            loadingDialog!!.isCancelable = false
+            loadingDialog.show(fm, "Loading")
+            loadingDialog.isCancelable = false
         }
     }
 
     fun hideLoadingDialog() {
-        loadingDialog?.dismiss()
+        loadingDialog.dismiss()
     }
 
 

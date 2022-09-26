@@ -23,7 +23,7 @@ import uz.usoft.a24seven.ui.utils.BaseFragment
 import uz.usoft.a24seven.ui.news.NewsListAdapter
 import uz.usoft.a24seven.utils.*
 
-class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate){
+class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
     private var imgList = ArrayList<Banner>()
     private lateinit var pagerAdapter: ImageCollectionAdapter
@@ -34,10 +34,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private lateinit var popularProductsAdapter: ProductsListAdapter
     private lateinit var onSaleProductsAdapter: ProductsListAdapter
     private lateinit var newsAdapter: NewsListAdapter
-    private var recyclers: List<Compilation>?=null
+    private var recyclers: List<Compilation>? = null
 
-    private var updateId=-1
-    private var updateValue=false
+    private var updateId = -1
+    private var updateValue = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,21 +54,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
 
-
     override fun getData() {
         homeViewModel.getHome()
     }
 
     override fun setUpObservers() {
         observeEvent(homeViewModel.getHomeResponse, ::handle)
-        observeEvent(homeViewModel.favResponse,::handle)
+        observeEvent(homeViewModel.favResponse, ::handle)
 
 
     }
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-        when(data) {
+        when (data) {
             is HomeResponse -> {
                 recyclers = data.compilations
                 unhideRecyclers()
@@ -83,22 +82,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                     pagerAdapter.updateImageList(imgList)
                 }
             }
-            else ->{
-                    updateProductList()
+            else -> {
+                updateProductList()
             }
         }
     }
 
     private fun updateProductList() {
-        recyclers?.forEach { it->
-            when(it.title)
-            {
-                getString(R.string.new_items)->
-                    newProductsAdapter.update(updateId,updateValue)
-                getString(R.string.popular_items)->
-                    popularProductsAdapter.update(updateId,updateValue)
-//                getString(R.string.on_sale_items)->
-//                    onSaleProductsAdapter.update(updateId,updateValue)
+        recyclers?.forEach { it ->
+            when (it.title) {
+                getString(R.string.new_items) ->
+                    newProductsAdapter.update(updateId, updateValue)
+                getString(R.string.popular_items) ->
+                    popularProductsAdapter.update(updateId, updateValue)
+                getString(R.string.sales_leaders) ->
+                    onSaleProductsAdapter.update(updateId, updateValue)
+
             }
         }
     }
@@ -111,23 +110,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     override fun onError(resource: Resource.Error) {
         super.onError(resource)
-        binding.swipeToRefresh.isRefreshing=false
+        binding.swipeToRefresh.isRefreshing = false
     }
 
     override fun onGenericError(resource: Resource.GenericError) {
         super.onGenericError(resource)
-        binding.swipeToRefresh.isRefreshing=false
+        binding.swipeToRefresh.isRefreshing = false
     }
 
-    private fun showRecycler(recycler:RecyclerView,adapter: ProductsListAdapter,list:ArrayList<Product>,title:TextView,showAll:TextView)
-    {
+    private fun showRecycler(
+        recycler: RecyclerView,
+        adapter: ProductsListAdapter,
+        list: ArrayList<Product>,
+        title: TextView,
+        showAll: TextView
+    ) {
         adapter.updateList(list)
-        title.isVisible=true
-        recycler.isVisible=true
+        title.isVisible = true
+        recycler.isVisible = true
         //showAll.isVisible=true
     }
 
-    override fun setUpPagers(){
+    override fun setUpPagers() {
 
         //imgList.clear()
         pagerAdapter = ImageCollectionAdapter(this)
@@ -137,34 +141,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun setUpAdapter() {
         newProductsAdapter = ProductsListAdapter(requireContext())
-        popularProductsAdapter = ProductsListAdapter( requireContext())
+        popularProductsAdapter = ProductsListAdapter(requireContext())
         onSaleProductsAdapter = ProductsListAdapter(requireContext())
 
-        val adapterList= ArrayList<ProductsListAdapter>()
+        val adapterList = ArrayList<ProductsListAdapter>()
         adapterList.add(newProductsAdapter)
         adapterList.add(popularProductsAdapter)
         adapterList.add(onSaleProductsAdapter)
 
         adapterList.forEach {
-            it.addFav = {product->
-                updateId=product.id
-                updateValue=true
+            it.addFav = { product ->
+                updateId = product.id
+                updateValue = true
                 homeViewModel.addFav(product.id)
             }
 
-            it.removeFav = {product->
-                updateId=product.id
-                updateValue=false
+            it.removeFav = { product ->
+                updateId = product.id
+                updateValue = false
                 homeViewModel.removeFav(product.id)
             }
 
-            it.addToCart={product->
+            it.addToCart = { product ->
 
-                Log.d("addtocart","infragment")
-                homeViewModel.storeCart(CartItem(product.id,1))
+                Log.d("addtocart", "infragment")
+                homeViewModel.storeCart(CartItem(product.id, 1))
 
                 homeViewModel.addToCartResponse.observe(
-                    viewLifecycleOwner, Observer { result->
+                    viewLifecycleOwner, Observer { result ->
 
                         result.getContentIfNotHandled()?.let { resource ->
                             when (resource) {
@@ -174,8 +178,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                                 is Resource.Success -> {
                                     //viewModel.st(productsList)
                                     hideLoadingDialog()
-                                    product.is_cart=true
-                                    PrefManager.getInstance(requireContext()).edit().putBoolean(product.id.toString(),true).apply()
+                                    product.is_cart = true
+                                    PrefManager.getInstance(requireContext()).edit()
+                                        .putBoolean(product.id.toString(), true).apply()
                                     newProductsAdapter.notifyDataSetChanged()
                                     popularProductsAdapter.notifyDataSetChanged()
                                     onSaleProductsAdapter.notifyDataSetChanged()
@@ -200,7 +205,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         popularProductsAdapter.onItemClick = {
             val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.popular_items),it.id)
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(
+                    resources.getString(R.string.popular_items),
+                    it.id
+                )
             navigate(action)
         }
 
@@ -208,13 +216,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         onSaleProductsAdapter.onItemClick = {
             val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.on_sale_items),it.id)
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(
+                    resources.getString(R.string.on_sale_items),
+                    it.id
+                )
             navigate(action)
         }
 
         newProductsAdapter.onItemClick = {
             val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(resources.getString(R.string.title_newProducts),it.id)
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct(
+                    resources.getString(R.string.title_newProducts),
+                    it.id
+                )
             navigate(action)
         }
 
@@ -224,16 +238,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
         newsAdapter.onItemClick = {
 
-            val action=HomeFragmentDirections.actionNavHomeToSelectedNewsFragment(it.id)
+            val action = HomeFragmentDirections.actionNavHomeToSelectedNewsFragment(it.id)
             navigate(action)
         }
 
     }
 
     override fun setUpRecyclers() {
-        initProductRecyclers(binding.newItemsRecycler,newProductsAdapter)
-        initProductRecyclers(binding.popularItemsRecycler,popularProductsAdapter)
-        initProductRecyclers(binding.onSaleItemsRecycler,onSaleProductsAdapter)
+        initProductRecyclers(binding.newItemsRecycler, newProductsAdapter)
+        initProductRecyclers(binding.popularItemsRecycler, popularProductsAdapter)
+        initProductRecyclers(binding.onSaleItemsRecycler, onSaleProductsAdapter)
 
         binding.newsRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -242,8 +256,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     }
 
-    private fun initProductRecyclers(recycler: RecyclerView, adapter: ProductsListAdapter)
-    {
+    private fun initProductRecyclers(recycler: RecyclerView, adapter: ProductsListAdapter) {
         recycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         recycler.adapter = adapter
@@ -251,26 +264,34 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
 
-
     override fun setUpOnClickListeners() {
         binding.newItems.setOnClickListener {
-            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList),getString(R.string.new_items))
+            val action = HomeFragmentDirections.actionNavHomeToNavNewProducts(
+                ProductsList(newProductsAdapter.productsList as ArrayList),
+                getString(R.string.new_items)
+            )
             navigate(action)
         }
 
         binding.popularItems.setOnClickListener {
-            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(popularProductsAdapter.productsList as ArrayList),getString(R.string.popular_items))
+            val action = HomeFragmentDirections.actionNavHomeToNavNewProducts(
+                ProductsList(popularProductsAdapter.productsList as ArrayList),
+                getString(R.string.popular_items)
+            )
             navigate(action)
         }
 
         binding.onSaleItems.setOnClickListener {
-            val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(onSaleProductsAdapter.productsList as ArrayList),getString(R.string.on_sale_items))
+            val action = HomeFragmentDirections.actionNavHomeToNavNewProducts(
+                ProductsList(onSaleProductsAdapter.productsList as ArrayList),
+                getString(R.string.on_sale_items)
+            )
             navigate(action)
         }
 
         binding.newItemsAll.setOnClickListener {
-          //  val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))
-           // navigate(action)
+            //  val action=HomeFragmentDirections.actionNavHomeToNavNewProducts(ProductsList(newProductsAdapter.productsList as ArrayList))
+            // navigate(action)
         }
 
         binding.news.setOnClickListener {
@@ -282,9 +303,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
 
-        (requireActivity() as MainActivity).onSearchResult={
+        (requireActivity() as MainActivity).onSearchResult = {
             val action =
-                HomeFragmentDirections.actionNavHomeToNavSelectedProduct("",it)
+                HomeFragmentDirections.actionNavHomeToNavSelectedProduct("", it)
             navigate(action)
         }
 
@@ -304,17 +325,48 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         unhideRecyclers()
     }
 
-    private fun unhideRecyclers()
-    {
-        recyclers?.forEach { it->
-            when(it.title)
-            {
-                getString(R.string.new_items)->
-                    showRecycler(binding.newItemsRecycler,newProductsAdapter,it.products as ArrayList<Product>,binding.newItems,binding.newItemsAll)
-                getString(R.string.popular_items)->
-                    showRecycler(binding.popularItemsRecycler,popularProductsAdapter,it.products as ArrayList<Product>,binding.popularItems,binding.allPopularItems)
-                getString(R.string.on_sale_items)->
-                    showRecycler(binding.onSaleItemsRecycler,onSaleProductsAdapter,it.products as ArrayList<Product>,binding.onSaleItems,binding.allOnSaleItems)
+    private fun unhideRecyclers() {
+        recyclers?.forEach { it ->
+            when (it.title) {
+                getString(R.string.new_items) -> {
+                    showRecycler(
+                        binding.newItemsRecycler,
+                        newProductsAdapter,
+                        it.products as ArrayList<Product>,
+                        binding.newItems,
+                        binding.newItemsAll
+                    )
+                    if (it.products.isEmpty()) {
+                        binding.newItems.isVisible = false
+                    }
+                }
+                getString(R.string.popular_items) -> {
+                    showRecycler(
+                        binding.popularItemsRecycler,
+                        popularProductsAdapter,
+                        it.products as ArrayList<Product>,
+                        binding.popularItems,
+                        binding.allPopularItems
+                    )
+                }
+                getString(R.string.on_sale_items) -> {
+                    showRecycler(
+                        binding.onSaleItemsRecycler,
+                        onSaleProductsAdapter,
+                        it.products as ArrayList<Product>,
+                        binding.onSaleItems,
+                        binding.allOnSaleItems
+                    )
+                }
+                getString(R.string.sales_leaders) -> {
+                    showRecycler(
+                        binding.onSaleItemsRecycler,
+                        onSaleProductsAdapter,
+                        it.products as ArrayList<Product>,
+                        binding.onSaleItems,
+                        binding.allOnSaleItems
+                    )
+                }
             }
         }
     }
@@ -323,7 +375,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         return super.onOptionsItemSelected(item)
 
     }
-
 
 
 }

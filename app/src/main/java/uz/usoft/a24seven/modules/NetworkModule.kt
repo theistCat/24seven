@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit
 
 
 private const val BASE_URL: String = "http://api.24seven.uz/"
+//"http://192.168.31.212:8002/"
 
 val networkModule = module {
 
@@ -52,7 +53,7 @@ val networkModule = module {
             .addInterceptor(ConnectivityInterceptor())
             .addInterceptor(LogoutInterceptor(get()))
             .addInterceptor { chain ->
-               // val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGktc2V2ZW4udXNvZnRkZXYudXpcL1wvb2F1dGhcL3ZlcmlmeSIsImlhdCI6MTYxNzQyODI4NCwiZXhwIjoxNjQ4OTY0Mjg0LCJuYmYiOjE2MTc0MjgyODQsImp0aSI6Ikpmd1B3ZnVSOWhDbGdLWVMiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xt0S-qmV3aSUNdn6hFrtPmRIVnVODmYaFqSdNzZaaos"
+                // val token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGktc2V2ZW4udXNvZnRkZXYudXpcL1wvb2F1dGhcL3ZlcmlmeSIsImlhdCI6MTYxNzQyODI4NCwiZXhwIjoxNjQ4OTY0Mjg0LCJuYmYiOjE2MTc0MjgyODQsImp0aSI6Ikpmd1B3ZnVSOWhDbGdLWVMiLCJzdWIiOjYsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xt0S-qmV3aSUNdn6hFrtPmRIVnVODmYaFqSdNzZaaos"
                 val token = PrefManager.getToken(get())
                 val locale: String = PrefManager.getLocale(get())
                 try {
@@ -72,10 +73,10 @@ val networkModule = module {
                 }
                 return@addInterceptor chain.proceed(chain.request())
             }
-            //If debugged version, network request debugger added
-            if (BuildConfig.DEBUG) {
-                clientBuilder.addInterceptor(ChuckerInterceptor(get()))
-            }
+        //If debugged version, network request debugger added
+        if (BuildConfig.DEBUG) {
+            clientBuilder.addInterceptor(ChuckerInterceptor(get()))
+        }
         clientBuilder.build()
     }
 
