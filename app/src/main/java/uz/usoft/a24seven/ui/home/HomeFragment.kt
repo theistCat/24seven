@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import uz.usoft.a24seven.MainActivity
 import uz.usoft.a24seven.R
@@ -38,6 +39,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private var updateId = -1
     private var updateValue = false
+    private var updateValueCart = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +54,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         }
 
     }
-
 
     override fun getData() {
         homeViewModel.getHome()
@@ -80,6 +81,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         imgList.add(it)
                     }
                     pagerAdapter.updateImageList(imgList)
+                    binding.homePager.isVisible = true
                 }
             }
             else -> {
@@ -91,12 +93,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun updateProductList() {
         recyclers?.forEach { it ->
             when (it.title) {
-                getString(R.string.new_items) ->
+                getString(R.string.new_items) -> {
                     newProductsAdapter.update(updateId, updateValue)
-                getString(R.string.popular_items) ->
+                    newProductsAdapter.updateCart(updateId, updateValueCart)
+                }
+                getString(R.string.popular_items) -> {
                     popularProductsAdapter.update(updateId, updateValue)
-                getString(R.string.sales_leaders) ->
+                    popularProductsAdapter.updateCart(updateId, updateValueCart)
+                }
+                getString(R.string.sales_leaders) -> {
                     onSaleProductsAdapter.update(updateId, updateValue)
+                    onSaleProductsAdapter.updateCart(updateId, updateValueCart)
+                }
+                getString(R.string.on_sale_items) -> {
+                    onSaleProductsAdapter.update(updateId, updateValue)
+                    onSaleProductsAdapter.updateCart(updateId, updateValueCart)
+                }
 
             }
         }
@@ -132,7 +144,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     override fun setUpPagers() {
-
         //imgList.clear()
         pagerAdapter = ImageCollectionAdapter(this)
         pagerAdapter.updateImageList(imgList)
@@ -149,22 +160,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
         adapterList.add(popularProductsAdapter)
         adapterList.add(onSaleProductsAdapter)
 
-        adapterList.forEach {
-            it.addFav = { product ->
+        adapterList.forEach { adapter ->
+            adapter.addFav = { product ->
                 updateId = product.id
                 updateValue = true
                 homeViewModel.addFav(product.id)
             }
 
-            it.removeFav = { product ->
+            adapter.removeFav = { product ->
                 updateId = product.id
                 updateValue = false
                 homeViewModel.removeFav(product.id)
             }
 
-            it.addToCart = { product ->
+            adapter.addToCart = { product ->
+                updateId = product.id
+                updateValueCart = true
+                adapter.updateCart(updateId, true)
 
-                Log.d("addtocart", "infragment")
                 homeViewModel.storeCart(CartItem(product.id, 1))
 
                 homeViewModel.addToCartResponse.observe(
@@ -211,8 +224,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 )
             navigate(action)
         }
-
-
 
         onSaleProductsAdapter.onItemClick = {
             val action =
@@ -326,9 +337,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun unhideRecyclers() {
+
         recyclers?.forEach { it ->
-            when (it.title) {
-                getString(R.string.new_items) -> {
+            when (it.title.trim()) {
+                getString(R.string.new_items).trim() -> {
                     showRecycler(
                         binding.newItemsRecycler,
                         newProductsAdapter,
@@ -340,7 +352,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         binding.newItems.isVisible = false
                     }
                 }
-                getString(R.string.popular_items) -> {
+                getString(R.string.popular_items).trim() -> {
                     showRecycler(
                         binding.popularItemsRecycler,
                         popularProductsAdapter,
@@ -349,7 +361,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         binding.allPopularItems
                     )
                 }
-                getString(R.string.on_sale_items) -> {
+                getString(R.string.on_sale_items).trim() -> {
                     showRecycler(
                         binding.onSaleItemsRecycler,
                         onSaleProductsAdapter,
@@ -358,7 +370,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                         binding.allOnSaleItems
                     )
                 }
-                getString(R.string.sales_leaders) -> {
+                getString(R.string.sales_leaders).trim() -> {
                     showRecycler(
                         binding.onSaleItemsRecycler,
                         onSaleProductsAdapter,

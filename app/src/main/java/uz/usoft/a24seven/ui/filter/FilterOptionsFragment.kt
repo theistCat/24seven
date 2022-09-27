@@ -36,7 +36,6 @@ class FilterOptionsFragment : Fragment() {
         (parentFragment as FilterFragment).characteristics.observe(
             viewLifecycleOwner, Observer { characteristics ->
                 characteristics?.let {
-                    showSnackbar(it.size.toString())
                     adapter.updateList(it)
                 }
             }

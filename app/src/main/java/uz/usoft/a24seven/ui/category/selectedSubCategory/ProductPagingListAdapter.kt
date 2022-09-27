@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.category.selectedSubCategory
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,29 +18,42 @@ import uz.usoft.a24seven.databinding.ItemProductGridBinding
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.utils.image
 
-class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Product,ProductPagingListAdapter.ViewHolder>(PRODUCT)
-{
+class ProductPagingListAdapter(val context: Context) :
+    PagingDataAdapter<Product, ProductPagingListAdapter.ViewHolder>(MyDifUtils) {
 
+    object MyDifUtils : DiffUtil.ItemCallback<Product>() {
+        override fun areItemsTheSame(
+            oldItem: Product,
+            newItem: Product
+        ): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    fun update(position:Int,updateValue:Boolean)
-    {
-        getItem(position)?.is_favorite=updateValue
+        @SuppressLint("DiffUtilEquals")
+        override fun areContentsTheSame(
+            oldItem: Product,
+            newItem: Product
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+    fun update(position: Int, updateValue: Boolean) {
+        getItem(position)?.is_favorite = updateValue
         notifyItemChanged(position)
     }
 
     var onItemClick: ((Product) -> Unit)? = null
-    var onFavClick: ((Product,position:Int) -> Unit)? = null
+    var onFavClick: ((Product, position: Int) -> Unit)? = null
     var addToCart: ((Product) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductGridBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return ViewHolder(binding)
-
     }
 
 
@@ -47,14 +61,18 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
         holder.bindData(getItem(position) as Product)
     }
 
-    inner class ViewHolder(var binding: ItemProductGridBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemProductGridBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             itemView.setOnClickListener {
                 onItemClick?.invoke(getItem(bindingAdapterPosition) as Product)
             }
             binding.productIsFav.setOnClickListener {
-                onFavClick?.invoke(getItem(bindingAdapterPosition) as Product,bindingAdapterPosition)
+                onFavClick?.invoke(
+                    getItem(bindingAdapterPosition) as Product,
+                    bindingAdapterPosition
+                )
             }
             binding.addToCart.setOnClickListener {
                 addToCart?.invoke(getItem(bindingAdapterPosition) as Product)
@@ -102,21 +120,26 @@ class ProductPagingListAdapter (val context : Context): PagingDataAdapter<Produc
                             ContextCompat.getDrawable(context, R.drawable.ic_add_cart)
                     }
 
-                    binding.addToCart.isVisible=product.product_count?:0!=0
+                    binding.addToCart.isVisible = product.product_count ?: 0 != 0
                 }
             }
         }
     }
+
     companion object {
         private val PRODUCT = object :
             DiffUtil.ItemCallback<Product>() {
             // Concert details may have changed if reloaded from the database,
             // but ID is fixed.
-            override fun areItemsTheSame(oldProduct: Product,
-                                         newProduct: Product) = oldProduct.id == newProduct.id
+            override fun areItemsTheSame(
+                oldProduct: Product,
+                newProduct: Product
+            ) = oldProduct.id == newProduct.id
 
-            override fun areContentsTheSame(oldProduct: Product,
-                                            newProduct: Product) = oldProduct == newProduct
+            override fun areContentsTheSame(
+                oldProduct: Product,
+                newProduct: Product
+            ) = oldProduct == newProduct
         }
     }
 }

@@ -1,5 +1,6 @@
 package uz.usoft.a24seven.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +17,7 @@ import uz.usoft.a24seven.databinding.ItemProductGridBinding
 import uz.usoft.a24seven.network.models.Product
 import uz.usoft.a24seven.utils.image
 
-class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
+class ProductsListAdapter(val context: Context, val isGrid: Boolean = false) :
     RecyclerView.Adapter<ProductsListAdapter.ViewHolder>() {
 
     var productsList: List<Product>? = null
@@ -27,23 +28,30 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
     }
 
 
-    fun getItem(position:Int):Product?
-    {
-         productsList!!.forEach { product ->
+    fun getItem(position: Int): Product? {
+        productsList!!.forEach { product ->
             if (product.id == position)
                 return product
         }
         return null
     }
 
-    fun update(updateId:Int,updateValue:Boolean)
-    {
-        Log.d("favTag", " $updateId to $updateValue")
-        //productsList!![updateId].is_favorite=updateValue
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(updateId: Int, updateValue: Boolean) {
         this.productsList?.forEach {
-            if (it.id==updateId) {
+            if (it.id == updateId) {
                 it.is_favorite = updateValue
-                Log.d("favTag","changed")
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateCart(updateId: Int, updateValue: Boolean) {
+        this.productsList?.forEach {
+            if (it.id == updateId) {
+                it.is_cart = updateValue
+                Log.d("LOL", "updateCart: ${it.is_cart}")
                 notifyDataSetChanged()
             }
         }
@@ -52,7 +60,7 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
     var onItemClick: ((Product) -> Unit)? = null
     var addToCart: ((Product) -> Unit)? = null
 
-    var onFavClick: ((Product,position:Int) -> Unit)? = null
+    var onFavClick: ((Product, position: Int) -> Unit)? = null
     var addFav: ((Product) -> Unit)? = null
     var removeFav: ((Product) -> Unit)? = null
 
@@ -94,7 +102,10 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                             bindingAdapterPosition
                         )
 
-                        Log.d("favTag", "change ${productsList!![bindingAdapterPosition].id} at position $bindingAdapterPosition")
+                        Log.d(
+                            "favTag",
+                            "change ${productsList!![bindingAdapterPosition].id} at position $bindingAdapterPosition"
+                        )
                     }
                     binding.addToCart.setOnClickListener {
                         addToCart?.invoke(productsList!![bindingAdapterPosition] as Product)
@@ -103,7 +114,7 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
                 is ItemProductBinding -> {
                     val binding = binding as ItemProductBinding
                     binding.productIsFav.setOnClickListener {
-                        if(binding.productIsFav.isChecked)
+                        if (binding.productIsFav.isChecked)
                             addFav?.invoke(productsList!![bindingAdapterPosition])
                         else
                             removeFav?.invoke(productsList!![bindingAdapterPosition])
@@ -119,69 +130,84 @@ class ProductsListAdapter( val context: Context,val isGrid: Boolean = false) :
             when (binding) {
                 is ItemProductGridBinding -> {
                     val binding = binding as ItemProductGridBinding
-                    if(product.discount_percent>0)
-                    {
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price_discount,product.unit.name)
-                        binding.productOldPrice.text = context.getString(R.string.money_format_sum, product.price_discount)
-                        binding.productTag.text=context.getString(R.string.discount,product.discount_percent)
+                    if (product.discount_percent > 0) {
+                        binding.productPrice.text = context.getString(
+                            R.string.money_format_sum_unit,
+                            product.price_discount,
+                            product.unit.name
+                        )
+                        binding.productOldPrice.text =
+                            context.getString(R.string.money_format_sum, product.price_discount)
+                        binding.productTag.text =
+                            context.getString(R.string.discount, product.discount_percent)
+                    } else {
+                        binding.productPrice.text = context.getString(
+                            R.string.money_format_sum_unit,
+                            product.price,
+                            product.unit.name
+                        )
+                        binding.productOldPrice.visibility = View.INVISIBLE
+                        binding.productTag.isVisible = false
                     }
-                    else{
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price,product.unit.name)
-                        binding.productOldPrice.visibility= View.INVISIBLE
-                        binding.productTag.isVisible=false
-                    }
-                    binding.productCategory.text=product.category?.name
-                    binding.productComments.text=context.getString(R.string.comments_count,product.comments_count)
-                    binding.productIsFav.isChecked=product.is_favorite
-                    binding.productName.text=product.name
-                    binding.productImage.image(context,product.image!!.path_thumb)
+                    binding.productCategory.text = product.category?.name
+                    binding.productComments.text =
+                        context.getString(R.string.comments_count, product.comments_count)
+                    binding.productIsFav.isChecked = product.is_favorite
+                    binding.productName.text = product.name
+                    binding.productImage.image(context, product.image!!.path_thumb)
 
-                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(),false))
-                    {
-                        binding.addToCart.isEnabled=false
-                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_check)
-                    }
-                    else
-                    {
-                        binding.addToCart.isEnabled=true
-                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
+                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(), false)) {
+                        binding.addToCart.isEnabled = false
+                        binding.addToCart.icon =
+                            ContextCompat.getDrawable(context, R.drawable.ic_check)
+                    } else {
+                        binding.addToCart.isEnabled = true
+                        binding.addToCart.icon =
+                            ContextCompat.getDrawable(context, R.drawable.ic_add_cart)
                     }
 
 
-                    binding.addToCart.isVisible=product.product_count!=0
+                    binding.addToCart.isVisible = product.product_count != 0
                 }
                 is ItemProductBinding -> {
                     val binding = binding as ItemProductBinding
-                    if(product.discount_percent>0)
-                    {
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price_discount,product.unit.name)
-                        binding.productOldPrice.text = context.getString(R.string.money_format_sum, product.price)
-                        binding.productTag.text=context.getString(R.string.discount,product.discount_percent)
+                    if (product.discount_percent > 0) {
+                        binding.productPrice.text = context.getString(
+                            R.string.money_format_sum_unit,
+                            product.price_discount,
+                            product.unit.name
+                        )
+                        binding.productOldPrice.text =
+                            context.getString(R.string.money_format_sum, product.price)
+                        binding.productTag.text =
+                            context.getString(R.string.discount, product.discount_percent)
+                    } else {
+                        binding.productPrice.text = context.getString(
+                            R.string.money_format_sum_unit,
+                            product.price,
+                            product.unit.name
+                        )
+                        binding.productOldPrice.visibility = View.INVISIBLE
+                        binding.productTag.isVisible = false
                     }
-                    else{
-                        binding.productPrice.text = context.getString(R.string.money_format_sum_unit, product.price,product.unit.name)
-                        binding.productOldPrice.visibility= View.INVISIBLE
-                        binding.productTag.isVisible=false
-                    }
-                    binding.productCategory.text=product.category?.name
-                    binding.productComments.text=context.getString(R.string.comments_count,product.comments_count)
-                    binding.productIsFav.isChecked=product.is_favorite
-                    binding.productName.text=product.name
-                    binding.productImage.image(context,product.image!!.path_thumb)
+                    binding.productCategory.text = product.category?.name
+                    binding.productComments.text =
+                        context.getString(R.string.comments_count, product.comments_count)
+                    binding.productIsFav.isChecked = product.is_favorite
+                    binding.productName.text = product.name
+                    binding.productImage.image(context, product.image!!.path_thumb)
 
-
-                    if (PrefManager.getInstance(context).getBoolean(product.id.toString(),false))
-                    {
-                        binding.addToCart.isEnabled=false
-                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_check)
-                    }
-                    else
-                    {
-                        binding.addToCart.isEnabled=true
-                        binding.addToCart.icon= ContextCompat.getDrawable(context,R.drawable.ic_add_cart)
+                    if (product.is_cart) {
+                        binding.addToCart.isEnabled = false
+                        binding.addToCart.icon =
+                            ContextCompat.getDrawable(context, R.drawable.ic_check)
+                    } else {
+                        binding.addToCart.isEnabled = true
+                        binding.addToCart.icon =
+                            ContextCompat.getDrawable(context, R.drawable.ic_add_cart)
                     }
 
-                    binding.addToCart.isVisible=product.product_count?:0!=0
+                    binding.addToCart.isVisible = product.product_count != 0
                 }
 
             }
