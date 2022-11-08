@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="8dp"
+    android:background="@color/cardBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/cardBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:id="@+id/orderID"
+            style="@style/HeaderStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/order_number"
+            app:layout_constraintEnd_toStartOf="@id/orderDate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/orderDate"
+            style="@style/SubHeaderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="8dp"
+            android:text="05-12-2019"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/orderItemCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/order_item_count"
+            android:textColor="@color/text_color_faded"
+            app:layout_constraintStart_toStartOf="@+id/orderID"
+            app:layout_constraintTop_toBottomOf="@id/orderID" />
+
+        <TextView
+            android:id="@+id/orderItemCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:text="4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/orderItemCountText"
+            app:layout_constraintTop_toTopOf="@+id/orderItemCountText" />
+
+        <TextView
+            android:id="@+id/orderPriceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/total_price"
+            android:textColor="@color/text_color_faded"
+            app:layout_constraintStart_toStartOf="@+id/orderItemCountText"
+            app:layout_constraintTop_toBottomOf="@id/orderItemCountText" />
+
+        <TextView
+            android:id="@+id/orderPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:text="156 550 сум "
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/orderPriceText"
+            app:layout_constraintTop_toTopOf="@+id/orderPriceText" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/orderDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/more"
+            android:textColor="@color/text_color"
+            app:backgroundTint="@color/cardBackground"
+            app:cornerRadius="24dp"
+            app:elevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/orderPriceText"
+            app:strokeColor="@color/text_color"
+            app:strokeWidth="2dp" />
+
+        <TextView
+            android:id="@+id/orderStatus"
+            style="@style/SubHeaderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/in_wait"
+            android:textColor="@color/color_secondary"
+            app:layout_constraintBottom_toBottomOf="@+id/orderDetails"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/orderDetails" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

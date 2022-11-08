@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "393600297825",
+    "project_id": "seven-e6356",
+    "storage_bucket": "seven-e6356.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393600297825:android:f48fe458a3f6b012017320",
+        "android_client_info": {
+          "package_name": "a24seven.uz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393600297825-8jbjuo7gktterg7rlvjmd4982rmnj0c6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdy84WrWtJ6cfmaQw0FKxJoR3M2jJUUU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393600297825-8jbjuo7gktterg7rlvjmd4982rmnj0c6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

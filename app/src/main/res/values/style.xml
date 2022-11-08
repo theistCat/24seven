@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="HeaderStyle">
+        <item name="fontFamily">@font/golos_text_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_margin">16dp</item>
+        <!--    <item name="android:fontFamily"></item>-->
+    </style>
+
+    <style name="SubHeaderStyle">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textColor">@color/text_color_faded</item>
+        <!--    <item name="android:fontFamily"></item>-->
+    </style>
+
+    <style name="SortHeaderStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:paddingBottom">32dp</item>
+        <item name="android:textColor">@color/text_color</item>
+        <!--    <item name="android:fontFamily"></item>-->
+    </style>
+
+    <style name="EditText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/ic_input_bg</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="TextAppearance.App.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/golos_text_regular</item>
+        <item name="android:fontFamily">@font/golos_text_regular</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="paddingStart">8dp</item>
+        <item name="paddingEnd">8dp</item>
+    </style>
+
+    <style name="Widget.App.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TabLayout</item>
+        <item name="tabTextAppearance">@style/TextAppearance.App.Button</item>
+    </style>
+
+    <style name="ThemeOverlay.App.TabLayout" parent="">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorSurface">@color/text_color</item>
+        <item name="colorOnSurface">@color/text_color</item>
+    </style>
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyCustomTextAppearance</item>
+    </style>
+
+    <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="datePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/color_secondary</item>
+        <item name="colorControlActivated">@color/color_secondary</item>
+        <item name="colorControlHighlight">@color/color_secondary</item>
+        <item name="colorOnPrimary">@color/color_secondary</item>
+        <item name="colorPrimary">@color/color_secondary</item>
+    </style>
+
+    <style name="isFavourite">
+        <item name="android:button">@drawable/favourite</item>
+        <item name="android:text">@null</item>
+        <item name="android:translationX">24dp</item>
+        <item name="android:translationY">-14dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+        <item name="android:background">@color/ic_launcher_background</item>
+    </style>
+
+</resources>

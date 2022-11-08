@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#10182B</color>
+
+    <string-array name="month">
+        <item>@string/jan</item>
+        <item>@string/feb</item>
+        <item>@string/mar</item>
+        <item>@string/apr</item>
+        <item>@string/may</item>
+        <item>@string/jun</item>
+        <item>@string/jul</item>
+        <item>@string/avg</item>
+        <item>@string/sep</item>
+        <item>@string/oct</item>
+        <item>@string/nov</item>
+        <item>@string/dev</item>
+    </string-array>
+
+<!--    <string-array name="sort_options">-->
+<!--        <item >@string/sort_by_popular_key</item>-->
+<!--        <item >@string/sort_by_popular_key</item>-->
+<!--        <item >@string/sort_by_cheap_key</item>-->
+<!--        <item >@string/sort_by_expensive_key</item>-->
+<!--    </string-array>-->
+</resources>

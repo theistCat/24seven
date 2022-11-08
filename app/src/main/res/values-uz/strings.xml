@@ -1,0 +1,181 @@
+<resources>
+    <string name="app_name">24seven</string>
+    <string name="title_home">24seven</string>
+    <string name="title_dashboard">Turkum</string>
+    <string name="title_cart">Savat</string>
+    <string name="title_profile">Mening profilim</string>
+    <string name="title_newProducts">Yangi mahsulotlar</string>
+    <string name="title_myFavourites">Sevimlilar</string>
+    <string name="view_all">Hammasini ko\'rish</string>
+    <string name="warning_fill_the_fields">xato</string>
+
+    <string name="empty_cart">Savatda hech qanday\nmahsulot yo‘q</string>
+
+    <string name="popular_items">MASHHUR TOVARLAR</string>
+    <string name="on_sale_items">SKIDKA</string>
+    <string name="sales_leaders">Savdo rahbarlari</string>
+    <string name="leave_feedback"><u>Izoh qoldirish</u></string>
+    <string name="feedbacks">Izohlar</string>
+    <string name="similar_products">O\'xshash mahsulotlar</string>
+    <string name="new_items">Yangi mahsulotlar</string>
+    <string name="news">Yangiliklar va aksiyalar</string>
+    <string name="total">Jami:</string>
+    <string name="check_out">Buyurtma berish</string>
+    <string name="choose_subCategory">Pastki turkumni tanlang</string>
+    <string name="sort">Tartiblash</string>
+    <string name="filter">Filtr</string>
+    <string name="barcodescannerborder">barcodescannerborder</string>
+    <string name="barcodescannerbordersecond">barcodescannerbordersecond</string>
+    <string name="delivery_address">Yetkazib berish manzili</string>
+    <string name="give_address">Yoki ko\'rsating</string>
+    <string name="phone_number">Telefon raqami*</string>
+    <string name="extra_phone_number">Qo\'shimcha telefon raqami*</string>
+    <string name="address">Manzil*</string>
+    <string name="district">Tuman*</string>
+    <string name="city">Shahar*</string>
+    <string name="from_map"><u>Xaritada</u></string>
+    <string name="payment_method">To\'lov</string>
+    <string name="payme">PayMe</string>
+    <string name="click">Click</string>
+    <string name="cash">Naqd</string>
+    <string name="order_price">Buyurtma:</string>
+    <string name="delivery_price">Yetkazib berish:</string>
+    <string name="confirm_order">BUYURTMANI TASDIQLASH</string>
+    <string name="done">Tayyor</string>
+    <string name="reset">Filtrni qayta tiklash</string>
+    <string name="share">Ulashish:</string>
+    <string name="other_news">Boshqa yangiliklar</string>
+    <string name="show_on_map"><u>Xaritada ko\'rsatish</u></string>
+    <string name="save_address">Manzilni saqlash</string>
+    <string name="address_name">Nomi*</string>
+    <string name="add_address">Manzilni qo\'shish</string>
+    <string name="delete_address"><u>Manzilni o\'chirish</u></string>
+    <string name="order_info">Buyurtma haqida ma\'lumot</string>
+    <string name="order_number">Buyurtma №%d</string>
+    <string name="order_time">Buyurtma vaqti:</string>
+    <string name="order_item_count">Miqdori:</string>
+    <string name="order_address">Yetkazib berish manzili:</string>
+    <string name="payment_Method">To\'lov usuli:</string>
+    <string name="order_total">Yakuniy narx:</string>
+    <string name="cancel_order">Buyurtmani bekor qilish</string>
+    <string name="save">Saqlash</string>
+    <string name="my_orders">Mening buyurtmalarim</string>
+    <string name="favourite">Tanlangan mahsulotlar</string>
+    <string name="my_addresses">Manzil kitobi</string>
+    <string name="my_pay_method">To\'lov usullari</string>
+    <string name="settings">Sozlamalar</string>
+    <string name="personal_info">Shaxsiy ma\'lumotlar</string>
+    <string name="fio">FISH*</string>
+    <string name="dob">Tug\'ilgan sanasi*</string>
+    <string name="gender">Jinsi*</string>
+    <string name="male">Erkak</string>
+    <string name="female">Ayol</string>
+    <string name="change_password">Parolni o\'zgartirish</string>
+    <string name="change_language">Tilni o\'zgartirish</string>
+    <string name="save_changes">O\'zgarishlarni saqlash</string>
+    <string name="set_as_default">Standart to\'lov usuli sifatida foydalanish</string>
+    <string name="edit">O\'zgartirish</string>
+    <string name="in_wait">Kutishda</string>
+    <string name="active">Faollar</string>
+    <string name="delivered">Yetkazib berildi</string>
+    <string name="more">Batafsil</string>
+    <string name="total_price">Umumiy qiymati:</string>
+
+
+    <string name="money_format_sum_unit">%2$s uchun %1$,d so\'m</string>
+    <string name="money_format_sum">%,d so\'m</string>
+    <string name="money_format_sum_unit_two_lines">%1$,d so\'m \n%2$s uchun </string>
+    <string name="comments_count">Izohlar (%d)</string>
+    <string name="discount">-%d%%</string>
+    <string name="money_format_sum_string">%s so\'m</string>
+    <string name="count_with_unit_">Miqdori: %d %s</string>
+
+
+    <string name="no_connectivity_exception">\"Server bilan aloqa yo\'q. \nEhtimol tarmoq o\'chirilgan!\"</string>
+    <string name="no_connection">Aloqa yo\'q!</string>
+    <string name="no_connection_try_again">Iltimos\, internetni tekshiring \n yana urinib ko\'ring</string>
+    <string name="try_again">Yana urinib ko\'ring</string>
+
+    <string name="jan">Yanvar</string>
+    <string name="feb">Fevral</string>
+    <string name="mar">Mart</string>
+    <string name="apr">Aprel</string>
+    <string name="may">May</string>
+    <string name="jun">Iyun</string>
+    <string name="jul">Iyul</string>
+    <string name="avg">Avgust</string>
+    <string name="sep">Sentabr</string>
+    <string name="oct">Oktabr</string>
+    <string name="nov">Noyabr</string>
+    <string name="dev">Dekabr</string>
+
+    <string name="title_activity_auth">Avtorizatsiya</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="user_guide">Foydalanuvchi uchun qo\'llanma</string>
+    <string name="send_code_again"><u>Kodni yana bir bor yuboring</u></string>
+    <string name="logout">Chiqish</string>
+    <string name="order_count">%d ta buyurtma</string>
+    <string name="address_count">%d ta manzil</string>
+    <string name="items_count">%d ta mahsulot</string>
+    <string name="settings_options">Shaxsiy ma\'lumotlar</string>
+    <string name="pls_your_comments">Iltimos, mahsulot haqida fikringizni baham ko\'ring</string>
+    <string name="your_comments">Sizning izohlaringiz</string>
+    <string name="leave_comment">IZOH YUBORISH</string>
+    <string name="saved_addresses">Saqlangan manzillar</string>
+    <string name="no_orders">Buyurtmalar yo\'q</string>
+    <string name="no_order">Buyurtma yo\'q!</string>
+    <string name="go_shopping">Siz hali buyurtma bermadingiz! Quyidagi tugmani bosing va mahsulotni buyurtma qiling</string>
+    <string name="start_shopping">XARIDNI BOSHLASH</string>
+    <string name="search">Qidiruv</string>
+    <string name="sort_by">Tartiblash</string>
+    <string name="sort_by_new">Eng yangi</string>
+    <string name="sort_by_popular">Mashhur</string>
+    <string name="sort_by_cheap">Narx: eng pastdan yuqoriga</string>
+    <string name="sort_by_expensive">Narx: eng yuqoridan eng pastga</string>
+    <string name="add_to_cart">Savatga</string>
+    <string name="in_cart">Savatda</string>
+    <string name="dark_theme">Qora mavzu</string>
+    <string name="select_address">Manzilni tanlang</string>
+    <string name="detecting_address">manzilni aniqlash</string>
+    <string name="warning_enable_permission">ruxsat berish</string>
+    <string name="any">Istalgan</string>
+    <string name="transfer">Pul ko\'chirish</string>
+    <string name="characteristics">Mahsulotning xususiyatlari</string>
+    <string name="success">muvaffaqiyatli</string>
+    <string name="tour_comment_in_review">izohlaringiz</string>
+    <string name="somethign_went_wrong">Nimadir noto\'g\'ri ketdi.</string>
+    <string name="no_addresses">manzillar yo\'q</string>
+    <string name="loading_error">Yuklash Xatosi</string>
+    <string name="error_name">ism</string>
+    <string name="error_last_name">familiya</string>
+    <string name="error_year">yil</string>
+    <string name="error_month">oy</string>
+    <string name="error_day">kun</string>
+    <string name="speak_to_text">Speak to text</string>
+    <string name="app_not_installed">Ilova o\'rnatilmagan</string>
+    <string name="n_n">Xaridni davom ettirish uchun\n iltimos telefon raqami\n orqali avtorizatsiyadan o\'ting</string>
+    <string name="input_phone">Telefon raqamini kiriting</string>
+    <string name="input_code">SMS kodini kiriting</string>
+    <string name="get_code">SMS kodini olish</string>
+    <string name="russian">Rus tili</string>
+    <string name="uzbek">O\'zbek tili</string>
+    <string name="cant_find_location">Manzilingizni xarita bo\'yicha aniqlay olmadik</string>
+    <string name="city_street_apt">Shahar, ko\'cha, uy</string>
+    <string name="canceled">Bekor qilingan</string>
+    <string name="chose_address">Kartadan adres tanlang</string>
+    <string name="balance_">Balans: %d</string>
+    <string name="change_region">Region</string>
+    <string name="out_of_stock">Mavjud emas</string>
+
+    <string name="policy"><u>Foydalanuvchi uchun qo\'llanma</u></string>
+    <string name="policy_"> <b>\t\tИНТЕЛЛЕКТУАЛ МУЛКНИ ҲИМОЯ ҚИЛИШ.</b> \n\n\t\t* 24seven сайтида жойлаштирилган барча матнли маълумотлар ва график тасвирлар 24seven мулки ҳисобланади. Бундай ахборот ва/ёки тасвирларнинг учинчи шахслар томонидан 24seven розилигисиз фойдаланиш 24seven ҳуқуқларининг бузилиши ҳисобланади ва Ўзбекистон Республикасининг амалдаги қонунчилигида назарда тутилган жавобгарликка олиб келиши мумкин. БОШҚА ШАРТЛАР. \n\t\t* Харидор ва 24seven ўртасидаги муносабатларга, ушбу шартномада тартибга солинмаган жойларида Ўзбекистон Республикаси қонунчилиги қўлланилади. \n\t\t* Харидор 24seven тизимида харидорни рўйхатга олишда, шу жумладан 24seven тизимида \'шахсий маълумотлар тўғрисида\' ги Ўзбекистон Республикаси қонунида назарда тутилган ҳаракатларни амалга оширишда харидор томонидан кўрсатилган шахсий маълумотларни қайта ишлашга розилик беради. \n\t\t* 24seven га харидор томонидан саволлар ва шикоятлар келиб тушган тақдирда, у уларни қуйидаги усуллардан бири билан эълон қилиши мумкин: \n\t\t* 24seven 95 146 24 24 телефон рақамига қўнғироқ қилинг; \n\t\t* почта орқали қуйидаги манзилга ёзма равишда 24seven: 100000 Тошкент шаҳри, Шайхонтохур тумани, Ахмад Рахмад кўчаси, 8/2-уй. \n\t\t* 24seven манзилига электрон хат юбориш: инфо@24seven.uz \n\t\t* 24seven ушбу оферта матнини янги таҳрирдаги сайтга жойлаштириш орқали исталган вақтда ушбу оферта шартларига ўзгартириш киритиш ҳуқуқига эга www. 24seven.uz. таклифлар матни сайтда янги таҳрирда жойлаштирилган санадан бошлаб харидорлар ва учинчи шахслар учун ўзгаришлар кучга киради www. 24seven.uz 24seven ёки таклифда кўрсатилган сана. \n\t\t* Товарларни етказиб беришдан тушадиган барча солиқлар, бошқа мажбурий тўловлар Агент томонидан мустақил равишда тўланади. 24seven Агент солиқ ва бошқа мажбурий тўловларни тўламаганлиги учун жавобгар эмас. \n\t\t* Сайт бўлими www. 24seven.uz \'24seven тўлови ва хизматлари\' офертанинг ажралмас қисми ҳисобланади.</string>
+    <string name="statistics">Статистика</string>
+
+
+    <!--    <string name="sort_by_new_key" translatable="false">new</string>-->
+    <!--    <string name="sort_by_popular_key" translatable="false">popular</string>-->
+    <!--    <string name="sort_by_cheap_key" translatable="false">cheap</string>-->
+    <!--    <string name="sort_by_expensive_key" translatable="false">expensive</string>-->
+
+</resources>

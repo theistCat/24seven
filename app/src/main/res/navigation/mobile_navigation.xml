@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_home">
+
+    <!--    home-->
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="a24seven.uz.ui.home.HomeFragment"
+        android:label=""
+        >
+        <action
+            android:id="@+id/action_nav_home_to_nav_newProducts"
+            app:destination="@id/nav_newProducts"
+            app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_home_to_nav_selectedProduct"
+            app:destination="@id/nav_selectedProduct"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_nav_home_to_newsFragment"
+            app:destination="@id/nav_news"
+            app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_home_to_selectedNewsFragment"
+            app:destination="@id/nav_selectedNews"
+            app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_home_to_nav_myFavouriteItems"
+            app:destination="@id/nav_myFavouriteItems"
+            app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_home_to_nav_barcodeScanner"
+            app:destination="@id/nav_barcodeScanner"
+            app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_nav_home_to_nav_search"
+            app:destination="@id/nav_search" />
+        <action
+            android:id="@+id/action_nav_home_to_coinFragment"
+            app:destination="@id/nav_coin"
+            app:popUpTo="@id/nav_home" />
+    </fragment>
+
+    <!--    categories-->
+    <fragment
+        android:id="@+id/nav_categories"
+        android:name="a24seven.uz.ui.category.CategoryFragment"
+        android:label=""
+        >
+        <action
+            android:id="@+id/action_nav_categories_to_subCategoriesFragment"
+            app:destination="@id/nav_subCategories"
+            app:popUpTo="@id/nav_categories"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_categories_to_nav_search"
+            app:destination="@id/nav_search" />
+    </fragment>
+
+    <!--    subCategories-->
+    <fragment
+        android:id="@+id/nav_subCategories"
+        android:name="a24seven.uz.ui.category.subCategory.SubCategoriesFragment"
+        android:label="">
+        <action
+            android:id="@+id/action_nav_subCategories_to_nav_selectedSubCategory"
+            app:destination="@id/nav_selectedSubCategory"
+            app:popUpTo="@id/nav_subCategories"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <argument
+            android:name="subCategories"
+            app:argType="a24seven.uz.network.models.SubCategoriesObject" />
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_nav_subCategories_self"
+            app:destination="@id/nav_subCategories"
+            app:popUpTo="@id/nav_subCategories"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_subCategories_to_nav_search"
+            app:destination="@id/nav_search" />
+    </fragment>
+
+    <!--    selectedSubCategory-->
+    <fragment
+        android:id="@+id/nav_selectedSubCategory"
+        android:name="a24seven.uz.ui.category.selectedSubCategory.SelectedSubCategoryFragment"
+        android:label="">
+        <argument
+            android:name="subCategoryName"
+            app:argType="string"
+            android:defaultValue=""  />
+        <action
+            android:id="@+id/action_nav_selectedSubCategory_to_nav_selectedProduct"
+            app:destination="@id/nav_selectedProduct"
+            app:popUpTo="@id/nav_selectedSubCategory"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <argument
+            android:name="subCategoryId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_nav_selectedSubCategory_to_nav_search"
+            app:destination="@id/nav_search" />
+    </fragment>
+
+    <!--    cart-->
+    <fragment
+        android:id="@+id/nav_cart"
+        android:name="a24seven.uz.ui.cart.CartFragment"
+        android:label="">
+        <action
+            android:id="@+id/action_nav_cart_to_nav_checkOut"
+            app:destination="@id/nav_checkOut"
+            app:popUpTo="@id/nav_cart"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    profile-->
+    <fragment
+        android:id="@+id/nav_profile"
+        android:name="a24seven.uz.ui.profile.ProfileFragment"
+        android:label="">
+        <action
+            android:id="@+id/action_nav_profile_to_nav_myOrders"
+            app:destination="@id/nav_myOrders"
+            app:popUpTo="@id/nav_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_nav_profile_to_nav_addressList"
+            app:destination="@id/nav_addressList"
+            app:popUpTo="@id/nav_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_nav_profile_to_nav_myPaymentMethod"
+            app:destination="@id/nav_myPaymentMethod"
+            app:popUpTo="@id/nav_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_nav_profile_to_nav_profileSettings"
+            app:destination="@id/nav_profileSettings"
+            app:popUpTo="@id/nav_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_nav_profile_to_nav_myFavouriteItems"
+            app:destination="@id/nav_myFavouriteItems"
+            app:popUpTo="@id/nav_profile"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    newProducts-->
+    <fragment
+        android:id="@+id/nav_newProducts"
+        android:name="a24seven.uz.ui.products.NewProductsFragment"
+        android:label="@string/title_newProducts">
+        <action
+            android:id="@+id/action_nav_newProducts_to_nav_selectedProduct"
+            app:destination="@id/nav_selectedProduct"
+            app:popUpTo="@id/nav_newProducts"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <argument
+            android:name="products"
+            app:argType="a24seven.uz.network.models.ProductsList" />
+        <argument
+            android:name="subCategoryName"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+
+    <!--    selectedProducts-->
+    <fragment
+        android:id="@+id/nav_selectedProduct"
+        android:name="a24seven.uz.ui.products.SelectedProductFragment"
+        android:label="">
+        <argument
+            android:name="selectedCategoryName"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="productId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_nav_selectedProduct_self"
+            app:destination="@id/nav_selectedProduct" />
+    </fragment>
+
+    <!--    checkOut-->
+    <fragment
+        android:id="@+id/nav_checkOut"
+        android:name="a24seven.uz.ui.checkout.CheckOutFragment"
+        android:label="Оформить заказ">
+        <action
+            android:id="@+id/action_nav_checkOut_to_nav_myOrders"
+            app:destination="@id/nav_myOrders"
+            app:popUpTo="@id/nav_home"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <argument
+            android:name="checkOutData"
+            app:argType="a24seven.uz.network.models.CheckOutData" />
+        <action
+            android:id="@+id/action_nav_checkOut_to_nav_map"
+            app:destination="@id/nav_map"
+            app:popUpTo="@id/nav_checkOut" />
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="region"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="city"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="point"
+            app:argType="a24seven.uz.network.models.LocPoint"
+            app:nullable="true" />
+        <argument
+            android:name="addAddressData"
+            app:argType="a24seven.uz.ui.profile.myAddresses.AddAddressData"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <!--    myOrders-->
+    <fragment
+        android:id="@+id/nav_myOrders"
+        android:name="a24seven.uz.ui.profile.myOrders.MyOrdersFragment"
+        android:label="Мои заказы">
+        <action
+            android:id="@+id/action_nav_myOrders_to_nav_selectedOrder"
+            app:destination="@id/nav_selectedOrder"
+            app:popUpTo="@id/nav_myOrders"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    selectedOrder-->
+    <fragment
+        android:id="@+id/nav_selectedOrder"
+        android:name="a24seven.uz.ui.profile.myOrders.SelectedOrderFragment"
+        android:label="Мои заказы" >
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+    </fragment>
+
+    <!--    activeOrders-->
+    <fragment
+        android:id="@+id/myActiveOrdersListFragment"
+        android:name="a24seven.uz.ui.profile.myOrders.orderLists.MyActiveOrdersListFragment"
+        android:label="fragment_my_active_orders_list">
+        <action
+            android:id="@+id/action_myActiveOrdersListFragment_to_nav_selectedOrder"
+            app:destination="@id/nav_selectedOrder"
+            app:popUpTo="@id/myActiveOrdersListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+    </fragment>
+
+    <!--    deliveredOrders-->
+    <fragment
+        android:id="@+id/myDeliveredOrdersListFragment"
+        android:name="a24seven.uz.ui.profile.myOrders.orderLists.MyDeliveredOrdersListFragment"
+        android:label="fragment_my_delivered_orders">
+        <action
+            android:id="@+id/action_myDeliveredOrdersListFragment_to_nav_selectedOrder"
+            app:destination="@id/nav_selectedOrder"
+            app:popUpTo="@id/myDeliveredOrdersListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    inactiveOrders-->
+    <fragment
+        android:id="@+id/myInactiveOrdersListFragment"
+        android:name="a24seven.uz.ui.profile.myOrders.orderLists.MyInactiveOrdersListFragment"
+        android:label="fragment_my_inactive_orders">
+        <action
+            android:id="@+id/action_myInactiveOrdersListFragment_to_nav_selectedOrder"
+            app:destination="@id/nav_selectedOrder"
+            app:popUpTo="@id/myInactiveOrdersListFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+    </fragment>
+
+    <!--    addressList-->
+    <fragment
+        android:id="@+id/nav_addressList"
+        android:name="a24seven.uz.ui.profile.myAddresses.AddressListFragment"
+        android:label="Адреса доставки">
+        <action
+            android:id="@+id/action_nav_addressList_to_selectedAddressFragment"
+            app:destination="@id/nav_selectedAddress"
+            app:popUpTo="@id/nav_addressList"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <action
+            android:id="@+id/action_nav_addressList_to_nav_addAddress"
+            app:destination="@id/nav_addAddress"
+            app:popUpTo="@id/nav_addressList"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    selectedAddress-->
+    <fragment
+        android:id="@+id/nav_selectedAddress"
+        android:name="a24seven.uz.ui.profile.myAddresses.SelectedAddressFragment"
+        android:label="Адреса доставки"
+        >
+        <argument
+            android:name="addressId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_nav_selectedAddress_to_nav_map"
+            app:destination="@id/nav_map" />
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="region"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="city"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="point"
+            app:argType="a24seven.uz.network.models.LocPoint"
+            app:nullable="true" />
+        <argument
+            android:name="addAddressData"
+            app:argType="a24seven.uz.ui.profile.myAddresses.AddAddressData"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <!--    addAddress-->
+    <fragment
+        android:id="@+id/nav_addAddress"
+        android:name="a24seven.uz.ui.profile.myAddresses.AddAddressFragment"
+        android:label="Добавить адрес"
+        >
+        <action
+            android:id="@+id/action_nav_addAddress_to_nav_map"
+            app:destination="@id/nav_map"
+            app:popUpTo="@id/nav_addAddress" />
+        <argument
+            android:name="address"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="region"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="city"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="point"
+            app:argType="a24seven.uz.network.models.LocPoint"
+            app:nullable="true" />
+        <argument
+            android:name="addAddressData"
+            app:argType="a24seven.uz.ui.profile.myAddresses.AddAddressData"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <!--    paymentMethods-->
+    <fragment
+        android:id="@+id/nav_myPaymentMethod"
+        android:name="a24seven.uz.ui.profile.paymentMethod.MyPaymentMethodFragment"
+        android:label="Способы оплаты"
+       />
+
+    <!--    profileSettings-->
+    <fragment
+        android:id="@+id/nav_profileSettings"
+        android:name="a24seven.uz.ui.profile.ProfileSettingsFragment"
+        android:label="Настройки" />
+
+    <!--    favourites-->
+    <fragment
+        android:id="@+id/nav_myFavouriteItems"
+        android:name="a24seven.uz.ui.profile.myFavouriteItems.MyFavouriteItemsFragment"
+        android:label="@string/title_myFavourites"
+        >
+        <action
+            android:id="@+id/action_nav_myFavouriteItems_to_nav_selectedProduct"
+            app:destination="@id/nav_selectedProduct"
+            app:popUpTo="@id/nav_myFavouriteItems"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    barcodeScanner-->
+    <fragment
+        android:id="@+id/nav_barcodeScanner"
+        android:name="a24seven.uz.ui.barcodeScanner.BarcodeScannerFragment"
+        android:label="Сканер штрих-кода"
+        />
+
+    <!--    news-->
+    <fragment
+        android:id="@+id/nav_news"
+        android:name="a24seven.uz.ui.news.NewsFragment"
+        android:label="Новости и акции"
+        >
+        <action
+            android:id="@+id/action_nav_news_to_selectedNewsFragment"
+            app:destination="@id/nav_selectedNews"
+            app:popUpTo="@id/nav_news"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+    </fragment>
+
+    <!--    selectedNews-->
+    <fragment
+        android:id="@+id/nav_selectedNews"
+        android:name="a24seven.uz.ui.news.SelectedNewsFragment"
+        android:label="Новости и акции"
+        >
+        <action
+            android:id="@+id/action_nav_selectedNews_self"
+            app:destination="@id/nav_selectedNews"
+            app:popUpTo="@id/nav_selectedNews"
+            app:popUpToInclusive="true"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out" />
+        <argument
+            android:name="newsId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_noConnectionFragment"
+        android:name="a24seven.uz.ui.noConnection.NoConnectionFragment"
+        android:label="fragment_no_connection"
+        tools:layout="@layout/fragment_no_connection" />
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="a24seven.uz.ui.seach.SearchFragment"
+        android:label="@string/search"
+        tools:layout="@layout/fragment_search" >
+
+        <action
+            android:id="@+id/action_nav_search_to_nav_selectedProduct"
+            app:destination="@id/nav_selectedProduct" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_map"
+        android:name="a24seven.uz.ui.map.MapFragment"
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_nav_map_to_nav_checkOut"
+            app:destination="@id/nav_checkOut" />
+
+        <argument
+            android:name="checkOutData"
+            app:argType="a24seven.uz.network.models.CheckOutData"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_nav_map_to_nav_addAddress"
+            app:destination="@id/nav_addAddress"
+            app:popUpTo="@id/nav_addAddress" />
+        <argument
+            android:name="fromDestination"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_nav_map_to_nav_selectedAddress"
+            app:destination="@id/nav_selectedAddress" />
+        <argument android:name="addressId"
+            app:argType="integer"/>
+        <argument
+            android:name="addAddressData"
+            app:argType="a24seven.uz.ui.profile.myAddresses.AddAddressData"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_coin"
+        android:name="a24seven.uz.ui.coin.CoinFragment"
+        android:label="Coins" />
+
+</navigation>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/background"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/HeaderStyle"
+            android:layout_gravity="center"
+            android:text="@string/sort_by" />
+
+        <TextView
+            android:id="@+id/sortByNew"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/SortHeaderStyle"
+            android:text="@string/sort_by_new" />
+
+        <TextView
+            android:id="@+id/sortByPopular"
+            style="@style/SortHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_popular" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/textView30"-->
+<!--            style="@style/SortHeaderStyle"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="по название" />-->
+
+        <TextView
+            android:id="@+id/sortByCheap"
+            style="@style/SortHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_cheap" />
+
+        <TextView
+            android:id="@+id/sortByExpensive"
+            style="@style/SortHeaderStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sort_by_expensive" />
+
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
