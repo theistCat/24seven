@@ -1,9 +1,30 @@
 package a24seven.uz.ui.products
 
+import a24seven.uz.R
+import a24seven.uz.data.PrefManager
+import a24seven.uz.databinding.FeedbackBottomsheetBinding
+import a24seven.uz.databinding.FragmentSelectedProductBinding
+import a24seven.uz.network.models.CartItem
+import a24seven.uz.network.models.Characteristics
+import a24seven.uz.network.models.Comment
+import a24seven.uz.network.models.Unit
+import a24seven.uz.network.utils.Event
+import a24seven.uz.network.utils.NoConnectivityException
+import a24seven.uz.network.utils.Resource
+import a24seven.uz.ui.home.ProductsListAdapter
+import a24seven.uz.ui.utils.BaseFragment
+import a24seven.uz.utils.SpacesItemDecoration
+import a24seven.uz.utils.createBottomSheet
+import a24seven.uz.utils.navigate
+import a24seven.uz.utils.observe
+import a24seven.uz.utils.observeEvent
+import a24seven.uz.utils.setUpViewPager
+import a24seven.uz.utils.showActionSnackbar
+import a24seven.uz.utils.showSnackbar
+import a24seven.uz.utils.toDp
 import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
@@ -12,30 +33,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import a24seven.uz.R
-import a24seven.uz.data.PrefManager
-import a24seven.uz.databinding.FeedbackBottomsheetBinding
-import a24seven.uz.databinding.FragmentSelectedProductBinding
-import a24seven.uz.network.models.CartItem
-import a24seven.uz.network.models.Characteristics
-import a24seven.uz.network.models.Comment
-import a24seven.uz.ui.utils.BaseFragment
-import a24seven.uz.network.models.Unit
-import a24seven.uz.network.utils.Event
-import a24seven.uz.network.utils.NoConnectivityException
-import a24seven.uz.network.utils.Resource
-import a24seven.uz.utils.SpacesItemDecoration
-import a24seven.uz.utils.navigate
-import a24seven.uz.utils.observe
-import a24seven.uz.utils.observeEvent
-import a24seven.uz.utils.setUpViewPager
-import a24seven.uz.utils.showActionSnackbar
-import a24seven.uz.utils.showSnackbar
-import a24seven.uz.utils.toDp
-import a24seven.uz.ui.home.ProductsListAdapter
-import a24seven.uz.utils.*
 
-class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(FragmentSelectedProductBinding::inflate) {
+class SelectedProductFragment :
+    BaseFragment<FragmentSelectedProductBinding>(FragmentSelectedProductBinding::inflate) {
 
     private lateinit var pagerAdapter: ImagesAdapter
     private lateinit var similarItemAdapter: ProductsListAdapter
@@ -44,18 +44,18 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     private val productViewModel: ProductViewModel by viewModel()
     private val safeArgs: SelectedProductFragmentArgs by navArgs()
     private val imgList = ArrayList<String>()
-    private lateinit var feedbackBottomSheet : BottomSheetDialog
-    private var _feedbackBottomSheetBinding : FeedbackBottomsheetBinding?=null
+    private lateinit var feedbackBottomSheet: BottomSheetDialog
+    private var _feedbackBottomSheetBinding: FeedbackBottomsheetBinding? = null
     private val feedbackBottomSheetBinding get() = _feedbackBottomSheetBinding!!
-    private var updateStatus=false
-    private var count=1
-    private var unit: Unit?=null
-    private var inCart=false
+    private var updateStatus = false
+    private var count = 1
+    private var unit: Unit? = null
+    private var inCart = false
 
-    private var updateId=-1
-    private var updateValue=false
-    private var addSimilarToCart=false
-    private var addSimilarToCartId=0
+    private var updateId = -1
+    private var updateValue = false
+    private var addSimilarToCart = false
+    private var addSimilarToCartId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,13 +78,13 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     private fun update() {
         lifecycleScope.launch {
-            productViewModel.updateCart(CartItem(safeArgs.productId,count))
+            productViewModel.updateCart(CartItem(safeArgs.productId, count))
         }
     }
 
     private fun remove() {
         lifecycleScope.launch {
-            productViewModel.deleteItem(CartItem(safeArgs.productId,count))
+            productViewModel.deleteItem(CartItem(safeArgs.productId, count))
         }
     }
 
@@ -98,14 +98,15 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
     }
 
     override fun setUpRecyclers() {
-        binding.similarItemsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.similarItemsRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.similarItemsRecycler.adapter = similarItemAdapter
         binding.similarItemsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), false))
 
 
-        binding.characteristicsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.characteristicsRecycler.adapter = characteristicsListAdapter
-        binding.characteristicsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true,span = 1))
+//        binding.characteristicsRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+//        binding.characteristicsRecycler.adapter = characteristicsListAdapter
+//        binding.characteristicsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16), true,span = 1))
 
         binding.feedbackRecycler.adapter = feedbackListAdapter
         binding.feedbackRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -119,16 +120,16 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
         binding.addProductToCart.setOnClickListener {
 
-            productViewModel.storeCart(CartItem(safeArgs.productId,count))
-           // productViewModel.addToCartWithoutEmit(CartItem(safeArgs.productId,count))
+            productViewModel.storeCart(CartItem(safeArgs.productId, count))
+            // productViewModel.addToCartWithoutEmit(CartItem(safeArgs.productId,count))
         }
 
 
         binding.isFavourite.setOnClickListener {
-            updateStatus = if(binding.isFavourite.isChecked){
+            updateStatus = if (binding.isFavourite.isChecked) {
                 productViewModel.addFav(safeArgs.productId)
                 true
-            } else{
+            } else {
                 productViewModel.removeFav(safeArgs.productId)
                 false
             }
@@ -136,32 +137,34 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
 
         feedbackBottomSheetBinding.sendFeedback.setOnClickListener {
-            if(feedbackBottomSheetBinding.feedback.text.isNotBlank())
-            {
-                productViewModel.addComment(safeArgs.productId,
-                    PrefManager.getName(requireContext()),feedbackBottomSheetBinding.feedback.text.toString())
+            if (feedbackBottomSheetBinding.feedback.text.isNotBlank()) {
+                productViewModel.addComment(
+                    safeArgs.productId,
+                    PrefManager.getName(requireContext()),
+                    feedbackBottomSheetBinding.feedback.text.toString()
+                )
             }
         }
 
         binding.inc.setOnClickListener {
             count++
-            if(inCart)
+            if (inCart)
                 update()
             else
                 binding.count.text =
-                    //getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
-                    (count*(unit?.count?:1.0)).toString()
+                        //getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                    (count * (unit?.count ?: 1.0)).toString()
         }
 
         binding.dec.setOnClickListener {
-            if(count>1) {
+            if (count > 1) {
                 count--
-                if(inCart)
+                if (inCart)
                     update()
                 else
                     binding.count.text =
-                        //getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
-                        (count*(unit?.count?:1.0)).toString()
+                            //getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                        (count * (unit?.count ?: 1.0)).toString()
             }
         }
 
@@ -173,16 +176,14 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
-        binding.isFavourite.isChecked=updateStatus
+        binding.isFavourite.isChecked = updateStatus
 
-        if(data is Comment)
-        {
+        if (data is Comment) {
             feedbackBottomSheet.dismiss()
-            showSnackbar(getString(R.string.tour_comment_in_review),Snackbar.LENGTH_LONG)
-        }
-        else{
+            showSnackbar(getString(R.string.tour_comment_in_review), Snackbar.LENGTH_LONG)
+        } else {
             showSnackbar(getString(R.string.success))
-            similarItemAdapter.update(updateId,updateValue)
+            similarItemAdapter.update(updateId, updateValue)
         }
     }
 
@@ -192,33 +193,38 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
             viewLifecycleOwner, Observer { result ->
                 result?.let {
 
-                        result.getContentIfNotHandled()?.let { resource ->
-                            when (resource) {
-                                is Resource.Loading -> {
-                                    onLoading()
-                                }
-                                is Resource.Success -> {
-                                    //viewModel.st(productsList)
-                                    hideLoadingDialog()
-                                    binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
-                                    if (count > 1) {
-                                        binding.dec.visibility = View.VISIBLE
-                                        binding.remove.visibility = View.GONE
-                                    }
-                                    else if(inCart)
-                                    {
-                                        binding.dec.visibility=View.GONE
-                                        binding.remove.visibility=View.VISIBLE
-                                    }
-                                }
-                                is Resource.GenericError -> {
-                                    onGenericError(resource)
-                                }
-                                is Resource.Error -> {
-                                    onError(resource)
+                    result.getContentIfNotHandled()?.let { resource ->
+                        when (resource) {
+                            is Resource.Loading -> {
+                                onLoading()
+                            }
+
+                            is Resource.Success -> {
+                                //viewModel.st(productsList)
+                                hideLoadingDialog()
+                                binding.count.text = getString(
+                                    R.string.count_with_unit,
+                                    (count * (unit?.count ?: 1.0)),
+                                    unit?.name
+                                )
+                                if (count > 1) {
+                                    binding.dec.visibility = View.VISIBLE
+                                    binding.remove.visibility = View.GONE
+                                } else if (inCart) {
+                                    binding.dec.visibility = View.GONE
+                                    binding.remove.visibility = View.VISIBLE
                                 }
                             }
+
+                            is Resource.GenericError -> {
+                                onGenericError(resource)
+                            }
+
+                            is Resource.Error -> {
+                                onError(resource)
+                            }
                         }
+                    }
                 }
             }
         )
@@ -231,28 +237,36 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                             is Resource.Loading -> {
                                 onLoading()
                             }
+
                             is Resource.Success -> {
                                 //viewModel.st(productsList)
                                 hideLoadingDialog()
-                                inCart=false
-                                count=1
-                                binding.count.text = getString(R.string.count_with_unit, (count*(unit?.count?:1.0)), unit?.name)
+                                inCart = false
+                                count = 1
+                                binding.count.text = getString(
+                                    R.string.count_with_unit,
+                                    (count * (unit?.count ?: 1.0)),
+                                    unit?.name
+                                )
 
                                 binding.dec.visibility = View.VISIBLE
                                 binding.remove.visibility = View.GONE
 
-                                binding.addProductToCart.isEnabled=true
-                                binding.addProductToCart.text=getString(R.string.add_to_cart)
+                                binding.addProductToCart.isEnabled = true
+                                binding.addProductToCart.text = getString(R.string.add_to_cart)
 
                                 if (safeArgs.productId != -1) {
-                                    PrefManager.getInstance(requireContext()).edit().remove(safeArgs.productId.toString())
+                                    PrefManager.getInstance(requireContext()).edit()
+                                        .remove(safeArgs.productId.toString())
                                         .apply()
                                 }
 
                             }
+
                             is Resource.GenericError -> {
                                 onGenericError(resource)
                             }
+
                             is Resource.Error -> {
                                 onError(resource)
                             }
@@ -263,39 +277,42 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
         )
 
         productViewModel.addToCartResponseTwo.observe(
-            viewLifecycleOwner, Observer { result->
+            viewLifecycleOwner, Observer { result ->
                 result?.let {
                     checkItem()
-                     if(it.toInt()==-1)
-                     {
-                         showActionSnackbar("Already in cart","replace",{
-                             productViewModel.addToCartWithoutEmit(CartItem(safeArgs.productId,count),replace = true)
-                         },Snackbar.LENGTH_LONG)
-                     }
-                    else{
-                         if(addSimilarToCart)
-                         {
-                             PrefManager.getInstance(requireContext()).edit().putBoolean(addSimilarToCartId.toString(),true).apply()
-                             addSimilarToCart=false
-                         }
-                         else
-                            PrefManager.getInstance(requireContext()).edit().putBoolean(safeArgs.productId.toString(),true).apply()
+                    if (it.toInt() == -1) {
+                        showActionSnackbar("Already in cart", "replace", {
+                            productViewModel.addToCartWithoutEmit(
+                                CartItem(
+                                    safeArgs.productId,
+                                    count
+                                ), replace = true
+                            )
+                        }, Snackbar.LENGTH_LONG)
+                    } else {
+                        if (addSimilarToCart) {
+                            PrefManager.getInstance(requireContext()).edit()
+                                .putBoolean(addSimilarToCartId.toString(), true).apply()
+                            addSimilarToCart = false
+                        } else
+                            PrefManager.getInstance(requireContext()).edit()
+                                .putBoolean(safeArgs.productId.toString(), true).apply()
 
-                     }
+                    }
                 }
             }
         )
 
         observe(productViewModel.removeFromCartResponse) {
-            if(it!=0)
-            {
-                PrefManager.getInstance(requireContext()).edit().remove(safeArgs.productId.toString()).apply()
+            if (it != 0) {
+                PrefManager.getInstance(requireContext()).edit()
+                    .remove(safeArgs.productId.toString()).apply()
                 hideLoadingDialog()
-                inCart=false
-                binding.dec.visibility=View.VISIBLE
-                binding.remove.visibility=View.GONE
-                binding.addProductToCart.isEnabled=true
-                binding.addProductToCart.text=getString(R.string.add_to_cart)
+                inCart = false
+                binding.dec.visibility = View.VISIBLE
+                binding.remove.visibility = View.GONE
+                binding.addProductToCart.isEnabled = true
+                binding.addProductToCart.text = getString(R.string.add_to_cart)
             }
         }
 
@@ -324,10 +341,10 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
             }
         )
 
-        observeEvent(productViewModel.favResponse,::handle)
-        observeEvent(productViewModel.addCommentResponse,::handle)
+        observeEvent(productViewModel.favResponse, ::handle)
+        observeEvent(productViewModel.addCommentResponse, ::handle)
 
-        observeEvent(productViewModel.storeCartResponse,::handleAddItem)
+        observeEvent(productViewModel.storeCartResponse, ::handleAddItem)
         //observeEvent(productViewModel.addToCartResponse,::handle)
 
         productViewModel.getProductResponse.observe(viewLifecycleOwner) {
@@ -364,8 +381,8 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
                             )
                         //(count*(unit?.count?:1.0)).toString()
 
-                        binding.characteristics.isVisible =
-                            product.characteristics?.isNotEmpty() == true
+//                        binding.characteristics.isVisible =
+//                            product.characteristics?.isNotEmpty() == true
                         characteristicsListAdapter.updateList(product.characteristics as ArrayList<Characteristics>)
 
                         if (product.discount_percent > 0) {
@@ -463,41 +480,44 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     private fun setUpAdapters() {
         similarItemAdapter = ProductsListAdapter(requireContext())
-        similarItemAdapter.onItemClick={
-            val action= SelectedProductFragmentDirections.actionNavSelectedProductSelf(selectedCategoryName = safeArgs.selectedCategoryName, productId = it.id)
+        similarItemAdapter.onItemClick = {
+            val action = SelectedProductFragmentDirections.actionNavSelectedProductSelf(
+                selectedCategoryName = safeArgs.selectedCategoryName,
+                productId = it.id
+            )
             navigate(action)
 
         }
-        similarItemAdapter.addFav={product->
-            updateId=product.id
-            updateValue=true
+        similarItemAdapter.addFav = { product ->
+            updateId = product.id
+            updateValue = true
             productViewModel.addFav(product.id)
 
         }
 
-        similarItemAdapter.removeFav={product->
-            updateId=product.id
-            updateValue=false
+        similarItemAdapter.removeFav = { product ->
+            updateId = product.id
+            updateValue = false
             productViewModel.removeFav(product.id)
 
         }
 
-        similarItemAdapter.addToCart={product->
-            addSimilarToCart=true
-            addSimilarToCartId=product.id
-            productViewModel.storeCart(CartItem(product.id,1))
+        similarItemAdapter.addToCart = { product ->
+            addSimilarToCart = true
+            addSimilarToCartId = product.id
+            productViewModel.storeCart(CartItem(product.id, 1))
         }
 
 
         feedbackListAdapter = FeedbackListAdapter()
-        characteristicsListAdapter= CharacteristicsListAdapter()
+        characteristicsListAdapter = CharacteristicsListAdapter()
     }
 
 
     override fun setUpUI() {
         mainActivity.setTitle(safeArgs.selectedCategoryName)
-        _feedbackBottomSheetBinding= FeedbackBottomsheetBinding.inflate(layoutInflater)
-        feedbackBottomSheet=
+        _feedbackBottomSheetBinding = FeedbackBottomsheetBinding.inflate(layoutInflater)
+        feedbackBottomSheet =
             createBottomSheet(feedbackBottomSheetBinding.root)
 
     }
@@ -509,54 +529,55 @@ class SelectedProductFragment : BaseFragment<FragmentSelectedProductBinding>(Fra
 
     override fun onDestroy() {
         super.onDestroy()
-        _feedbackBottomSheetBinding=null
+        _feedbackBottomSheetBinding = null
     }
 
 
-    private fun handleAddItem(event: Event<Resource<Any>>){
-        if(addSimilarToCart)
-        {
-            PrefManager.getInstance(requireContext()).edit().putBoolean(addSimilarToCartId.toString(),true).apply()
-            similarItemAdapter.getItem(addSimilarToCartId)?.is_cart=true
-            addSimilarToCart=false
-        }
-        else
-        {
-        event.getContentIfNotHandled()?.let { resource ->
-            when (resource) {
-                is Resource.Loading -> {
-                    onLoading()
-                }
-                is Resource.Success -> {
-                    //viewModel.st(productsList)
-                    hideLoadingDialog()
-                    inCart = true
-                    binding.addProductToCart.isEnabled = false
-                    binding.addProductToCart.text = getString(R.string.in_cart)
-                    binding.count.text = getString(
-                        R.string.count_with_unit,
-                        (count * (unit?.count ?: 1.0)),
-                        unit?.name
-                    )
-
-                    if (count > 1) {
-                        binding.dec.visibility = View.VISIBLE
-                        binding.remove.visibility = View.GONE
-                    } else if (inCart) {
-                        binding.dec.visibility = View.GONE
-                        binding.remove.visibility = View.VISIBLE
+    private fun handleAddItem(event: Event<Resource<Any>>) {
+        if (addSimilarToCart) {
+            PrefManager.getInstance(requireContext()).edit()
+                .putBoolean(addSimilarToCartId.toString(), true).apply()
+            similarItemAdapter.getItem(addSimilarToCartId)?.is_cart = true
+            addSimilarToCart = false
+        } else {
+            event.getContentIfNotHandled()?.let { resource ->
+                when (resource) {
+                    is Resource.Loading -> {
+                        onLoading()
                     }
 
+                    is Resource.Success -> {
+                        //viewModel.st(productsList)
+                        hideLoadingDialog()
+                        inCart = true
+                        binding.addProductToCart.isEnabled = false
+                        binding.addProductToCart.text = getString(R.string.in_cart)
+                        binding.count.text = getString(
+                            R.string.count_with_unit,
+                            (count * (unit?.count ?: 1.0)),
+                            unit?.name
+                        )
 
-                }
-                is Resource.GenericError -> {
-                    onGenericError(resource)
-                }
-                is Resource.Error -> {
-                    onError(resource)
+                        if (count > 1) {
+                            binding.dec.visibility = View.VISIBLE
+                            binding.remove.visibility = View.GONE
+                        } else if (inCart) {
+                            binding.dec.visibility = View.GONE
+                            binding.remove.visibility = View.VISIBLE
+                        }
+
+
+                    }
+
+                    is Resource.GenericError -> {
+                        onGenericError(resource)
+                    }
+
+                    is Resource.Error -> {
+                        onError(resource)
+                    }
                 }
             }
-        }
         }
     }
 }

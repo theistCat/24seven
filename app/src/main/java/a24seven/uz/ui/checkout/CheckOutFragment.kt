@@ -1,13 +1,5 @@
 package a24seven.uz.ui.checkout
 
-import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import a24seven.uz.MainActivity
 import a24seven.uz.R
 import a24seven.uz.data.PrefManager
@@ -23,6 +15,14 @@ import a24seven.uz.utils.navigate
 import a24seven.uz.utils.observeEvent
 import a24seven.uz.utils.showErrorIfNotFilled
 import a24seven.uz.utils.showSnackbar
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutBinding::inflate) {
@@ -99,9 +99,11 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             getString(R.string.cash) -> {
                 binding.cash.isChecked = true
             }
+
             getString(R.string.transfer) -> {
                 binding.transfer.isChecked = true
             }
+
             else -> {
                 binding.cash.isChecked = true
             }
@@ -175,6 +177,7 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             is List<*> -> {
                 regionsArray.addAll(data as ArrayList<Region>)
             }
+
             else -> {
                 viewModel.emptyTheCart()
                 var i = 0
