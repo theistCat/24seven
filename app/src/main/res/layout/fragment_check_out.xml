@@ -1,296 +1,537 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:orientation="vertical"
     tools:context=".ui.checkout.CheckOutFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_marginBottom="6dp"
+        android:layout_weight="15"
+        app:layout_constraintBottom_toTopOf="@id/checkout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="16dp">
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/textView10"
-                style="@style/HeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/delivery_address"
-                android:visibility="gone"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/golos_text_medium"
+                android:text="Выберите способ доставки:"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/savedAddresses"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_margin="16dp"
-                android:background="@drawable/ic_input_bg"
-                android:gravity="center_vertical"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@string/saved_addresses"
-                android:visibility="gone"
-                app:drawableEndCompat="@drawable/ic_dropdown"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/deliveryType_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintStart_toStartOf="@id/textView10"
+                app:layout_constraintTop_toBottomOf="@id/textView10">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp">
+
+                    <TextView
+                        android:id="@+id/delivery_switch_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:background="@drawable/check_out_button"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="6dp"
+                        android:text="Доставка"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/delivery_switch_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="5dp"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:maxLines="1"
+                        android:paddingHorizontal="20dp"
+                        android:paddingVertical="6dp"
+                        android:text="Самовывоз"
+                        android:textColor="#585D68"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView10"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:text="@string/delivery_address"-->
+            <!--                android:visibility="visible"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/back_button" />-->
 
             <TextView
                 android:id="@+id/discountTag"
-                style="@style/HeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/give_address"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/savedAddresses" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/regionDropDown"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:errorEnabled="true"
+                android:layout_marginTop="15dp"
+                android:text="@string/give_address"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deliveryType_card" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/savedAddresses_card"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="13dp"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/discountTag">
 
-                <AutoCompleteTextView
-                    android:id="@+id/regionDropDownValue"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/region"
-                    android:inputType="none" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/address_icon" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:id="@+id/savedAddresses"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="8"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="18dp"
+                        android:textColor="#585D68"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        tools:text="г.Ташкент, Мирзо-Улугбекский район, Буюк Ипак Йули 1123" />
 
+                    <ImageView
+                        android:id="@+id/fromMap"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:paddingVertical="21dp"
+                        android:src="@drawable/ic_next" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cityDropDown"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/regionDropDown">
-
-                <AutoCompleteTextView
-                    android:id="@+id/cityDropDownValue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/city"
-                    android:inputType="none" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <EditText
-                android:id="@+id/checkoutPhone"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="@string/phone_number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cityDropDown" />
-
-            <EditText
-                android:id="@+id/checkoutExtraPhone"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="@string/extra_phone_number"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkoutPhone" />
-
-            <EditText
-                android:id="@+id/checkoutAddress"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="@string/address"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkoutExtraPhone" />
-
-            <EditText
-                android:id="@+id/checkoutDistrict"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="@string/district"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkoutAddress" />
-
-            <EditText
-                android:id="@+id/checkoutCity"
-                style="@style/EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:hint="@string/city"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkoutDistrict" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/fromMap"
-                style="@style/SubHeaderStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/from_map"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkoutCity" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/paymentMethodHeader"
-                style="@style/HeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="15dp"
+                android:fontFamily="@font/golos_text_medium"
                 android:text="@string/payment_method"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fromMap" />
+                app:layout_constraintTop_toBottomOf="@+id/savedAddresses_card" />
 
-            <RadioGroup
+            <androidx.cardview.widget.CardView
                 android:id="@+id/radioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="5dp"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/paymentMethodHeader">
 
-
-                <RadioButton
-                    android:id="@+id/cash"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/cash" />
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp">
 
+                    <TextView
+                        android:id="@+id/cash"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
+                        android:layout_marginEnd="18dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/payment_method_button"
+                        android:drawableStart="@drawable/chash_icon"
+                        android:drawablePadding="17dp"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:gravity=""
+                        android:paddingVertical="7dp"
+                        android:paddingStart="10dp"
+                        android:text="Наличными"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
-                <RadioButton
-                    android:id="@+id/transfer"
+                    <TextView
+                        android:id="@+id/transfer"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="18dp"
+                        android:layout_marginEnd="7dp"
+                        android:layout_weight="1"
+                        android:drawableStart="@drawable/transfer_icon"
+                        android:drawablePadding="17dp"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:gravity=""
+                        android:maxLines="1"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="7dp"
+                        android:paddingEnd="18dp"
+                        android:text="Оплата картой"
+                        android:textColor="#585D68"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/phoneNumber_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/golos_text_medium"
+                android:text="Укажите номер получателя:"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/radioGroup" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/checkoutPhone_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:hint="@string/phone_number"
+                app:cardCornerRadius="5dp"
+                app:layout_constraintEnd_toStartOf="@id/checkoutExtraPhone_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/phoneNumber_title">
+
+                <EditText
+                    android:id="@+id/checkoutPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/transfer" />
-            </RadioGroup>
+                    android:background="@color/white"
+                    android:drawableStart="@drawable/phone_number_icon"
+                    android:drawablePadding="12dp"
+                    android:fontFamily="@font/golos_text_medium"
+                    android:paddingVertical="7dp"
+                    android:paddingStart="14dp"
+                    android:textColor="#585D68"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    tools:text="+998 (94) 444-48-85" />
 
+            </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/textView15"
-                style="@style/HeaderStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/order_price"
-                android:textColor="@color/text_color_faded"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-            <TextView
-                android:id="@+id/orderPrice"
-                style="@style/HeaderStyle"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/checkoutExtraPhone_card"
+                style="@style/EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text=" sum"
-                android:textAlignment="textEnd"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/extra_phone_number"
+                app:cardCornerRadius="5dp"
+                app:layout_constraintBottom_toBottomOf="@id/checkoutPhone_card"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/textView15"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintStart_toEndOf="@id/checkoutPhone_card"
+                app:layout_constraintTop_toTopOf="@id/checkoutPhone_card">
 
+                <EditText
+                    android:id="@+id/checkoutExtraPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:drawableStart="@drawable/phone_number_icon"
+                    android:drawablePadding="12dp"
+                    android:fontFamily="@font/golos_text_medium"
+                    android:hint="+998 (xx) xxx-xx-xx"
+                    android:paddingVertical="7dp"
+                    android:paddingStart="14dp"
+                    android:textColor="#585D68"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView16"
-                style="@style/HeaderStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/delivery_price"
-                android:textColor="@color/text_color_faded"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView15" />
+            </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/deliveryPrice"
-                style="@style/HeaderStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="sum"
-                android:textAlignment="textEnd"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/textView16"
-                app:layout_constraintTop_toBottomOf="@+id/textView15" />
-
-
-            <TextView
-                android:id="@+id/textView17"
-                style="@style/HeaderStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="@string/total"
-                android:textColor="@color/text_color_faded"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-            <TextView
-                android:id="@+id/totalPrice"
-                style="@style/HeaderStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="sum"
-                android:textAlignment="textEnd"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/textView17"
-                app:layout_constraintTop_toBottomOf="@+id/textView16" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/checkout"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="16dp"
-                android:text="@string/confirm_order"
-                app:cornerRadius="25dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="13dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView17" />
+                app:layout_constraintTop_toBottomOf="@id/checkoutPhone_card">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="12dp"
+                    android:paddingHorizontal="10dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/product_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:itemCount="2"
+                        tools:listitem="@layout/item_product_name_price" />
+
+                    <TextView
+                        android:id="@+id/priceType_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:text="Тип оплаты"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/product_list" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:maxLines="1"
+                        android:text="@string/null__"
+                        android:textColor="@color/text_color_"
+                        app:layout_constraintBottom_toBottomOf="@id/priceType_title"
+                        app:layout_constraintEnd_toStartOf="@id/price_type"
+                        app:layout_constraintStart_toEndOf="@id/priceType_title"
+                        app:layout_constraintTop_toTopOf="@id/priceType_title" />
+
+                    <TextView
+                        android:id="@+id/price_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/priceType_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/priceType_title"
+                        tools:text="Наличными" />
+
+                    <TextView
+                        android:id="@+id/delivery_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/golos_text_medium"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@id/pustishka"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/priceType_title"
+                        tools:text="Доставка" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:maxLines="1"
+                        android:text="@string/null__"
+                        android:textColor="@color/text_color_"
+                        app:layout_constraintBottom_toBottomOf="@id/delivery_title"
+                        app:layout_constraintEnd_toStartOf="@id/delivery"
+                        app:layout_constraintStart_toEndOf="@id/delivery_title"
+                        app:layout_constraintTop_toTopOf="@id/delivery_title" />
+
+                    <TextView
+                        android:id="@+id/delivery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@id/delivery_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/delivery_title"
+                        tools:text="Самовывоз" />
+
+                    <TextView
+                        android:id="@+id/pustishka"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginVertical="20dp"
+                        app:layout_constraintBottom_toTopOf="@id/totalPrice_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/delivery_title" />
+
+                    <TextView
+                        android:id="@+id/totalPrice_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:text="Итого"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/pustishka" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:maxLines="1"
+                        android:text="@string/null__"
+                        android:textColor="@color/text_color_"
+                        app:layout_constraintBottom_toBottomOf="@id/totalPrice_title"
+                        app:layout_constraintEnd_toStartOf="@id/total_price"
+                        app:layout_constraintStart_toEndOf="@id/totalPrice_title"
+                        app:layout_constraintTop_toTopOf="@id/totalPrice_title" />
+                    
+                    <TextView
+                        android:id="@+id/total_price"
+                        android:layout_width="wrap_content"
+                        app:layout_constraintTop_toTopOf="@id/totalPrice_title"
+                        app:layout_constraintBottom_toBottomOf="@id/totalPrice_title"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:textSize="14sp"
+                        android:fontFamily="@font/golos_text_medium"
+                        tools:text="540 000 сум"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView15"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text="@string/order_price"-->
+            <!--                android:textColor="@color/text_color_faded"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/checkoutExtraPhone_card" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/orderPrice"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text=" sum"-->
+            <!--                android:textAlignment="textEnd"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toEndOf="@id/textView15"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/checkoutExtraPhone_card" />-->
+
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView16"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text="@string/delivery_price"-->
+            <!--                android:textColor="@color/text_color_faded"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/textView15" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/deliveryPrice"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text="sum"-->
+            <!--                android:textAlignment="textEnd"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toEndOf="@id/textView16"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/textView15" />-->
+
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView17"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text="@string/total"-->
+            <!--                android:textColor="@color/text_color_faded"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/textView16" />-->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/totalPrice"-->
+            <!--                style="@style/HeaderStyle"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="24dp"-->
+            <!--                android:text="sum"-->
+            <!--                android:textAlignment="textEnd"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toEndOf="@id/textView17"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/textView16" />-->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/checkout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="35dp"
+        android:background="@drawable/checkout_button_back"
+        android:fontFamily="@font/golos_text_medium"
+        android:gravity="center"
+        android:paddingVertical="15dp"
+        android:text="Оплатить заказ"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 

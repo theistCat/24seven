@@ -74,7 +74,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     override fun setUpUI() {
         super.setUpUI()
-
         binding.searchQuery.requestFocus()
     }
 
