@@ -72,7 +72,7 @@ class SevenRepository(private val api: SevenApi, private val cartDao: CartDao) {
     suspend fun updateProfile(
         firstName: String,
         lastName: String,
-        inn: Int,
+        inn: String,
         name: String,
         region_id: Int
     ) = flow {

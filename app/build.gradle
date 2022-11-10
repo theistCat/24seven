@@ -16,8 +16,8 @@ android {
         applicationId "a24seven.uz"
         minSdkVersion 25
         targetSdkVersion 33
-        versionCode 13
-        versionName "0.0.17"
+        versionCode 14
+        versionName "0.0.18"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

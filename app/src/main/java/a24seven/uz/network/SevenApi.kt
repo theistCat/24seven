@@ -141,7 +141,7 @@ interface SevenApi {
     suspend fun updateProfile(
         @Field("first_name") firstName: String,
         @Field("last_name") lastName: String,
-        @Field("inn") inn: Int,
+        @Field("inn") inn: String,
         @Field("name") name: String,
         @Field("region_id") region: Int,
     ): Response<ProfileResponse>

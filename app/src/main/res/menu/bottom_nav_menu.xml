@@ -6,10 +6,10 @@
         android:icon="@drawable/ic_logo_small"
         android:title="@string/title_home" />
 
-<!--    <item-->
-<!--        android:id="@+id/nav_categories"-->
-<!--        android:icon="@drawable/ic_category"-->
-<!--        android:title="@string/title_dashboard" />-->
+    <item
+        android:id="@+id/nav_categories"
+        android:icon="@drawable/ic_category"
+        android:title="@string/title_dashboard" />
 
     <item
         android:id="@+id/nav_cart"

@@ -2,24 +2,17 @@ package a24seven.uz.ui.profile
 
 import a24seven.uz.R
 import a24seven.uz.data.PrefManager
-import a24seven.uz.databinding.ChangeLanguageBottomsheetBinding
 import a24seven.uz.databinding.FragmentProfileBinding
-import a24seven.uz.databinding.SortBottomsheetBinding
 import a24seven.uz.network.models.ProfileResponse
 import a24seven.uz.network.utils.NoConnectivityException
 import a24seven.uz.network.utils.Resource
 import a24seven.uz.ui.utils.BaseFragment
-import a24seven.uz.utils.createBottomSheet
 import a24seven.uz.utils.navigate
 import a24seven.uz.utils.observeEvent
 import a24seven.uz.utils.showSnackbar
-import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
 
 
 // TODO: myOrders
@@ -29,15 +22,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private val viewModel: ProfileViewModel by viewModel()
     private var userData: ProfileResponse? = null
 
-    private lateinit var bottomsheet: BottomSheetDialog
-    private var _bottomSheetBinding: ChangeLanguageBottomsheetBinding? = null
-    private val bottomSheetBinding get() = _bottomSheetBinding!!
-
     override fun setUpUI() {
         super.setUpUI()
-        _bottomSheetBinding = ChangeLanguageBottomsheetBinding.inflate(layoutInflater)
-        bottomsheet =
-            createBottomSheet(bottomSheetBinding.root)
 
         setTitle(getString(R.string.profile_title))
         viewModel.getProfileResponse()
@@ -120,21 +106,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             viewModel.getLogoutResponse()
         }
 
-        binding.changeLanguage
-
         binding.myOrders.setOnClickListener {
             navigate(R.id.action_nav_profile_to_nav_myOrders)
         }
-        binding.changeLanguage.setOnClickListener {
-           bottomSheet()
-        }
+//        binding.changeLanguage.setOnClickListener {
+//            navigate(R.id.changeLanguage)
+//        }
         binding.myAdresses.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavProfileToNavAddressList()
             navigate(action)
         }
-        binding.myPaymentMethod.setOnClickListener {
-            navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
-        }
+//        binding.myPaymentMethod.setOnClickListener {
+//            navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
+//        }
 
         binding.profileSettings.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavProfileToNavProfileSettings()
@@ -145,42 +129,4 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
         }
     }
-
-    lateinit var local:String
-
-    fun bottomSheet(){
-
-        bottomsheet.show()
-
-
-        _bottomSheetBinding?.ruButton?.setOnClickListener {
-            local = "ru"
-            _bottomSheetBinding?.ruButton?.setBackgroundResource(R.drawable.shape_language)
-            _bottomSheetBinding?.uzButton?.setBackgroundResource(R.drawable.shape_language1)
-//            changeLocale("ru")
-        }
-
-        _bottomSheetBinding?.uzButton?.setOnClickListener {
-            local = "uz"
-            _bottomSheetBinding?.uzButton?.setBackgroundResource(R.drawable.shape_language)
-            _bottomSheetBinding?.ruButton?.setBackgroundResource(R.drawable.shape_language1)
-//            changeLocale("uz")
-        }
-
-        _bottomSheetBinding?.confirmation?.setOnClickListener {
-            changeLocale(local)
-            bottomsheet.dismiss()
-        }
-
-    }
-
-    private fun changeLocale(locale: String) {
-        val oldLocale = PrefManager.getLocale(requireContext())
-        if (oldLocale != locale) {
-            PrefManager.saveLocale(requireContext(), locale.toLowerCase(Locale.ROOT))
-            ActivityCompat.recreate(requireActivity())
-        }
-    }
-
-
 }

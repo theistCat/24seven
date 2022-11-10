@@ -7,19 +7,15 @@ import a24seven.uz.databinding.FragmentCheckOutBinding
 import a24seven.uz.network.models.Address
 import a24seven.uz.network.models.Region
 import a24seven.uz.network.utils.Variables
-import a24seven.uz.ui.profile.TypedDropdownAdapter
 import a24seven.uz.ui.profile.myAddresses.AddAddressData
 import a24seven.uz.ui.profile.myAddresses.AddressListDialogFragment
 import a24seven.uz.ui.utils.BaseFragment
 import a24seven.uz.utils.navigate
 import a24seven.uz.utils.observeEvent
-import a24seven.uz.utils.showErrorIfNotFilled
 import a24seven.uz.utils.showSnackbar
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -54,18 +50,18 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 //        setUpSpinnerAdapter()
 
 
-        if (safeArgs.address != null) {
-            binding.checkoutAddress.setText(safeArgs.address)
-            binding.checkoutAddress.visibility = View.VISIBLE
-        }
-        if (safeArgs.region != null) {
-            binding.checkoutDistrict.setText(safeArgs.region)
-            binding.checkoutDistrict.visibility = View.VISIBLE
-        }
-        if (safeArgs.city != null) {
-            binding.checkoutCity.setText(safeArgs.city)
-            binding.checkoutCity.visibility = View.VISIBLE
-        }
+//        if (safeArgs.address != null) {
+//            binding.checkoutAddress.setText(safeArgs.address)
+//            binding.checkoutAddress.visibility = View.VISIBLE
+//        }
+//        if (safeArgs.region != null) {
+//            binding.checkoutDistrict.setText(safeArgs.region)
+//            binding.checkoutDistrict.visibility = View.VISIBLE
+//        }
+//        if (safeArgs.city != null) {
+//            binding.checkoutCity.setText(safeArgs.city)
+//            binding.checkoutCity.visibility = View.VISIBLE
+//        }
 
         if (safeArgs.point != null) {
             lat = safeArgs.point!!.lat
@@ -74,18 +70,18 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
 
         safeArgs.addAddressData?.let {
             with(binding) {
-                this.regionDropDownValue.setText(it.region, false)
-                this.cityDropDownValue.setText(it.city, false)
+//                this.regionDropDownValue.setText(it.region, false)
+//                this.cityDropDownValue.setText(it.city, false)
                 regionId = it.regionId
                 cityId = it.cityId
             }
         }
 
         binding.totalPrice.text = getString(R.string.money_format_sum, safeArgs.checkOutData.total)
-        binding.deliveryPrice.text =
+        binding.delivery.text =
             getString(R.string.money_format_sum, safeArgs.checkOutData.delivery_fee)
-        binding.orderPrice.text =
-            getString(R.string.money_format_sum, safeArgs.checkOutData.order_price)
+//        binding.orderPrice.text =
+//            getString(R.string.money_format_sum, safeArgs.checkOutData.order_price)
 
 
         binding.checkoutPhone.setText(
@@ -109,46 +105,46 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
             }
         }
 
-        val arrayAdapter = TypedDropdownAdapter(
-            requireContext(), R.layout.support_simple_spinner_dropdown_item,
-            regionsArray
-        )
+//        val arrayAdapter = TypedDropdownAdapter(
+//            requireContext(), R.layout.support_simple_spinner_dropdown_item,
+//            regionsArray
+//        )
 
-        (binding.regionDropDownValue as? AutoCompleteTextView)?.setAdapter(arrayAdapter)
-
-
-        binding.regionDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
-            binding.regionDropDown.error = null
-            arrayAdapter.getItem(i)?.let {
-                regionId = it.id
-                citiesArray.clear()
-                citiesArray.addAll(it.cities as ArrayList<Region>)
-
-            }
-        }
-
-        val cityAdapter = TypedDropdownAdapter(
-            requireContext(), R.layout.support_simple_spinner_dropdown_item,
-            citiesArray
-        )
-
-        (binding.cityDropDownValue as? AutoCompleteTextView)?.setAdapter(cityAdapter)
+//        (binding.regionDropDownValue as? AutoCompleteTextView)?.setAdapter(arrayAdapter)
 
 
-        binding.cityDropDownValue.setOnClickListener {
-            if (cityAdapter.isEmpty)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.warning_region),
-                    Toast.LENGTH_SHORT
-                ).show()
-        }
-        binding.cityDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+//        binding.regionDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+//            binding.regionDropDown.error = null
+//            arrayAdapter.getItem(i)?.let {
+//                regionId = it.id
+//                citiesArray.clear()
+//                citiesArray.addAll(it.cities as ArrayList<Region>)
+//
+//            }
+//        }
 
-            cityAdapter.getItem(i)?.let {
-                cityId = it.id
-            }
-        }
+//        val cityAdapter = TypedDropdownAdapter(
+//            requireContext(), R.layout.support_simple_spinner_dropdown_item,
+//            citiesArray
+//        )
+
+//        (binding.cityDropDownValue as? AutoCompleteTextView)?.setAdapter(cityAdapter)
+
+
+//        binding.cityDropDownValue.setOnClickListener {
+//            if (cityAdapter.isEmpty)
+//                Toast.makeText(
+//                    requireContext(),
+//                    getString(R.string.warning_region),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//        }
+//        binding.cityDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+//
+//            cityAdapter.getItem(i)?.let {
+//                cityId = it.id
+//            }
+//        }
     }
 
 
@@ -197,54 +193,55 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
     override fun setUpOnClickListeners() {
 
         binding.checkout.setOnClickListener {
-            if (binding.radioGroup.checkedRadioButtonId != -1) {
-                val paymentMethod = when (binding.radioGroup.checkedRadioButtonId) {
+            if (binding.radioGroup2.checkedRadioButtonId != -1) {
+                val paymentMethod = when (binding.radioGroup2.checkedRadioButtonId) {
                     R.id.transfer -> "transfer"
                     R.id.cash -> "cash"
                     else -> "cash"
                 }
-                if (isAddressValid()) {
-                    if (binding.regionDropDownValue.showErrorIfNotFilled(binding.regionDropDown)
-                        && binding.cityDropDownValue.showErrorIfNotFilled(binding.cityDropDown)
-                    ) {
-                        if (addressId != -1)
-                            viewModel.checkout(
-                                paymentMethod,
-                                addressId,
-                                safeArgs.checkOutData.productList
-                            )
-                        else {
-                            address["address[name]"] = "Manual"
-                            address["address[phone]"] = binding.checkoutPhone.text.toString()
-                            address["address[region]"] = binding.checkoutDistrict.text.toString()
-                            address["address[city]"] = binding.checkoutCity.text.toString()
-                            address["address[location][lat]"] = lat
-                            address["address[location][lng]"] = lng
-                            address["address[address]"] = binding.checkoutAddress.text.toString()
-                            address["address[region_id]"] = regionId.toString()
-                            address["address[city_id]"] = cityId.toString()
-                            address["address[phone_other]"] =
-                                binding.checkoutExtraPhone.text.toString()
-                            viewModel.checkout(
-                                paymentMethod,
-                                null,
-                                safeArgs.checkOutData.productList,
-                                address
-                            )
-                        }
-                    } else binding.scrollView.smoothScrollTo(
-                        binding.regionDropDownValue.scrollX,
-                        binding.regionDropDownValue.scrollY
+//                if (isAddressValid()) {
+//                    if (binding.regionDropDownValue.showErrorIfNotFilled(binding.regionDropDown)
+//                        && binding.cityDropDownValue.showErrorIfNotFilled(binding.cityDropDown)
+//                    ) {
+                if (addressId != -1)
+                    viewModel.checkout(
+                        paymentMethod,
+                        addressId,
+                        safeArgs.checkOutData.productList
                     )
-                } else showSnackbar(getString(R.string.chose_address))
-            }
+                else {
+                    address["address[name]"] = "Manual"
+                    address["address[phone]"] = binding.checkoutPhone.text.toString()
+//                    address["address[region]"] = binding.checkoutDistrict.text.toString()
+//                    address["address[city]"] = binding.checkoutCity.text.toString()
+                    address["address[location][lat]"] = lat
+                    address["address[location][lng]"] = lng
+                    address["address[address]"] = binding.savedAddresses.text.toString()
+                    address["address[region_id]"] = regionId.toString()
+                    address["address[city_id]"] = cityId.toString()
+                    address["address[phone_other]"] =
+                        binding.checkoutExtraPhone.text.toString()
+                    viewModel.checkout(
+                        paymentMethod,
+                        null,
+                        safeArgs.checkOutData.productList,
+                        address
+                    )
+                }
+//                    } else binding.scrollView.smoothScrollTo(
+//                        binding.regionDropDownValue.scrollX,
+//                        binding.regionDropDownValue.scrollY
+//                    )
+            } else showSnackbar(getString(R.string.chose_address))
         }
+
+
 
         binding.savedAddresses.setOnClickListener {
             val fm = requireActivity().supportFragmentManager
             val addressListDialogFragment = AddressListDialogFragment()
             addressListDialogFragment.onItemClick = {
-                setAddress(it)
+//                setAddress(it)
                 addressId = it.id
                 addressListDialogFragment.dismiss()
             }
@@ -257,9 +254,9 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
                 safeArgs.checkOutData,
                 Variables.fromCheckout, addressId = -1, addAddressData = AddAddressData(
                     "Manual",
-                    binding.regionDropDownValue.text.toString(),
+                    "Tashkent",
                     regionId,
-                    binding.cityDropDownValue.text.toString(),
+                    "Tashkent",
                     cityId
                 )
             )
@@ -267,35 +264,31 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding>(FragmentCheckOutB
         }
     }
 
-    private fun isAddressValid(): Boolean {
-        return (binding.checkoutAddress.showErrorIfNotFilled()
-                && binding.checkoutCity.showErrorIfNotFilled()
-                && binding.checkoutDistrict.showErrorIfNotFilled())
-
-    }
+//    private fun isAddressValid(): Boolean {
+//        return (binding.checkoutAddress.showErrorIfNotFilled()
+//                && binding.checkoutCity.showErrorIfNotFilled()
+//                && binding.checkoutDistrict.showErrorIfNotFilled())
+//
+//    }
 
     private fun setAddress(address: Address) {
-        binding.checkoutAddress.setText(address.address)
+        binding.savedAddresses.text = "${address.address} ${address.region} ${address.city}"
 
         binding.checkoutAddress.visibility = View.VISIBLE
-        binding.checkoutCity.setText(address.city)
-        binding.checkoutCity.visibility = View.VISIBLE
-        binding.checkoutDistrict.setText(address.region)
-        binding.checkoutDistrict.visibility = View.VISIBLE
 
         regionId = address.region_id ?: -1
-        binding.regionDropDownValue.let {
-            it.setText((it.adapter as TypedDropdownAdapter).setSelection(regionId), false)
-            citiesArray.clear()
-            citiesArray.addAll(
-                (it.adapter as TypedDropdownAdapter).getSelection(regionId)?.cities ?: arrayListOf()
-            )
-        }
+//        binding.regionDropDownValue.let {
+//            it.setText((it.adapter as TypedDropdownAdapter).setSelection(regionId), false)
+//            citiesArray.clear()
+//            citiesArray.addAll(
+//                (it.adapter as TypedDropdownAdapter).getSelection(regionId)?.cities ?: arrayListOf()
+//            )
+//        }
 
         cityId = address.city_id ?: -1
-        binding.cityDropDownValue.let {
-            it.setText((it.adapter as TypedDropdownAdapter).setSelection(cityId), false)
-        }
+//        binding.cityDropDownValue.let {
+//            it.setText((it.adapter as TypedDropdownAdapter).setSelection(cityId), false)
+//        }
     }
 
     override fun onResume() {

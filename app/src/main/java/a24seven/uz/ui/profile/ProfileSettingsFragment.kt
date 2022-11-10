@@ -14,10 +14,13 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AutoCompleteTextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.*
+import java.util.Locale
 
 
 //Todo: disable update button if no update are made
@@ -62,7 +65,7 @@ class ProfileSettingsFragment :
             is ProfileResponse -> {
                 binding.profilePhone.setText(getString(R.string.phone_format, data.phone))
 
-                if (data.inn != null && data.inn != 0) {
+                if (!data.inn.isNullOrEmpty()) {
                     binding.profileINN.setText(data.inn.toString())
                 }
 
@@ -80,16 +83,16 @@ class ProfileSettingsFragment :
                             data.lastName
                         )
                     )
-                if (data.dob.isNotEmpty()) {
-                    val dob = data.dob.split("-")
-                    binding.profileDOB.text =
-                        getString(
-                            R.string.dob_format,
-                            dob[2].toInt(),
-                            monthName[dob[1].toInt() - 1],
-                            dob[0].toInt()
-                        )
-                }
+//                if (data.dob.isNotEmpty()) {
+//                    val dob = data.dob.split("-")
+//                    binding.profileDOB.text =
+//                        getString(
+//                            R.string.dob_format,
+//                            dob[2].toInt(),
+//                            monthName[dob[1].toInt() - 1],
+//                            dob[0].toInt()
+//                        )
+//                }
                 if (data.gender)
                     binding.male.isChecked = true
                 else
@@ -201,17 +204,17 @@ class ProfileSettingsFragment :
             PrefManager.saveTheme(requireContext(), binding.switch1.isChecked)
         }
 
-        bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->
-            when (i) {
-                R.id.ru_button -> {
-                    changeLocale("ru")
-                }
-
-                R.id.uz_button -> {
-                    changeLocale("uz")
-                }
-            }
-        }
+//        bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->
+//            when (i) {
+//                R.id.ru_button -> {
+//                    changeLocale("ru")
+//                }
+//
+//                R.id.uz_button -> {
+//                    changeLocale("uz")
+//                }
+//            }
+//        }
 
         binding.radioGroupLocale.setOnCheckedChangeListener { _, i ->
             when (i) {
@@ -235,22 +238,22 @@ class ProfileSettingsFragment :
                 lastName = fio[1]
             }
 
-//            var inn = binding.profileINN.text.trim().toString()
+            var inn = binding.profileINN.text.trim().toString()
             val storeName = binding.profileStoreName.text.toString()
 
             var year = ""
             var month = 0
             var day = ""
 
-            val birthday = (binding.profileDOB.text).split(" ")
-
-
-            if (birthday.size > 2) {
-                year = birthday[2]
-                val monthName = resources.getStringArray(R.array.month)
-                month = monthName.indexOf(birthday[1]) + 1
-                day = birthday[0]
-            }
+//            val birthday = (binding.profileDOB.text).split(" ")
+//
+//
+//            if (birthday.size > 2) {
+//                year = birthday[2]
+//                val monthName = resources.getStringArray(R.array.month)
+//                month = monthName.indexOf(birthday[1]) + 1
+//                day = birthday[0]
+//            }
 
 
             when {
@@ -266,9 +269,13 @@ class ProfileSettingsFragment :
                     binding.profileStoreName.error = "Укажите название магазина"
                 }
 
-                inn.length != 9 -> {
+                inn.isEmpty() -> {
                     binding.profileINN.error = "Укажите ИНН"
                 }
+
+//                inn.length != 14 -> {
+//                    binding.profileINN.error = "Укажите ИНН"
+//                }
 
                 region == -1 -> {
                     binding.changeRegion.error = getString(R.string.warning_region)
@@ -283,22 +290,22 @@ class ProfileSettingsFragment :
                     viewModel.getUpdateProfileResponse(
                         firstName,
                         lastName,
-                        inn = inn.toInt(),
+                        inn = inn,
                         name = storeName,
                         region
                     )
                 }
 
-                year.isBlank() -> {
-                    binding.profileDOB.error = getString(R.string.error_year)
-                }
-                month == 0 -> {
-                    binding.profileDOB.error = getString(R.string.error_month)
-                }
-                day.isBlank() -> {
-
-                    binding.profileDOB.error = getString(R.string.error_day)
-                }
+//                year.isBlank() -> {
+//                    binding.profileDOB.error = getString(R.string.error_year)
+//                }
+//                month == 0 -> {
+//                    binding.profileDOB.error = getString(R.string.error_month)
+//                }
+//                day.isBlank() -> {
+//
+//                    binding.profileDOB.error = getString(R.string.error_day)
+//                }
             }
         }
 

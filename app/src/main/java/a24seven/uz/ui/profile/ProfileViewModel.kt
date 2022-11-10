@@ -80,7 +80,7 @@ class ProfileViewModel constructor(private val repository: SevenRepository) : Vi
     fun getUpdateProfileResponse(
         firstName: String,
         lastName: String,
-        inn: Int,
+        inn: String,
         name: String,
         region_id: Int
     ) {

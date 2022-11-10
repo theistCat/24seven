@@ -15,7 +15,7 @@ data class ProfileResponse(
     val orders_count: Int,
     val region_id: Int,
     val name: String?,
-    val inn: Int?
+    val inn: String?
 ) {
     val lastName get() = last_name ?: ""
     val firstName get() = first_name ?: ""

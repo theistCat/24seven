@@ -190,9 +190,9 @@ class ProductsListAdapter(val context: Context, val isGrid: Boolean = false) :
                         binding.productOldPrice.visibility = View.INVISIBLE
                         binding.productTag.isVisible = false
                     }
-                    binding.productCategory.text = product.category?.name
-                    binding.productComments.text =
-                        context.getString(R.string.comments_count, product.comments_count)
+//                    binding.productCategory.text = product.category?.name
+//                    binding.productComments.text =
+//                        context.getString(R.string.comments_count, product.comments_count)
                     binding.productIsFav.isChecked = product.is_favorite
                     binding.productName.text = product.name
                     binding.productImage.image(context, product.image!!.path_thumb)
