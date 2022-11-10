@@ -6,4 +6,5 @@
   <path
       android:pathData="M8,0L335,0A8,8 0,0 1,343 8L343,40A8,8 0,0 1,335 48L8,48A8,8 0,0 1,0 40L0,8A8,8 0,0 1,8 0z"
       android:fillColor="@color/cardBackground"/>
+
 </vector>

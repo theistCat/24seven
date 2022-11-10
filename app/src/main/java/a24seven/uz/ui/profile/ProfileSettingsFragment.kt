@@ -8,20 +8,16 @@ import a24seven.uz.network.models.ProfileResponse
 import a24seven.uz.network.models.Region
 import a24seven.uz.network.utils.Resource
 import a24seven.uz.ui.utils.BaseFragment
-import a24seven.uz.utils.createBottomSheet
 import a24seven.uz.utils.hideKeyboard
 import a24seven.uz.utils.observeEvent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AutoCompleteTextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
+import java.util.*
 
 
 //Todo: disable update button if no update are made
@@ -86,13 +82,13 @@ class ProfileSettingsFragment :
                     )
                 if (data.dob.isNotEmpty()) {
                     val dob = data.dob.split("-")
-//                    binding.profileDOB.text =
-//                        getString(
-//                            R.string.dob_format,
-//                            dob[2].toInt(),
-//                            monthName[dob[1].toInt() - 1],
-//                            dob[0].toInt()
-//                        )
+                    binding.profileDOB.text =
+                        getString(
+                            R.string.dob_format,
+                            dob[2].toInt(),
+                            monthName[dob[1].toInt() - 1],
+                            dob[0].toInt()
+                        )
                 }
                 if (data.gender)
                     binding.male.isChecked = true
@@ -158,20 +154,20 @@ class ProfileSettingsFragment :
 
 
     override fun setUpUI() {
-        _bottomSheetBinding = ChangeLanguageBottomsheetBinding.inflate(layoutInflater)
-        bottomsheet = createBottomSheet(bottomSheetBinding.root)
-
-        when (PrefManager.getLocale(requireContext())) {
-            "ru" -> {
-                Log.d("locale", "russian")
-                binding.ru.isChecked = true
-            }
-
-            "uz" -> {
-                Log.d("locale", "uzbek")
-                binding.uz.isChecked = true
-            }
-        }
+//        _bottomSheetBinding = ChangeLanguageBottomsheetBinding.inflate(layoutInflater)
+//        bottomsheet = createBottomSheet(bottomSheetBinding.root)
+//
+//        when (PrefManager.getLocale(requireContext())) {
+//            "ru" -> {
+//                Log.d("locale", "russian")
+//                binding.ru.isChecked = true
+//            }
+//
+//            "uz" -> {
+//                Log.d("locale", "uzbek")
+//                binding.uz.isChecked = true
+//            }
+//        }
 
         uiMode = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
 
@@ -207,11 +203,11 @@ class ProfileSettingsFragment :
 
         bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->
             when (i) {
-                R.id.ru -> {
+                R.id.ru_button -> {
                     changeLocale("ru")
                 }
 
-                R.id.uz -> {
+                R.id.uz_button -> {
                     changeLocale("uz")
                 }
             }
@@ -239,22 +235,22 @@ class ProfileSettingsFragment :
                 lastName = fio[1]
             }
 
-            var inn = binding.profileINN.text.trim().toString()
+//            var inn = binding.profileINN.text.trim().toString()
             val storeName = binding.profileStoreName.text.toString()
 
             var year = ""
             var month = 0
             var day = ""
 
-//            val birthday = (binding.profileDOB.text).split(" ")
-//
-//
-//            if (birthday.size > 2) {
-//                year = birthday[2]
-//                val monthName = resources.getStringArray(R.array.month)
-//                month = monthName.indexOf(birthday[1]) + 1
-//                day = birthday[0]
-//            }
+            val birthday = (binding.profileDOB.text).split(" ")
+
+
+            if (birthday.size > 2) {
+                year = birthday[2]
+                val monthName = resources.getStringArray(R.array.month)
+                month = monthName.indexOf(birthday[1]) + 1
+                day = birthday[0]
+            }
 
 
             when {
@@ -293,24 +289,23 @@ class ProfileSettingsFragment :
                     )
                 }
 
-                //                    year.isBlank()->{
-//                        binding.profileDOB.error = getString(R.string.error_year)
-//                    }
-//                    month==0->{
-//                        binding.profileDOB.error = getString(R.string.error_month)}
-//                    day.isBlank()-> {
-//
-//                        binding.profileDOB.error = getString(R.string.error_day)
-//                    }
+                year.isBlank() -> {
+                    binding.profileDOB.error = getString(R.string.error_year)
+                }
+                month == 0 -> {
+                    binding.profileDOB.error = getString(R.string.error_month)
+                }
+                day.isBlank() -> {
+
+                    binding.profileDOB.error = getString(R.string.error_day)
+                }
             }
         }
 
 
-
-
-        binding.changeLanguage.setOnClickListener {
-            //  bottomsheet.show()
-        }
+//        binding.changeLanguage.setOnClickListener {
+//             bottomsheet.show()
+//        }
 
 //        binding.profileDOB.setOnClickListener {
 //            val dpd = DatePickerDialog(

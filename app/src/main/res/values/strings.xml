@@ -36,7 +36,7 @@
     <string name="payment_method">Выберите способ оплаты:</string>
     <string name="payme">PayMe</string>
     <string name="click">Click</string>
-    <string name="cash">Наличный расчет</string>
+    <string name="cash">Наличными</string>
     <string name="order_price">Заказ:</string>
     <string name="delivery_price">Доставка:</string>
     <string name="confirm_order">ПОДТВЕРДИТЬ ЗАКАЗ</string>
@@ -84,7 +84,7 @@
 
     <string name="money_format_sum_unit">%1$,d сум</string>
     <string name="money_format_coin_unit" translatable="false">%1$,d coin</string>
-    <string name="count_with_unit" translatable="false"></string>
+    <string name="count_with_unit" translatable="false" />
     <string name="money_format_sum">%,d сум</string>
     <string name="money_format_sum_unit_two_lines">%1$,d сум</string>
     <string name="comments_count">Отзывы (%d)</string>
@@ -147,7 +147,7 @@
     <string name="detecting_address">detecting address</string>
     <string name="warning_enable_permission">enable_permission</string>
     <string name="any">Любые</string>
-    <string name="transfer">Перечисление</string>
+    <string name="transfer">Оплата картой</string>
     <string name="characteristics">Характеристики продукта</string>
     <string name="plus" translatable="false">+</string>
     <string name="success">success</string>
@@ -166,8 +166,8 @@
     <string name="input_phone">Введите номер телефона</string>
     <string name="input_code">Введите Смс-код</string>
     <string name="get_code">Получить смс-код</string>
-    <string name="russian">Russian</string>
-    <string name="uzbek">Uzbek</string>
+    <string name="russian">Русский</string>
+    <string name="uzbek">Узбекский</string>
     <string name="cant_find_location">Не можем определить ваш адрес по карте</string>
     <string name="city_street_apt">Город, улица, дом</string>
     <string name="balance_">Balance: %d</string>
@@ -187,6 +187,23 @@
 
 
     <string name="null__">.......................................................................................................................</string>
+    <string name="profile_name_lastName">Введите имя и фамилию</string>
+    <string name="profile_phone_title">Введите номер телефона</string>
+    <string name="profile_inn_title">Введите ИНН</string>
+    <string name="inn">ИНН</string>
+    <string name="profile_bornDate_title">Введите дату рождения</string>
+    <string name="day_month_year">дд/мм/гггг</string>
+    <string name="update">Сохранить</string>
+    <string name="deliveryType_title">Выберите способ доставки:</string>
+    <string name="delivery">Доставка</string>
+    <string name="pickup">Самовывоз</string>
+    <string name="phoneNumber_title">Укажите номер получателя:</string>
+    <string name="priceType_title">Тип оплаты</string>
+    <string name="delivery_title">Доставка</string>
+    <string name="totalPrice_title">Итого</string>
+    <string name="checkout">Оплатить заказ</string>
+    <string name="select_language">Выбрать язык</string>
+    <string name="confirmation">Подтвердить</string>
 
     <!--    <string name="sort_by_new_key" translatable="false">new</string>-->
     <!--    <string name="sort_by_popular_key" translatable="false">popular</string>-->

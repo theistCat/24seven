@@ -30,7 +30,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/golos_text_medium"
-                android:text="Выберите способ доставки:"
+                android:text="@string/deliveryType_title"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
                         android:fontFamily="@font/golos_text_medium"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="6dp"
-                        android:text="Доставка"
+                        android:text="@string/delivery"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -73,21 +73,11 @@
                         android:maxLines="1"
                         android:paddingHorizontal="20dp"
                         android:paddingVertical="6dp"
-                        android:text="Самовывоз"
+                        android:text="@string/pickup"
                         android:textColor="#585D68"
                         android:textSize="12sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/textView10"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="@string/delivery_address"-->
-            <!--                android:visibility="visible"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/back_button" />-->
 
             <TextView
                 android:id="@+id/discountTag"
@@ -192,7 +182,7 @@
                         android:gravity=""
                         android:paddingVertical="7dp"
                         android:paddingStart="10dp"
-                        android:text="Наличными"
+                        android:text="@string/cash"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -212,7 +202,7 @@
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="7dp"
                         android:paddingEnd="18dp"
-                        android:text="Оплата картой"
+                        android:text="@string/transfer"
                         android:textColor="#585D68"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -227,7 +217,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/golos_text_medium"
-                android:text="Укажите номер получателя:"
+                android:text="@string/phoneNumber_title"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -327,7 +317,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/golos_text_medium"
-                        android:text="Тип оплаты"
+                        android:text="@string/priceType_title"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -354,7 +344,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/priceType_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/priceType_title"
-                        tools:text="Наличными" />
+                        tools:text="@string/cash" />
 
                     <TextView
                         android:id="@+id/delivery_title"
@@ -367,7 +357,7 @@
                         app:layout_constraintBottom_toTopOf="@id/pustishka"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/priceType_title"
-                        tools:text="Доставка" />
+                        tools:text="@string/delivery_title" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -389,7 +379,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/delivery_title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/delivery_title"
-                        tools:text="Самовывоз" />
+                        tools:text="@string/pickup" />
 
                     <TextView
                         android:id="@+id/pustishka"
@@ -406,7 +396,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="25dp"
-                        android:text="Итого"
+                        android:text="@string/totalPrice_title"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -440,77 +430,6 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!--            <TextView-->
-            <!--                android:id="@+id/textView15"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text="@string/order_price"-->
-            <!--                android:textColor="@color/text_color_faded"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/checkoutExtraPhone_card" />-->
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/orderPrice"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text=" sum"-->
-            <!--                android:textAlignment="textEnd"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toEndOf="@id/textView15"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/checkoutExtraPhone_card" />-->
-
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/textView16"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text="@string/delivery_price"-->
-            <!--                android:textColor="@color/text_color_faded"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/textView15" />-->
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/deliveryPrice"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text="sum"-->
-            <!--                android:textAlignment="textEnd"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toEndOf="@id/textView16"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/textView15" />-->
-
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/textView17"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text="@string/total"-->
-            <!--                android:textColor="@color/text_color_faded"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/textView16" />-->
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/totalPrice"-->
-            <!--                style="@style/HeaderStyle"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginTop="24dp"-->
-            <!--                android:text="sum"-->
-            <!--                android:textAlignment="textEnd"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toEndOf="@id/textView17"-->
-            <!--                app:layout_constraintTop_toBottomOf="@+id/textView16" />-->
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -525,7 +444,7 @@
         android:fontFamily="@font/golos_text_medium"
         android:gravity="center"
         android:paddingVertical="15dp"
-        android:text="Оплатить заказ"
+        android:text="@string/checkout"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
