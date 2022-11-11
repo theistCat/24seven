@@ -44,21 +44,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:background="@drawable/ellipsoid"
         app:layout_constraintBottom_toTopOf="@+id/btnChooseLocation"
         app:layout_constraintEnd_toEndOf="@+id/mapView">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/ellipsoid" />
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="13dp"
+            app:srcCompat="@drawable/map_icon" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/my_location"
-            app:tint="@color/color_secondary" />
     </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

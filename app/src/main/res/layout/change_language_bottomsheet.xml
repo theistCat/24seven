@@ -19,68 +19,73 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/radioButtonLocale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="70dp"
         android:layout_marginVertical="25dp"
-        app:layout_constraintBottom_toTopOf="@id/confirmation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text">
 
-        <TextView
+        <RadioButton
             android:id="@+id/ru_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="20dp"
-            android:layout_weight="1"
             android:background="@drawable/shape_language"
             android:drawableStart="@drawable/russia"
             android:drawablePadding="10dp"
             android:fontFamily="@font/golos_text_medium"
-            android:gravity="center"
             android:paddingHorizontal="12dp"
             android:paddingVertical="5dp"
             android:text="@string/russian"
+            android:layout_weight="1"
+            android:button="@color/transparent"
             android:textColor="@color/text_color_"
             android:textSize="10sp"
             android:textStyle="bold" />
 
-        <TextView
+        <RadioButton
             android:id="@+id/uz_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            android:background="@drawable/shape_language"
             android:layout_marginEnd="50dp"
             android:layout_weight="1"
             android:drawableStart="@drawable/uzbekistan"
             android:drawablePadding="10dp"
+            android:button="@color/transparent"
+            android:duplicateParentState="false"
             android:fontFamily="@font/golos_text_medium"
-            android:gravity="center"
             android:paddingHorizontal="12dp"
             android:paddingVertical="5dp"
             android:text="@string/uzbek"
             android:textColor="@color/text_color_"
             android:textSize="10sp"
             android:textStyle="bold" />
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/confirmation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="75dp"
-        android:background="@drawable/checkout_button_back"
-        android:gravity="center"
-        android:paddingVertical="17dp"
-        android:text="@string/confirmation"
-        android:textColor="@color/white"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    </RadioGroup>
+
+<!--    <TextView-->
+<!--        android:id="@+id/confirmation"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="75dp"-->
+<!--        android:background="@drawable/checkout_button_back"-->
+<!--        android:gravity="center"-->
+<!--        android:paddingVertical="17dp"-->
+<!--        android:text="@string/confirmation"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="14sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

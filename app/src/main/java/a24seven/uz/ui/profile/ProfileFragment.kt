@@ -2,17 +2,22 @@ package a24seven.uz.ui.profile
 
 import a24seven.uz.R
 import a24seven.uz.data.PrefManager
+import a24seven.uz.databinding.ChangeLanguageBottomsheetBinding
 import a24seven.uz.databinding.FragmentProfileBinding
 import a24seven.uz.network.models.ProfileResponse
 import a24seven.uz.network.utils.NoConnectivityException
 import a24seven.uz.network.utils.Resource
 import a24seven.uz.ui.utils.BaseFragment
+import a24seven.uz.utils.createBottomSheet
 import a24seven.uz.utils.navigate
 import a24seven.uz.utils.observeEvent
 import a24seven.uz.utils.showSnackbar
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 
 // TODO: myOrders
@@ -25,9 +30,17 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     override fun setUpUI() {
         super.setUpUI()
 
+        _bottomSheetBinding = ChangeLanguageBottomsheetBinding.inflate(layoutInflater)
+        bottomsheet =
+            createBottomSheet(bottomSheetBinding.root)
+
         setTitle(getString(R.string.profile_title))
         viewModel.getProfileResponse()
     }
+
+    private lateinit var bottomsheet: BottomSheetDialog
+    private var _bottomSheetBinding: ChangeLanguageBottomsheetBinding? = null
+    private val bottomSheetBinding get() = _bottomSheetBinding!!
 
     override fun <T : Any> onSuccess(data: T) {
         super.onSuccess(data)
@@ -109,9 +122,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         binding.myOrders.setOnClickListener {
             navigate(R.id.action_nav_profile_to_nav_myOrders)
         }
-//        binding.changeLanguage.setOnClickListener {
-//            navigate(R.id.changeLanguage)
-//        }
+
+        binding.changeLanguage.setOnClickListener {
+            changeBottomSheet()
+        }
+
         binding.myAdresses.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavProfileToNavAddressList()
             navigate(action)
@@ -129,4 +144,53 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             navigate(R.id.action_nav_profile_to_nav_myFavouriteItems)
         }
     }
+
+    var language:String = ""
+
+    private fun changeBottomSheet() {
+
+        when (PrefManager.getLocale(requireContext())) {
+            "ru" -> {
+                bottomSheetBinding.ruButton.isChecked = true
+            }
+            "uz" -> {
+                bottomSheetBinding.uzButton.isChecked = true
+            }
+        }
+
+        bottomSheetBinding.radioButtonLocale.setOnCheckedChangeListener { _, i ->
+            when (i) {
+                R.id.ru_button -> {
+                    language="ru"
+                    changeLocale(language)
+                }
+
+                R.id.uz_button -> {
+                    language = "uz"
+                    changeLocale(language)
+                }
+            }
+        }
+
+
+        if (language == "ru"){
+            bottomSheetBinding.ruButton.setBackgroundResource(R.drawable.shape_language)
+            bottomSheetBinding.uzButton.setBackgroundResource(R.drawable.defaut_dot)
+        }else if (language == "uz"){
+            bottomSheetBinding.uzButton.setBackgroundResource(R.drawable.shape_language)
+            bottomSheetBinding.ruButton.setBackgroundResource(R.drawable.defaut_dot)
+        }
+
+        bottomsheet.show()
+
+    }
+
+    private fun changeLocale(locale: String) {
+        val oldLocale = PrefManager.getLocale(requireContext())
+        if (oldLocale != locale) {
+            PrefManager.saveLocale(requireContext(), locale.toLowerCase(Locale.ROOT))
+            ActivityCompat.recreate(requireActivity())
+        }
+    }
+
 }

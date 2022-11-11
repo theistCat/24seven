@@ -7,7 +7,7 @@
 
 
             <!-- solid background -->
-            <solid android:color="@color/text_color_faded"
+            <solid android:color="#FCBC7D"
 
                 />
             <!-- border-->
