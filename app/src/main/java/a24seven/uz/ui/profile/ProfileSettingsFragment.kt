@@ -100,14 +100,14 @@ class ProfileSettingsFragment :
 
                 region = data.region_id
 
-                if (regionsArray.contains(Region(data.region_id, "", ArrayList<Region>()))) {
-                    val index =
-                        regionsArray.indexOf(Region(data.region_id, "", ArrayList<Region>()))
-                    (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(
-                        regionsArray[index].name,
-                        false
-                    )
-                }
+//                if (regionsArray.contains(Region(data.region_id, "", ArrayList<Region>()))) {
+//                    val index =
+//                        regionsArray.indexOf(Region(data.region_id, "", ArrayList<Region>()))
+//                    (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(
+//                        regionsArray[index].name,
+//                        false
+//                    )
+//                }
             }
 
         }
@@ -123,36 +123,36 @@ class ProfileSettingsFragment :
 
         observeEvent(viewModel.profileResponse, ::handle)
         observeEvent(viewModel.updateResponse, ::handle)
-        viewModel.regionsResponse.observe(viewLifecycleOwner)
-        { event ->
-            event.getContentIfNotHandled()?.let { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                    }
-
-                    is Resource.Success -> {
-                        regionsArray.addAll(resource.data as ArrayList<Region>)
-                        if (region != -1)
-                            if (regionsArray.contains(Region(region, "", ArrayList<Region>()))) {
-                                val index =
-                                    regionsArray.indexOf(Region(region, "", ArrayList<Region>()))
-                                (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(
-                                    regionsArray[index].name,
-                                    false
-                                )
-                            }
-                    }
-
-                    is Resource.GenericError -> {
-                        onGenericError(resource)
-                    }
-
-                    is Resource.Error -> {
-                        onError(resource)
-                    }
-                }
-            }
-        }
+//        viewModel.regionsResponse.observe(viewLifecycleOwner)
+//        { event ->
+//            event.getContentIfNotHandled()?.let { resource ->
+//                when (resource) {
+//                    is Resource.Loading -> {
+//                    }
+//
+//                    is Resource.Success -> {
+//                        regionsArray.addAll(resource.data as ArrayList<Region>)
+//                        if (region != -1)
+//                            if (regionsArray.contains(Region(region, "", ArrayList<Region>()))) {
+//                                val index =
+//                                    regionsArray.indexOf(Region(region, "", ArrayList<Region>()))
+//                                (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setText(
+//                                    regionsArray[index].name,
+//                                    false
+//                                )
+//                            }
+//                    }
+//
+//                    is Resource.GenericError -> {
+//                        onGenericError(resource)
+//                    }
+//
+//                    is Resource.Error -> {
+//                        onError(resource)
+//                    }
+//                }
+//            }
+//        }
     }
 
 
@@ -172,37 +172,37 @@ class ProfileSettingsFragment :
 //            }
 //        }
 
-        uiMode = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
-
-        binding.switch1.isChecked = uiMode == Configuration.UI_MODE_NIGHT_YES
-
-
-        val arrayAdapter = TypedDropdownAdapter(
-            requireContext(), R.layout.support_simple_spinner_dropdown_item,
-            regionsArray
-        )
-
-        (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setAdapter(arrayAdapter)
-
-
-        binding.activityTypeDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
-            arrayAdapter.getItem(i)?.let {
-                region = it.id
-            }
-        }
+//        uiMode = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)
+//
+//        binding.switch1.isChecked = uiMode == Configuration.UI_MODE_NIGHT_YES
+//
+//
+//        val arrayAdapter = TypedDropdownAdapter(
+//            requireContext(), R.layout.support_simple_spinner_dropdown_item,
+//            regionsArray
+//        )
+//
+//        (binding.activityTypeDropDownValue as? AutoCompleteTextView)?.setAdapter(arrayAdapter)
+//
+//
+//        binding.activityTypeDropDownValue.setOnItemClickListener { adapterView, view, i, l ->
+//            arrayAdapter.getItem(i)?.let {
+//                region = it.id
+//            }
+//        }
 
     }
 
     override fun setUpOnClickListeners() {
-        binding.switch1.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-
-        binding.switch1.setOnClickListener {
-            PrefManager.saveTheme(requireContext(), binding.switch1.isChecked)
-        }
+//        binding.switch1.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//            } else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//        }
+//
+//        binding.switch1.setOnClickListener {
+//            PrefManager.saveTheme(requireContext(), binding.switch1.isChecked)
+//        }
 
 //        bottomSheetBinding.locale.setOnCheckedChangeListener { _, i ->
 //            when (i) {
@@ -216,17 +216,17 @@ class ProfileSettingsFragment :
 //            }
 //        }
 
-        binding.radioGroupLocale.setOnCheckedChangeListener { _, i ->
-            when (i) {
-                R.id.ru -> {
-                    changeLocale("ru")
-                }
-
-                R.id.uz -> {
-                    changeLocale("uz")
-                }
-            }
-        }
+//        binding.radioGroupLocale.setOnCheckedChangeListener { _, i ->
+//            when (i) {
+//                R.id.ru -> {
+//                    changeLocale("ru")
+//                }
+//
+//                R.id.uz -> {
+//                    changeLocale("uz")
+//                }
+//            }
+//        }
 
         binding.updateProfile.setOnClickListener {
             var firstName = ""
@@ -277,14 +277,14 @@ class ProfileSettingsFragment :
 //                    binding.profileINN.error = "Укажите ИНН"
 //                }
 
-                region == -1 -> {
-                    binding.changeRegion.error = getString(R.string.warning_region)
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.warning_region),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+//                region == -1 -> {
+//                    binding.changeRegion.error = getString(R.string.warning_region)
+//                    Toast.makeText(
+//                        requireContext(),
+//                        getString(R.string.warning_region),
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
 
                 else -> {
                     viewModel.getUpdateProfileResponse(

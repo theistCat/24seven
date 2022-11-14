@@ -172,15 +172,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             }
         }
 
-
-        if (language == "ru"){
-            bottomSheetBinding.ruButton.setBackgroundResource(R.drawable.shape_language)
-            bottomSheetBinding.uzButton.setBackgroundResource(R.drawable.defaut_dot)
-        }else if (language == "uz"){
-            bottomSheetBinding.uzButton.setBackgroundResource(R.drawable.shape_language)
-            bottomSheetBinding.ruButton.setBackgroundResource(R.drawable.defaut_dot)
-        }
-
         bottomsheet.show()
 
     }

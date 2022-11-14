@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:bottom="0dp"
-        android:drawable="@drawable/ic_tab_indicator"
+        android:drawable="@drawable/tab_layout_shape_indicator"
         android:left="-10dp"
         android:right="-10dp"
         android:top="0dp">

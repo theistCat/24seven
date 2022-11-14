@@ -175,7 +175,7 @@ class MapFragment : Fragment(), CameraListener {
                             binding.streetHouseText.visibility = View.INVISIBLE
 
                             binding.streetHouseText.setTextColor(Color.parseColor("#000000"))
-                            binding.cityText.visibility = View.INVISIBLE
+//                            binding.cityText.visibility = View.INVISIBLE
                             binding.streetHouseText.show()
 
                             binding.btnChooseLocation.isEnabled = true
@@ -378,7 +378,7 @@ class MapFragment : Fragment(), CameraListener {
                 binding.streetHouseText.visibility=View.VISIBLE
                 binding. streetHouseText.text = getString(R.string.detecting_address)
                 binding.streetHouseText.setTextColor(Color.parseColor("#b6b6b6"))
-                binding.cityText.visibility = View.INVISIBLE
+//                binding.cityText.visibility = View.INVISIBLE
                 binding.btnChooseLocation.isEnabled = false
 
                 handler.removeCallbacks(runnable)
