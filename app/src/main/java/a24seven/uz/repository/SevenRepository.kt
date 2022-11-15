@@ -27,7 +27,6 @@ import a24seven.uz.ui.profile.myOrders.OrderPagingSource
 
 class SevenRepository(private val api: SevenApi, private val cartDao: CartDao) {
 
-
     companion object {
         private const val PRODUCT_PAGING_SIZE = 5
         private const val COMMENT_PAGING_SIZE = 5
@@ -310,7 +309,6 @@ class SevenRepository(private val api: SevenApi, private val cartDao: CartDao) {
             ),
             pagingSourceFactory = { NewsPagingSource(api) }
         ).flow
-
     }
 
     suspend fun showNews(newsId: Int) = flow {

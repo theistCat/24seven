@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +24,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:id="@+id/homePager"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +50,7 @@
 
             <TextView
                 android:id="@+id/newItems"
-                android:visibility="gone"
+                android:visibility="visible"
                 style="@style/HeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,7 +60,7 @@
 
             <TextView
                 android:id="@+id/newItemsAll"
-                android:visibility="gone"
+                android:visibility="visible"
                 style="@style/SubHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +69,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/newItemsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,7 +81,7 @@
             <TextView
                 android:id="@+id/popularItems"
                 style="@style/HeaderStyle"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/popular_items"
@@ -91,7 +90,7 @@
 
             <TextView
                 android:id="@+id/allPopularItems"
-                android:visibility="gone"
+                android:visibility="visible"
                 style="@style/SubHeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,7 +99,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/popularItemsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -110,7 +109,7 @@
 
             <TextView
                 android:id="@+id/onSaleItems"
-                android:visibility="gone"
+                android:visibility="visible"
                 style="@style/HeaderStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -121,7 +120,7 @@
             <TextView
                 android:id="@+id/allOnSaleItems"
                 style="@style/SubHeaderStyle"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/view_all"
@@ -129,7 +128,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/onSaleItemsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,7 +137,7 @@
                 tools:layout_editor_absoluteX="185dp" />
 
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/news"
                 style="@style/HeaderStyle"
                 android:layout_width="wrap_content"
@@ -148,7 +147,7 @@
                 app:layout_constraintTop_toBottomOf="@id/onSaleItemsRecycler" />
 
             <TextView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/allNews"
                 style="@style/SubHeaderStyle"
                 android:layout_width="wrap_content"
@@ -158,7 +157,7 @@
                 app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
+                android:visibility="visible"
                 android:id="@+id/newsRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1,5 +1,7 @@
 package a24seven.uz.ui.profile.myOrders
 
+import a24seven.uz.R
+import a24seven.uz.databinding.FragmentMyOrdersBinding
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import a24seven.uz.R
-import a24seven.uz.databinding.FragmentMyOrdersBinding
 
 class MyOrdersFragment : Fragment() {
 
@@ -48,9 +48,9 @@ class MyOrdersFragment : Fragment() {
 
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
-                2 -> {
-                    tab.text = getString(R.string.in_wait)
-                }
+//                2 -> {
+//                    tab.text = getString(R.string.in_wait)
+//                }
 
                 0 -> {
                     tab.text = getString(R.string.active)
@@ -60,9 +60,9 @@ class MyOrdersFragment : Fragment() {
                     tab.text = getString(R.string.delivered)
                 }
 
-                3 -> {
-                    tab.text = getString(R.string.canceled)
-                }
+//                3 -> {
+//                    tab.text = getString(R.string.canceled)
+//                }canceled
 
             }
         }.attach()
@@ -82,14 +82,14 @@ class MyOrdersFragment : Fragment() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    2 -> {
-                        binding.tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.tabInactiveOrder
-                            )
-                        )
-                    }
+//                    2 -> {
+//                        binding.tabLayout.setSelectedTabIndicatorColor(
+//                            ContextCompat.getColor(
+//                                requireContext(),
+//                                R.color.tabInactiveOrder
+//                            )
+//                        )
+//                    }
 
                     0 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
@@ -109,28 +109,28 @@ class MyOrdersFragment : Fragment() {
                         )
                     }
 
-                    3 -> {
-                        binding.tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.tabCanceledOrder
-                            )
-                        )
-                    }
+//                    3 -> {
+//                        binding.tabLayout.setSelectedTabIndicatorColor(
+//                            ContextCompat.getColor(
+//                                requireContext(),
+//                                R.color.tabDeliveredOrder
+//                            )
+//                        )
+//                    }
 
                 }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    2 -> {
-                        binding.tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.tabInactiveOrder
-                            )
-                        )
-                    }
+//                    2 -> {
+//                        binding.tabLayout.setSelectedTabIndicatorColor(
+//                            ContextCompat.getColor(
+//                                requireContext(),
+//                                R.color.tabInactiveOrder
+//                            )
+//                        )
+//                    }
 
                     0 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
@@ -150,14 +150,14 @@ class MyOrdersFragment : Fragment() {
                         )
                     }
 
-                    3 -> {
-                        binding.tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.tabCanceledOrder
-                            )
-                        )
-                    }
+//                    3 -> {
+//                        binding.tabLayout.setSelectedTabIndicatorColor(
+//                            ContextCompat.getColor(
+//                                requireContext(),
+//                                R.color.tabCanceledOrder
+//                            )
+//                        )
+//                    }
 
                 }
 
@@ -165,14 +165,14 @@ class MyOrdersFragment : Fragment() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 when (tab?.position) {
-                    2 -> {
-                        binding.tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.tabInactiveOrder
-                            )
-                        )
-                    }
+//                    2 -> {
+//                        binding.tabLayout.setSelectedTabIndicatorColor(
+//                            ContextCompat.getColor(
+//                                requireContext(),
+//                                R.color.tabInactiveOrder
+//                            )
+//                        )
+//                    }
 
                     0 -> {
                         binding.tabLayout.setSelectedTabIndicatorColor(
@@ -192,14 +192,14 @@ class MyOrdersFragment : Fragment() {
                         )
                     }
 
-                    3 -> {
-                        binding.tabLayout.setSelectedTabIndicatorColor(
-                            ContextCompat.getColor(
-                                requireContext(),
-                                R.color.tabCanceledOrder
-                            )
-                        )
-                    }
+//                    3 -> {
+//                        binding.tabLayout.setSelectedTabIndicatorColor(
+//                            ContextCompat.getColor(
+//                                requireContext(),
+//                                R.color.tabCanceledOrder
+//                            )
+//                        )
+//                    }
 
                 }
             }

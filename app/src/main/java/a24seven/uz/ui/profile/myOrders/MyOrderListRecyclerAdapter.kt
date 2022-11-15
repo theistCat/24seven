@@ -47,18 +47,18 @@ class MyOrderListRecyclerAdapter(
 
             binding.orderStatus.setTextColor(
                 when (orderListType) {
-                    Variables.orderType[1]!! -> {
-                        Color.parseColor("#1BC06D")
-                    }
+//                    Variables.orderType[1]!! -> {
+//                        Color.parseColor("#1BC06D")
+//                    }
 
                     Variables.orderType[0]!! -> {
                         Color.parseColor("#F8B068")
                     }
 
-                    Variables.orderType[2]!! -> {
-                        Color.parseColor("#DB3022")
-                    }
-
+//                    Variables.orderType[2]!! -> {
+//                        Color.parseColor("#DB3022")
+//                    }
+//
                     else -> {
                         Color.parseColor("#DB3022")
                     }

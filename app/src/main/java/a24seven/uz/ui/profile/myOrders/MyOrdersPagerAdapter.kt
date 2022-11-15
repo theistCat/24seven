@@ -17,16 +17,16 @@ class MyOrdersPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) 
                 MyActiveOrdersListFragment()
             }
 
-            1 -> {
+            else -> {
                 MyDeliveredOrdersListFragment()
             }
 
-            2 -> {
-                MyInactiveOrdersListFragment()
-            }
-
-            else ->
-                MyCanceledOrdersListFragment()
+//            2 -> {
+//                MyInactiveOrdersListFragment()
+//            }
+//
+//            else ->
+//                MyCanceledOrdersListFragment()
         }
     }
 
