@@ -5,7 +5,10 @@ import a24seven.uz.R
 import a24seven.uz.databinding.ActivityAuthBinding
 import a24seven.uz.network.utils.NoConnectivityException
 import a24seven.uz.network.utils.Resource
-import a24seven.uz.utils.*
+import a24seven.uz.utils.hideProgress
+import a24seven.uz.utils.showAsProgress
+import a24seven.uz.utils.showErrorIfNotFilled
+import a24seven.uz.utils.showSnackbar
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -39,11 +42,26 @@ class AuthActivity : AppCompatActivity() {
             policyDialogFragment.isCancelable = true
         }
 
-        binding.getCode.setOnClickListener {
+        binding.getNumber.setOnClickListener {
 
             if (binding.userPhone.showErrorIfNotFilled() && binding.userPhone.text.length == 12)
                 viewModel.getFirstStepResponse(binding.userPhone.text.toString())
             else binding.userPhone.error = this.getString(R.string.warning_fill_the_fields)
+
+            binding.getNumber.visibility = View.GONE
+            binding.getCode.visibility = View.VISIBLE
+            binding.userPhone.visibility = View.GONE
+            binding.verifyCode.visibility = View.VISIBLE
+            binding.userPhoneTitle.text = getString(R.string.input_code)
+            binding.text1.visibility = View.GONE
+            binding.policy.visibility = View.GONE
+            binding.plus.visibility = View.GONE
+            binding.delete.visibility = View.GONE
+//            binding.resendVerifyCode.visibility = View.VISIBLE
+        }
+
+        binding.delete.setOnClickListener {
+            binding.userPhone.text.clear()
         }
 
         binding.userPhone.doAfterTextChanged {
