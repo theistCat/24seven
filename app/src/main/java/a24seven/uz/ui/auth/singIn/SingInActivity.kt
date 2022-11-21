@@ -1,5 +1,6 @@
 package a24seven.uz.ui.auth.singIn
 
+import a24seven.uz.R
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
