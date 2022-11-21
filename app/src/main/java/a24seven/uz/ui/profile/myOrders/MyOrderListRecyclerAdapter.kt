@@ -67,21 +67,21 @@ class MyOrderListRecyclerAdapter(
 
             binding.orderStatus.text =
                 when (orderListType) {
-                    Variables.orderType[1]!! -> {
-                        context.getString(R.string.active)
-                    }
-
                     Variables.orderType[0]!! -> {
                         context.getString(R.string.in_wait)
-                    }
-
-                    Variables.orderType[2]!! -> {
-                        context.getString(R.string.delivered)
                     }
 
                     else -> {
                         context.getString(R.string.active)
                     }
+
+//                    Variables.orderType[2]!! -> {
+//                        context.getString(R.string.delivered)
+//                    }
+//
+//                    else -> {
+//                        context.getString(R.string.active)
+//                    }
                 }
 
 

@@ -32,13 +32,13 @@ class AuthActivity : AppCompatActivity() {
         binding.plus.visibility=View.INVISIBLE
 
 
-        binding.policy.setOnClickListener {
-            val fm = this.supportFragmentManager
-            val policyDialogFragment = PolicyDialogFragment()
-
-            policyDialogFragment.show(fm, "AddressList")
-            policyDialogFragment.isCancelable = true
-        }
+//        binding.policy.setOnClickListener {
+//            val fm = this.supportFragmentManager
+//            val policyDialogFragment = PolicyDialogFragment()
+//
+//            policyDialogFragment.show(fm, "AddressList")
+//            policyDialogFragment.isCancelable = true
+//        }
 
         binding.getCode.setOnClickListener {
 
@@ -54,63 +54,62 @@ class AuthActivity : AppCompatActivity() {
                 binding.plus.visibility=View.INVISIBLE
         }
 
-        binding.auth.setOnClickListener {
-            viewModel.getVerifyResponse(binding.userPhone.text.toString(),binding.verifyCode.text.toString())
-        }
+//        binding.auth.setOnClickListener {
+//            viewModel.getVerifyResponse(binding.userPhone.text.toString(),binding.verifyCode.text.toString())
+//        }
 
         viewModel.verifyResponse.observe(this, Observer {
                 it.getContentIfNotHandled()?.let {resource->
-                    when (resource) {
-                        is Resource.Loading -> {
-                            binding.loaderAuth.showAsProgress()
-                        }
-                        is Resource.Success -> {
-                            binding.loaderAuth.hideProgress()
-                            val  returnIntent = Intent();
-                            returnIntent.putExtra(MainActivity.ACCESS_TOKEN,resource.data.access_token);
-                            setResult(Activity.RESULT_OK,returnIntent);
-                            finish()
-                        }
-                        is Resource.GenericError -> {
-                            binding.loaderAuth.hideProgress()
-                            showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
-                        }
-                        is Resource.Error -> {
-                            binding.loaderAuth.hideProgress()
-                            if (resource.exception is NoConnectivityException) {
-                                //showNoConnectionDialog(this::onRetry)
-                            } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
-                        }
-                    }
+//                    when (resource) {
+//                        is Resource.Loading -> {
+//                            binding.loaderAuth.showAsProgress()
+//                        }
+//                        is Resource.Success -> {
+//                            binding.loaderAuth.hideProgress()
+//                            val  returnIntent = Intent();
+//                            returnIntent.putExtra(MainActivity.ACCESS_TOKEN,resource.data.access_token);
+//                            setResult(Activity.RESULT_OK,returnIntent);
+//                            finish()
+//                        }
+//                        is Resource.GenericError -> {
+//                            binding.loaderAuth.hideProgress()
+//                            showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
+//                        }
+//                        is Resource.Error -> {
+//                            binding.loaderAuth.hideProgress()
+//                            if (resource.exception is NoConnectivityException) {
+//                                //showNoConnectionDialog(this::onRetry)
+//                            } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
+//                        }
+//                    }
                 }
         })
 
         viewModel.firstStepResponse.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {resource->
-                when (resource) {
-                    is Resource.Loading -> {
-                        binding.loaderGetCode.showAsProgress()
-                    }
-                    is Resource.Success -> {
-                        binding.loaderGetCode.hideProgress()
-                        binding.motionLayout.transitionToEnd()
-                    }
-                    is Resource.GenericError -> {
-                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
-
-                        binding.loaderGetCode.hideProgress()
-                    }
-                    is Resource.Error -> {
-                        binding.loaderGetCode.hideProgress()
-                        if (resource.exception is NoConnectivityException) {
-                            //showNoConnectionDialog(this::onRetry)
-                        } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
-                    }
-                }
+            it.getContentIfNotHandled()?.let {
+//                when (resource) {
+//                    is Resource.Loading -> {
+//                        binding.loaderGetCode.showAsProgress()
+//                    }
+//                    is Resource.Success -> {
+//                        binding.loaderGetCode.hideProgress()
+////                        binding.motionLayout.transitionToEnd()
+//                    }
+//                    is Resource.GenericError -> {
+//                        showSnackbar(resource.errorResponse.jsonResponse.optString("error")?:"error")
+//
+//                        binding.loaderGetCode.hideProgress()
+//                    }
+//                    is Resource.Error -> {
+//                        binding.loaderGetCode.hideProgress()
+//                        if (resource.exception is NoConnectivityException) {
+////                            showNoConnectionDialog(this::onRetry)
+//                        } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
+//                    }
+//                }
             }
         })
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         setResult(Activity.RESULT_CANCELED,Intent());

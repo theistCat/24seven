@@ -1,16 +1,16 @@
 package a24seven.uz.ui.home
 
+import a24seven.uz.network.models.CartItem
+import a24seven.uz.network.models.HomeResponse
+import a24seven.uz.network.utils.Event
+import a24seven.uz.network.utils.Resource
+import a24seven.uz.repository.SevenRepository
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import a24seven.uz.network.models.CartItem
-import a24seven.uz.network.models.HomeResponse
-import a24seven.uz.network.utils.Event
-import a24seven.uz.network.utils.Resource
-import a24seven.uz.repository.SevenRepository
 
 class HomeViewModel constructor(private val repository: SevenRepository) : ViewModel() {
 
@@ -24,11 +24,9 @@ class HomeViewModel constructor(private val repository: SevenRepository) : ViewM
         }
     }
 
-
     val favResponse = MutableLiveData<Event<Resource<Any>>>()
 
-
-    fun addFav(productId:Int) {
+    fun addFav(productId: Int) {
         viewModelScope.launch {
             repository.addFav(productId).onEach {
                 favResponse.value = Event(it)
@@ -36,7 +34,7 @@ class HomeViewModel constructor(private val repository: SevenRepository) : ViewM
         }
     }
 
-    fun removeFav(productId:Int) {
+    fun removeFav(productId: Int) {
         viewModelScope.launch {
             repository.removeFav(productId).onEach {
                 favResponse.value = Event(it)
@@ -44,7 +42,6 @@ class HomeViewModel constructor(private val repository: SevenRepository) : ViewM
         }
     }
 
-//
 //    val addToCartResponse = MutableLiveData<Long>()
 //    fun addToCart(item: CartItem) = viewModelScope.launch {
 //
@@ -64,14 +61,10 @@ class HomeViewModel constructor(private val repository: SevenRepository) : ViewM
     }
 
 
-    fun delete(item: CartItem) =
-        viewModelScope.launch {
-        repository.delete(item)
-    }
+    fun delete(item: CartItem) = viewModelScope.launch { repository.delete(item) }
 
 //    val removeCart = MutableLiveData<Event<Resource<Any>>>()
-//
-//
+
 //    fun delete(item: CartItem) {
 //        viewModelScope.launch {
 //            repository.delete(item).onEach {

@@ -35,7 +35,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.24seven"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".SingInActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
