@@ -202,14 +202,14 @@ fun Fragment.showActionSnackbar(
 
 
 fun View.showAsProgress() {
-    val loadingAnimation = AnimationUtils.loadAnimation(this.context, R.anim.spinning)
-    this.startAnimation(loadingAnimation)
+//    val loadingAnimation = AnimationUtils.loadAnimation(this.context, R.anim.spinning)
+//    this.startAnimation(loadingAnimation)
     this.visibility = View.VISIBLE
 }
 
 fun View.hideProgress() {
-    this.clearAnimation()
-    this.visibility = View.INVISIBLE
+//    this.clearAnimation()
+    this.visibility = View.GONE
 }
 
 /**

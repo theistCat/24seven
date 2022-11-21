@@ -82,11 +82,11 @@ class AuthActivity : AppCompatActivity() {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        binding.loaderAuth.showAsProgress()
+//                        binding.loaderAuth.showAsProgress()
                     }
 
                     is Resource.Success -> {
-                        binding.loaderAuth.hideProgress()
+//                        binding.loaderAuth.hideProgress()
                         val returnIntent = Intent();
                         returnIntent.putExtra(
                             MainActivity.ACCESS_TOKEN,
@@ -97,14 +97,14 @@ class AuthActivity : AppCompatActivity() {
                     }
 
                     is Resource.GenericError -> {
-                        binding.loaderAuth.hideProgress()
+//                        binding.loaderAuth.hideProgress()
                         showSnackbar(
                             resource.errorResponse.jsonResponse.optString("error") ?: "error"
                         )
                     }
 
                     is Resource.Error -> {
-                        binding.loaderAuth.hideProgress()
+//                        binding.loaderAuth.hideProgress()
                         if (resource.exception is NoConnectivityException) {
                             //showNoConnectionDialog(this::onRetry)
                         } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
@@ -117,11 +117,11 @@ class AuthActivity : AppCompatActivity() {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        binding.loaderAuth.showAsProgress()
+//                        binding.loaderAuth.showAsProgress()
                     }
 
                     is Resource.Success -> {
-                        binding.loaderAuth.hideProgress()
+//                        binding.loaderAuth.hideProgress()
 //                        binding.motionLayout.transitionToEnd()
                     }
 
@@ -130,11 +130,11 @@ class AuthActivity : AppCompatActivity() {
                             resource.errorResponse.jsonResponse.optString("error") ?: "error"
                         )
 
-                        binding.loaderAuth.hideProgress()
+//                        binding.loaderAuth.hideProgress()
                     }
 
                     is Resource.Error -> {
-                        binding.loaderAuth.hideProgress()
+//                        binding.loaderAuth.hideProgress()
                         if (resource.exception is NoConnectivityException) {
                             //showNoConnectionDialog(this::onRetry)
                         } else resource.exception.message?.let { it1 -> showSnackbar(it1) }
