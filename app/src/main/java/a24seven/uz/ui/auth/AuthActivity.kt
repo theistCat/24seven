@@ -99,12 +99,12 @@ class AuthActivity : AppCompatActivity() {
             it.getContentIfNotHandled()?.let { resource ->
                 when (resource) {
                     is Resource.Loading -> {
-                        binding.loaderGetCode.showAsProgress()
+                        binding.loaderAuth.showAsProgress()
                     }
 
                     is Resource.Success -> {
-                        binding.loaderGetCode.hideProgress()
-                        binding.motionLayout.transitionToEnd()
+                        binding.loaderAuth.hideProgress()
+//                        binding.motionLayout.transitionToEnd()
                     }
 
                     is Resource.GenericError -> {
@@ -112,11 +112,11 @@ class AuthActivity : AppCompatActivity() {
                             resource.errorResponse.jsonResponse.optString("error") ?: "error"
                         )
 
-                        binding.loaderGetCode.hideProgress()
+                        binding.loaderAuth.hideProgress()
                     }
 
                     is Resource.Error -> {
-                        binding.loaderGetCode.hideProgress()
+                        binding.loaderAuth.hideProgress()
                         if (resource.exception is NoConnectivityException) {
                             //showNoConnectionDialog(this::onRetry)
                         } else resource.exception.message?.let { it1 -> showSnackbar(it1) }

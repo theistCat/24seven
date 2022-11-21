@@ -314,6 +314,16 @@
 <!--                            app:layout_constraintEnd_toEndOf="parent"-->
 <!--                            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/loaderAuth"
+                android:layout_width="30dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageView4"
+                app:layout_constraintBottom_toTopOf="@id/userPhone_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:indeterminate="true"
+                android:layout_height="30dp"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
