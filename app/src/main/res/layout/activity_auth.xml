@@ -176,12 +176,12 @@
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/text2"
+                app:layout_constraintBottom_toTopOf="@id/policy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/text2"
+                android:id="@+id/policy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
@@ -301,16 +301,16 @@
             <!--                app:layout_constraintTop_toTopOf="@+id/auth"-->
             <!--                app:srcCompat="@drawable/ic_logo_small" />-->
 
-            <!--            <TextView-->
-            <!--                android:id="@+id/policy"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:text="@string/policy"-->
-            <!--                android:padding="16dp"-->
-            <!--                android:textColor="@color/white"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintBottom_toBottomOf="parent"/>-->
+<!--                        <TextView-->
+<!--                            android:id="@+id/policy"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="@string/policy"-->
+<!--                            android:padding="16dp"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintBottom_toBottomOf="parent"/>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
