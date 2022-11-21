@@ -1,5 +1,11 @@
 package a24seven.uz.utils
 
+import a24seven.uz.MainActivity
+import a24seven.uz.R
+import a24seven.uz.databinding.FragmentCollectionObjectBinding
+import a24seven.uz.network.models.Banner
+import a24seven.uz.network.utils.Event
+import a24seven.uz.ui.products.ImagesAdapter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -23,16 +29,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.CallSuper
+import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -46,17 +58,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 import com.redmadrobot.inputmask.MaskedTextChangedListener
 import com.redmadrobot.inputmask.helper.AffinityCalculationStrategy
-import a24seven.uz.MainActivity
-import a24seven.uz.R
-import a24seven.uz.databinding.FragmentCollectionObjectBinding
-import a24seven.uz.network.models.Banner
-import a24seven.uz.network.utils.Event
-import a24seven.uz.ui.products.ImagesAdapter
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.NumberFormat
-import java.util.*
+import java.util.Locale
 
 fun Fragment.toDp(px: Int): Int {
     return ((requireContext().resources.displayMetrics.density * px) + 0.5f).toInt()
@@ -234,6 +240,7 @@ fun Fragment.navigate(action: NavDirections, slowLoad: Boolean = false) {
 
     this.findNavController().navigate(action, builder.build())
 }
+
 //fun EditText.formatPhoneMask() {
 //    val affineFormats: MutableList<String> = ArrayList()
 //    affineFormats.add("+998 [00] [000] [00] [00]")
