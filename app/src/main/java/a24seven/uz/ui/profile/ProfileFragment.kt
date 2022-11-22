@@ -131,9 +131,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             val action = ProfileFragmentDirections.actionNavProfileToNavAddressList()
             navigate(action)
         }
-//        binding.myPaymentMethod.setOnClickListener {
+        binding.myPaymentMethod.setOnClickListener {
             navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
-//        }
+        }
 
         binding.profileSettings.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavProfileToNavProfileSettings()
