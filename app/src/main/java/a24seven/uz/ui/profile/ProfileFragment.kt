@@ -132,7 +132,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             navigate(action)
         }
 //        binding.myPaymentMethod.setOnClickListener {
-//            navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
+            navigate(R.id.action_nav_profile_to_nav_myPaymentMethod)
 //        }
 
         binding.profileSettings.setOnClickListener {

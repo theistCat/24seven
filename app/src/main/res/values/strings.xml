@@ -58,6 +58,8 @@
     <string name="order_total">Итоговая цена:</string>
     <string name="cancel_order">Отменить заказ</string>
     <string name="save">Сохранить</string>
+    <string name="add_card">Добавить карту</string>
+    <string name="add_card2">Добавить платежную карту</string>
     <string name="my_orders">Мои заказы</string>
     <string name="favourite">Избранные товары</string>
     <string name="my_addresses">Адресная книга</string>
@@ -165,7 +167,7 @@
     <string name="app_not_installed">App not Installed</string>
     <string name="n_n">Для продолжения покупки\n пожалуйста авторизуйтесь\n через номер телефона</string>
     <string name="input_phone">Введите пожалуйста номер телефона</string>
-    <string name="input_code">Введите Смс-код</string>
+    <string name="input_code">Введите код-подтверждения</string>
     <string name="get_number">получить код</string>
     <string name="restart_code">Отправить код-подтверждения снова</string>
     <string name="get_code">Далее</string>
@@ -219,6 +221,11 @@
     <string name="name_lastname">Фамилия и имя</string>
     <string name="singIn_company_name_title">Введите наименование компании</string>
     <string name="company_name_editText">Название компании</string>
+    <string name="no_add_card_text">Вы не добавили карту...</string>
+    <string name="number_card">Номер карты</string>
+    <string name="card_expiry_date_text">Срок действия карты</string>
+    <string name="card_name_text">Название карты</string>
+    <string name="proceed">Продолжить</string>
 
     <!--    <string name="sort_by_new_key" translatable="false">new</string>-->
     <!--    <string name="sort_by_popular_key" translatable="false">popular</string>-->
