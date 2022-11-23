@@ -29,7 +29,7 @@ class NotificationsFragment : Fragment() {
     private fun setUpNotificationsViewModel() {
         val binding = binding
         notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textNotifications.text = it
+
         })
     }
 }

@@ -60,10 +60,10 @@
     <string name="save">Сохранить</string>
     <string name="add_card">Добавить карту</string>
     <string name="add_card2">Добавить платежную карту</string>
-    <string name="my_orders">Мои заказы</string>
+    <string name="my_orders">История заказов</string>
     <string name="favourite">Избранные товары</string>
-    <string name="my_addresses">Адресная книга</string>
-    <string name="my_pay_method">Способы оплаты</string>
+    <string name="my_addresses">Мои адреса</string>
+    <string name="my_pay_method">Платежные карты</string>
     <string name="name">ФИО</string>
     <string name="personal_info">Персональные данные</string>
     <string name="fio">ФИО*</string>
@@ -72,7 +72,7 @@
     <string name="male">Мужской</string>
     <string name="female">Женский</string>
     <string name="change_password">Сменить пароль</string>
-    <string name="change_language">Сменить язык</string>
+    <string name="change_language">Язык</string>
     <string name="change_region">Сменить регион</string>
     <string name="save_changes">Сохранить изменения</string>
     <string name="set_as_default">Использовать как способ оплаты по умолчанию</string>
@@ -226,6 +226,9 @@
     <string name="card_expiry_date_text">Срок действия карты</string>
     <string name="card_name_text">Название карты</string>
     <string name="proceed">Продолжить</string>
+    <string name="hot_call">Горячий звонок в колл-центр</string>
+    <string name="notification_text">Уведомления</string>
+    <string name="no_notification">У вас пока нет уведомлений...</string>
 
     <!--    <string name="sort_by_new_key" translatable="false">new</string>-->
     <!--    <string name="sort_by_popular_key" translatable="false">popular</string>-->

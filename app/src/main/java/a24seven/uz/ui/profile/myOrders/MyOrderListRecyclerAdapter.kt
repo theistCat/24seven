@@ -88,7 +88,6 @@ class MyOrderListRecyclerAdapter(
             if (order.status == Variables.orderType[3])
                 binding.orderStatus.text = context.getString(R.string.canceled)
 
-
             binding.orderDate.text = order.created_at
             binding.orderID.text = context.getString(R.string.order_number, order.id)
             binding.orderItemCount.text = order.products_count.toString()
