@@ -45,7 +45,6 @@ class MyOrdersFragment : Fragment() {
 
     private fun setUpTabLayouts() {
 
-
         TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
             when (position) {
 //                2 -> {
@@ -67,12 +66,12 @@ class MyOrdersFragment : Fragment() {
             }
         }.attach()
 
-        binding.tabLayout.setSelectedTabIndicatorColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.tabActiveOrder
-            )
-        )
+//        binding.tabLayout.setSelectedTabIndicatorColor(
+//            ContextCompat.getColor(
+//                requireContext(),
+//                R.color.tabDeliveredOrder
+//            )
+//        )
 
         //for some reason this line is causing a bug where indicator is not visible
         //binding.tabLayout.setSelectedTabIndicator(R.drawable.pill_indicator)

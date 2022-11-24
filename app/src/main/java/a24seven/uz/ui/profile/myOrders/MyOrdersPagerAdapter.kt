@@ -9,7 +9,7 @@ import a24seven.uz.ui.profile.myOrders.orderLists.MyInactiveOrdersListFragment
 
 class MyOrdersPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int = 4
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
