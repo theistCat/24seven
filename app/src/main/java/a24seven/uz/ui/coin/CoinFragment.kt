@@ -68,6 +68,7 @@ class CoinFragment : BaseFragment<FragmentCoinItemsBinding>(FragmentCoinItemsBin
                 .setNegativeButton("Отменить") { dialog, which ->
                     // Respond to negative button press
                     dialog.dismiss()
+
                 }
                 .setPositiveButton("Обменять") { dialog, which ->
                     // Respond to positive button press

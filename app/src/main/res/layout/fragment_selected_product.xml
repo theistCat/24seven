@@ -46,11 +46,11 @@
                 android:id="@+id/discountTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:background="@drawable/shape_circle"
-                android:backgroundTint="@color/design_default_color_error"
+                android:backgroundTint="#FF0000"
                 android:gravity="center"
                 android:text="5%"
-                android:layout_margin="8dp"
                 android:textAlignment="gravity"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/productPager"
@@ -69,9 +69,10 @@
             <TextView
                 android:id="@+id/productName"
                 style="@style/HeaderStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="start"
                 android:paddingEnd="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/productOldPrice"
                 app:layout_constraintStart_toStartOf="parent"
@@ -94,6 +95,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/strike_trough"
                 android:textColor="@color/design_default_color_error"
+                android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="@+id/productName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -102,14 +104,52 @@
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="8 990 сум" />
 
+            <RatingBar
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="15dp"
+                android:isIndicator="false"
+                app:layout_constraintBottom_toBottomOf="@id/productPrice"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/productPrice" />
+
             <TextView
                 android:id="@+id/productPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productName"
                 tools:text="10 600 990 сум" />
+
+            <TextView
+                android:id="@+id/productType_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/golos_text_medium"
+                android:text="Вес товара, "
+                android:textColor="@color/text_color"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/productDetail" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/golos_text_medium"
+                tools:text="л"
+                android:textColor="@color/text_color"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/productType_title"
+                app:layout_constraintStart_toEndOf="@id/productType_title"
+                app:layout_constraintTop_toTopOf="@id/productType_title" />
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -117,18 +157,17 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productDetail">
 
                 <FrameLayout
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/shape_circle"
+                    android:background="@drawable/shape_circle2"
                     android:elevation="2dp"
                     app:strokeColor="@color/text_color_faded"
                     app:strokeWidth="0.5dp">
-
 
                     <ImageView
                         android:id="@+id/remove"
@@ -146,30 +185,22 @@
                         app:srcCompat="@drawable/ic_minus" />
                 </FrameLayout>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="70dp"
-                    android:layout_height="32dp"
-                    android:layout_margin="4dp"
-                    app:cardBackgroundColor="@color/cardBackground"
-                    app:cardCornerRadius="30dp"
-                    app:strokeColor="@color/text_color_faded"
-                    app:strokeWidth="0.5dp">
-
-                    <TextView
-                        android:id="@+id/count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/text_color_faded"
-                        android:textSize="12sp" />
-
-                </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/golos_text_medium"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <FrameLayout
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_margin="4dp"
-                    android:background="@drawable/shape_circle"
+                    android:background="@drawable/shape_circle2"
                     android:elevation="2dp"
                     app:strokeColor="@color/text_color_faded"
                     app:strokeWidth="0.5dp">
