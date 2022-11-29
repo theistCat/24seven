@@ -142,7 +142,7 @@
     <string name="sort_by_popular">Популярный</string>
     <string name="sort_by_cheap">Цена: от самой низкой к высокой</string>
     <string name="sort_by_expensive">Цена: от самой высокой к самой низкой</string>
-    <string name="add_to_cart">В корзину</string>
+    <string name="add_to_cart">в корзину</string>
     <string name="in_cart">В корзине</string>
     <string name="dark_theme">Dark Theme</string>
     <string name="select_address">Выберите адрес</string>
