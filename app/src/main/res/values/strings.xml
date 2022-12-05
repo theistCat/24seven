@@ -229,6 +229,7 @@
     <string name="hot_call">Горячий звонок в колл-центр</string>
     <string name="notification_text">Уведомления</string>
     <string name="no_notification">У вас пока нет уведомлений...</string>
+    <string name="notAdded_text">Вы еще ничего не добавили</string>
 
     <!--    <string name="sort_by_new_key" translatable="false">new</string>-->
     <!--    <string name="sort_by_popular_key" translatable="false">popular</string>-->

@@ -28,6 +28,7 @@ import a24seven.uz.utils.observeEvent
 import a24seven.uz.utils.showSnackbar
 import a24seven.uz.utils.toDp
 import a24seven.uz.utils.*
+import androidx.recyclerview.widget.LinearLayoutManager
 
 class MyFavouriteItemsFragment :
     BaseFragment<FragmentMyFavouriteItemsBinding>(FragmentMyFavouriteItemsBinding::inflate) {
@@ -163,7 +164,7 @@ class MyFavouriteItemsFragment :
 
     override fun setUpRecyclers() {
         binding.favouriteProductsRecycler.adapter = adapter
-        binding.favouriteProductsRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.favouriteProductsRecycler.layoutManager = LinearLayoutManager(requireContext())
         binding.favouriteProductsRecycler.addItemDecoration(SpacesItemDecoration(toDp(16)))
     }
 

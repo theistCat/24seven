@@ -11,6 +11,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import a24seven.uz.R
+import a24seven.uz.databinding.ItemMyFavouriteBinding
 import a24seven.uz.databinding.ItemProductGridBinding
 import a24seven.uz.network.models.Product
 import a24seven.uz.utils.image
@@ -45,7 +46,7 @@ class ProductPagingListAdapter(val context: Context) :
     var addToCart: ((Product) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemProductGridBinding.inflate(
+        val binding = ItemMyFavouriteBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -58,7 +59,7 @@ class ProductPagingListAdapter(val context: Context) :
         holder.bindData(getItem(position) as Product)
     }
 
-    inner class ViewHolder(var binding: ItemProductGridBinding) :
+    inner class ViewHolder(var binding: ItemMyFavouriteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -80,15 +81,15 @@ class ProductPagingListAdapter(val context: Context) :
         fun bindData(product: Product) {
             when (binding) {
                 else -> {
-                    val binding = binding as ItemProductGridBinding
+                    val binding = binding
                     if (product.discount_percent > 0) {
                         binding.productPrice.text = context.getString(
                             R.string.money_format_sum_unit,
                             product.price_discount,
                             product.unit.name
                         )
-                        binding.productOldPrice.text =
-                            context.getString(R.string.money_format_sum, product.price)
+//                        binding.productOldPrice.text =
+//                            context.getString(R.string.money_format_sum, product.price)
                         binding.productTag.text =
                             context.getString(R.string.discount, product.discount_percent)
                     } else {
@@ -97,12 +98,12 @@ class ProductPagingListAdapter(val context: Context) :
                             product.price,
                             product.unit.name
                         )
-                        binding.productOldPrice.visibility = View.INVISIBLE
-                        binding.productTag.isVisible = false
+//                        binding.productOldPrice.visibility = View.INVISIBLE
+//                        binding.productTag.isVisible = false
                     }
-                    binding.productCategory.text = product.category?.name
-                    binding.productComments.text =
-                        context.getString(R.string.comments_count, product.comments_count)
+//                    binding.productCategory.text = product.category?.name
+//                    binding.productComments.text =
+//                        context.getString(R.string.comments_count, product.comments_count)
                     binding.productIsFav.isChecked = product.is_favorite
                     binding.productName.text = product.name
                     binding.productImage.image(context, product.image!!.path_thumb)
@@ -117,7 +118,7 @@ class ProductPagingListAdapter(val context: Context) :
                             ContextCompat.getDrawable(context, R.drawable.ic_add_cart)
                     }
 
-                    binding.addToCart.isVisible = product.product_count ?: 0 != 0
+                    binding.addToCart.isVisible = (product.product_count ?: 0) != 0
                 }
             }
         }

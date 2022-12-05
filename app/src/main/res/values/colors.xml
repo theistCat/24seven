@@ -21,6 +21,6 @@
     <color name="cardBackground">#ffffff</color>
     <color name="tabInactiveOrder">#F8B068</color>
     <color name="tabActiveOrder">#0066CC</color>
-    <color name="tabCanceledOrder">#DB3022</color>
+    <color name="tabCanceledOrder">#FF1300</color>
     <color name="tabDeliveredOrder">#1BC06D</color>
 </resources>

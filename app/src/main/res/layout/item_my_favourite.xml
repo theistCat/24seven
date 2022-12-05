@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    app:cardBackgroundColor="@color/cardBackground"
+    app:cardCornerRadius="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/productImageLay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="6dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/productImage"
+                android:padding="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/img" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <CheckBox
+            android:id="@+id/productIsFav"
+            style="@style/isFavourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/productTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_tag"
+            android:backgroundTint="@color/tabCanceledOrder"
+            android:elevation="1dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="-20%"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/productImageLay" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/color_secondary"
+            android:fontFamily="@font/golos_text_medium"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:paddingHorizontal="50dp"
+            android:text="@string/add_to_cart"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:cornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/productImageLay"
+            app:layout_constraintStart_toEndOf="@id/productImageLay" />
+
+        <!--        <ImageView-->
+        <!--            android:id="@+id/productCommentsIcon"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="8dp"-->
+        <!--            android:layout_marginEnd="8dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="@+id/productComments"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="@+id/productComments"-->
+        <!--            app:srcCompat="@drawable/ic_comments" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/productComments"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="4dp"-->
+        <!--            android:text="Oтзыв (15)"-->
+        <!--            android:textColor="@color/text_color_faded"-->
+        <!--            android:textSize="12sp"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/productCommentsIcon"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/productImageLay" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/productCategory"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="8dp"-->
+        <!--            android:text="Фрукты"-->
+        <!--            android:textColor="@color/text_color_faded"-->
+        <!--            android:textSize="12sp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.0"-->
+        <!--            app:layout_constraintStart_toStartOf="@id/productCommentsIcon"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/productComments" />-->
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:maxLines="2"
+            android:textColor="@color/text_color"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@id/productIsFav"
+            app:layout_constraintStart_toEndOf="@id/productImageLay"
+            app:layout_constraintTop_toTopOf="@id/productImageLay"
+            tools:text="Яблоко Бойка" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/productOldPrice"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="4dp"-->
+        <!--            android:background="@drawable/strike_trough"-->
+        <!--            android:text="8 990 сум"-->
+        <!--            android:textColor="@color/color_secondary"-->
+        <!--            android:textSize="12sp"-->
+        <!--            app:layout_constraintStart_toStartOf="@id/productCommentsIcon"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/productName" />-->
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:fontFamily="@font/golos_text_medium"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/addToCart"
+            app:layout_constraintStart_toEndOf="@id/productImageLay"
+            app:layout_constraintTop_toBottomOf="@id/productName"
+            tools:text="7 490 сум за кг " />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

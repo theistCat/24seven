@@ -72,8 +72,8 @@
     <style name="isFavourite">
         <item name="android:button">@drawable/favourite</item>
         <item name="android:text">@null</item>
-        <item name="android:translationX">24dp</item>
-        <item name="android:translationY">-14dp</item>
+<!--        <item name="android:translationX">24dp</item>-->
+<!--        <item name="android:translationY">-14dp</item>-->
     </style>
 
     <style name="ShapeAppearanceOverlay.MyApp.Button.Circle" parent="">
