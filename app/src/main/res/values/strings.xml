@@ -47,7 +47,7 @@
     <string name="show_on_map"><u>Показать на карте</u></string>
     <string name="save_address">Сохранить адрес</string>
     <string name="address_name">Название*</string>
-    <string name="add_address">Добавить адрес</string>
+    <string name="add_address">+ Добавить новый адрес</string>
     <string name="delete_address"><u>Удалить адрес</u></string>
     <string name="order_info">Информация о заказе</string>
     <string name="order_number">Заказ №%d</string>

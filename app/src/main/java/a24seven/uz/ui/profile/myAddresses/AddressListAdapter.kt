@@ -32,7 +32,7 @@ class AddressListAdapter : PagingDataAdapter<Address, AddressListAdapter.ViewHol
         }
 
         fun bindData(address: Address) {
-            binding.addressName.text=address.name
+//            binding.addressName.text=address.name
             binding.address.text=address.address
         }
     }
